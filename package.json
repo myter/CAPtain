@@ -1,0 +1,7 @@
+{
+  "name": "CAPtain",
+  "version": "0.0.1",
+  "dependencies": {
+    "spiders.js": "latest"
+  }
+}
