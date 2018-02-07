@@ -2,9 +2,20 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "noImplicitUseStrict" : true
   },
   "exclude": [
     "node_modules"
+  ],
+  "types":[
+    "./node_modules/@types/mocha",
+    "./node_modules/@types/node"
+  ],
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "typings/**/*"
   ]
 }

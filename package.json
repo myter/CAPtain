@@ -2,6 +2,15 @@
   "name": "CAPtain",
   "version": "0.0.1",
   "dependencies": {
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^9.4.1",
     "spiders.js": "latest"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.5.3"
+  },
+  "scripts": {
+    "build-client-cap-tests": "browserify tests/testCapExtension.js -o tests/CAPExtensionBundle.js"
   }
 }
