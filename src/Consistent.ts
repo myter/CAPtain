@@ -7,6 +7,19 @@ export class Consistent extends SpiderObject{
         this[_IS_CONSISTENT_KEY_] = true
     }
 }
+class AsyncObjectMirror extends SpiderObjectMirror{
+    invoke(methodName : string,args : Array<any>){
+        return new Promise((resolve)=>{
+            resolve(super.invoke(methodName,args))
+        })
+    }
+
+    access(fieldName : string){
+        return new Promise((resolve)=>{
+            resolve(super.access(fieldName))
+        })
+    }
+}
 export class ConsistentMirror extends SpiderObjectMirror{
     private checkArg(arg){
         if(arg instanceof Array){
@@ -36,7 +49,9 @@ export class ConsistentMirror extends SpiderObjectMirror{
             throw new Error(message)
         }
         else{
-            return super.invoke(methodName,args)
+            return new Promise((resolve)=>{
+                resolve(super.invoke(methodName,args))
+            })
         }
     }
 
@@ -45,8 +60,16 @@ export class ConsistentMirror extends SpiderObjectMirror{
             throw new Error("Cannot assign non-consistent argument to consistent field")
         }
         else{
-            return super.write(fieldName,value)
+            return new Promise((resolve)=>{
+                resolve(super.write(fieldName,value))
+            })
         }
+    }
+
+    access(fieldName : string){
+        return new Promise((resolve)=>{
+            resolve(super.access(fieldName))
+        })
     }
 }
 let consScope       = new LexScope()

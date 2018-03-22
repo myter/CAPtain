@@ -8,6 +8,18 @@ class Consistent extends spiders_js_1.SpiderObject {
     }
 }
 exports.Consistent = Consistent;
+class AsyncObjectMirror extends spiders_js_1.SpiderObjectMirror {
+    invoke(methodName, args) {
+        return new Promise((resolve) => {
+            resolve(super.invoke(methodName, args));
+        });
+    }
+    access(fieldName) {
+        return new Promise((resolve) => {
+            resolve(super.access(fieldName));
+        });
+    }
+}
 class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -36,7 +48,9 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
             throw new Error(message);
         }
         else {
-            return super.invoke(methodName, args);
+            return new Promise((resolve) => {
+                resolve(super.invoke(methodName, args));
+            });
         }
     }
     write(fieldName, value) {
@@ -44,8 +58,15 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
             throw new Error("Cannot assign non-consistent argument to consistent field");
         }
         else {
-            return super.write(fieldName, value);
+            return new Promise((resolve) => {
+                resolve(super.write(fieldName, value));
+            });
         }
+    }
+    access(fieldName) {
+        return new Promise((resolve) => {
+            resolve(super.access(fieldName));
+        });
     }
 }
 exports.ConsistentMirror = ConsistentMirror;

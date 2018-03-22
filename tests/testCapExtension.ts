@@ -67,7 +67,9 @@ class TestConsistent extends Consistent{
     }
 
     incWithCon(con){
-        this.value += con.value
+        con.value.then((v)=>{
+            this.value += v
+        })
     }
 }
 
@@ -138,7 +140,6 @@ class AvailableNOKConstraintAct extends CAPActor{
     test(){
         let c   = new this.TestConsistent()
         c.incWithCon({value:5})
-        return c.value
     }
 }
 let AvailableNOKConstraint = () => {
@@ -648,8 +649,9 @@ class ConsistentConstraintConsistentAct extends CAPActor{
     test(){
         let c   = new this.TestConsistent()
         let cc  = new this.TestConsistent()
-        c.incWithCon(cc)
-        return c.value
+        return c.incWithCon(cc).then(()=>{
+            return c.value
+        })
     }
 }
 let ConsistentConstraintConsistent = ()=>{

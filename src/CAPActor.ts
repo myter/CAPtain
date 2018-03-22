@@ -63,6 +63,6 @@ export class CAPActor extends Actor{
     }
 
     init(){
-        this.gsp = new this.GSP(this.reflectOnActor().base.thisRef.ownerId,this.Round)
+        this.gsp = new this.GSP(this.libs.reflectOnActor().base.thisRef.ownerId,this.Round)
     }
 }

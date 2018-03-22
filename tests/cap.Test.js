@@ -280,6 +280,7 @@ describe("Eventuals", () => {
         }
         inc() {
             this.v1++;
+            return 5;
         }
         incWithPrim(v) {
             this.v1 += v;
@@ -563,7 +564,9 @@ describe("Consistents", () => {
             this.value += num;
         }
         incWithCon(con) {
-            this.value += con.value;
+            con.value.then((v) => {
+                this.value += v;
+            });
         }
     }
     it("Check OK Constraint (primitive)", (done) => {
@@ -601,8 +604,9 @@ describe("Consistents", () => {
             test() {
                 let c = new this.TestConsistent();
                 let cc = new this.TestConsistent();
-                c.incWithCon(cc);
-                return c.value;
+                return c.incWithCon(cc).then(() => {
+                    return c.value;
+                });
             }
         }
         app.spawnActor(Act).test().then((v) => {

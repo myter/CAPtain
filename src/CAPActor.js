@@ -54,7 +54,7 @@ class CAPActor extends spiders_js_1.Actor {
         this.Round = require("./Round").Round;
     }
     init() {
-        this.gsp = new this.GSP(this.reflectOnActor().base.thisRef.ownerId, this.Round);
+        this.gsp = new this.GSP(this.libs.reflectOnActor().base.thisRef.ownerId, this.Round);
     }
 }
 exports.CAPActor = CAPActor;

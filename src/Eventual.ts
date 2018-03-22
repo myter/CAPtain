@@ -14,7 +14,7 @@ export class Eventual extends SpiderIsolate{
     //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted(){
         Reflect.ownKeys(this).forEach((key)=>{
-            if(key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_"){
+            if(key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_'){
                 this.committedVals.set(key.toString(),this[key])
             }
         })
