@@ -1,6 +1,6 @@
 {
   "name": "spiders.captain",
-  "main": "./src/spiders.js",
+  "main": "./captain.js",
   "typings": "./index.d.ts",
   "version": "0.0.3",
   "dependencies": {
