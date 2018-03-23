@@ -6,6 +6,9 @@
     "experimentalDecorators": true,
     "noImplicitUseStrict" : true
   },
+  "files": [
+    "/index.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ],

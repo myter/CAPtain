@@ -1,5 +1,5 @@
 {
-  "name": "CAPtain",
+  "name": "spiders.captain",
   "version": "0.0.1",
   "dependencies": {
     "@types/mocha": "^2.2.48",
