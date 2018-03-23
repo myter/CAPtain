@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="Added type declarations">
-      <change beforePath="" afterPath="$PROJECT_DIR$/captain.ts" />
+    <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -267,7 +264,7 @@
       <workItem from="1521733579650" duration="3876000" />
       <workItem from="1521737583695" duration="751000" />
       <workItem from="1521789937459" duration="1023000" />
-      <workItem from="1521792671610" duration="380000" />
+      <workItem from="1521792671610" duration="409000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -304,7 +301,14 @@
       <option name="project" value="LOCAL" />
       <updated>1521790911565</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added main exports">
+      <created>1521793066312</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1521793066312</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -340,7 +344,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13285000" />
+    <option name="totallyTimeSpent" value="13314000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1337" extended-state="6" />
@@ -413,7 +417,8 @@
     <MESSAGE value="Migrated from main project" />
     <MESSAGE value="Fixed issue where mirror would be assigned to committed values" />
     <MESSAGE value="Added type declarations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added type declarations" />
+    <MESSAGE value="Added main exports" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added main exports" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
