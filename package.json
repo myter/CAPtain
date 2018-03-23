@@ -1,5 +1,7 @@
 {
   "name": "spiders.captain",
+  "main": "./src/spiders.js",
+  "typings": "./index.d.ts",
   "version": "0.0.2",
   "dependencies": {
     "@types/mocha": "^2.2.48",
