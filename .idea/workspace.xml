@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="Added type declarations">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -243,7 +242,7 @@
       <workItem from="1519219272027" duration="1843000" />
       <workItem from="1521733579650" duration="3876000" />
       <workItem from="1521737583695" duration="751000" />
-      <workItem from="1521789937459" duration="910000" />
+      <workItem from="1521789937459" duration="1023000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -273,7 +272,14 @@
       <option name="project" value="LOCAL" />
       <updated>1521790862166</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added type declarations">
+      <created>1521790911565</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1521790911565</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -309,7 +315,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12792000" />
+    <option name="totallyTimeSpent" value="12905000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1336" extended-state="6" />
