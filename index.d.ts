@@ -6,7 +6,7 @@ export * from "spiders.js"
 export class CAPActor{
     parent  : FarRef
     libs    : ActorSTDLib
-    constructor()
+
 }
 
 export class Eventual{}
