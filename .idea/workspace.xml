@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/CAPMirror.ts" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/CAPplication.ts" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/captain.js" afterPath="$PROJECT_DIR$/captain.js" />
-      <change beforePath="$PROJECT_DIR$/captain.js.map" afterPath="$PROJECT_DIR$/captain.js.map" />
-      <change beforePath="$PROJECT_DIR$/captain.ts" afterPath="$PROJECT_DIR$/captain.ts" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
-      <change beforePath="$PROJECT_DIR$/src/CAPActor.js" afterPath="$PROJECT_DIR$/src/CAPActor.js" />
-      <change beforePath="$PROJECT_DIR$/src/CAPActor.js.map" afterPath="$PROJECT_DIR$/src/CAPActor.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/CAPActor.ts" afterPath="$PROJECT_DIR$/src/CAPActor.ts" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js" afterPath="$PROJECT_DIR$/src/Eventual.js" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js.map" afterPath="$PROJECT_DIR$/src/Eventual.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.ts" afterPath="$PROJECT_DIR$/src/Eventual.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js" afterPath="$PROJECT_DIR$/tests/temp.js" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js.map" afterPath="$PROJECT_DIR$/tests/temp.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.ts" afterPath="$PROJECT_DIR$/tests/temp.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -276,7 +261,7 @@
       <workItem from="1521789937459" duration="1023000" />
       <workItem from="1521792671610" duration="409000" />
       <workItem from="1521793278332" duration="170000" />
-      <workItem from="1522306111077" duration="3735000" />
+      <workItem from="1522306111077" duration="3758000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -327,7 +312,14 @@
       <option name="project" value="LOCAL" />
       <updated>1521793387513</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Implemented CAPplication">
+      <created>1522310031653</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1522310031653</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -363,7 +355,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17219000" />
+    <option name="totallyTimeSpent" value="17242000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="813" extended-state="6" />
@@ -441,7 +433,8 @@
     <MESSAGE value="Fixed issue where mirror would be assigned to committed values" />
     <MESSAGE value="Added type declarations" />
     <MESSAGE value="Added main exports" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added main exports" />
+    <MESSAGE value="Implemented CAPplication" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented CAPplication" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
