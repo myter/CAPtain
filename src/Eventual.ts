@@ -1,5 +1,6 @@
 import {GSP} from "./GSP";
 import {bundleScope,LexScope,SpiderIsolate,SpiderIsolateMirror} from "spiders.js";
+import {native} from "../index";
 
 export var _IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_"
 var _LOCAL_KEY_ = "_IS_EVENTUAL_"
@@ -11,6 +12,11 @@ export class Eventual extends SpiderIsolate{
     committedVals       : Map<string,any>
     isEventual
 
+
+    //////////////////////////////////////
+    // GSP methods                      //
+    //////////////////////////////////////
+
     //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted(){
         Reflect.ownKeys(this).forEach((key)=>{
@@ -18,17 +24,6 @@ export class Eventual extends SpiderIsolate{
                 this.committedVals.set(key.toString(),this[key])
             }
         })
-    }
-
-    constructor(){
-        super(new EventualMirror())
-        this[_LOCAL_KEY_] = true
-        this.id                 = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-            return v.toString(16);
-        })
-        this.isEventual         = true
-        this.committedVals      = new Map()
     }
 
     //Called by host actor when this eventual is first passed to other actor
@@ -50,6 +45,17 @@ export class Eventual extends SpiderIsolate{
         this.committedVals.forEach((_,key)=>{
             this.committedVals.set(key,this[key])
         })
+    }
+
+    constructor(){
+        super(new EventualMirror())
+        this[_LOCAL_KEY_] = true
+        this.id                 = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        })
+        this.isEventual         = true
+        this.committedVals      = new Map()
     }
 }
 export class EventualMirror extends SpiderIsolateMirror{

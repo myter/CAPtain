@@ -8,6 +8,16 @@ export class CAPActor{
     libs    : ActorSTDLib
 }
 
+export class CAPplication{
+    libs    : ActorSTDLib
+    constructor(address? : string,port? : number)
+    spawnActor(actorClass : Function,constructionArgs? : Array<any>,port? : number)
+    spawnActorFromFile(path : string,className : string,constructorArgs? : Array<any>,port? : number)
+    kill()
+}
+
+export type native = string | boolean | number
+
 export class Eventual{}
 
 export class Available{}

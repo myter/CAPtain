@@ -1,49 +1,34 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const CAPActor_1 = require("../src/CAPActor");
-const spiders_js_1 = require("spiders.js");
 const Eventual_1 = require("../src/Eventual");
-class TestEventual extends Eventual_1.Eventual {
+const CAPplication_1 = require("../src/CAPplication");
+class Counter extends Eventual_1.Eventual {
     constructor() {
         super();
-        this.v1 = 5;
+        this.value = 0;
     }
-    inc() {
-        this.v1++;
-        return 5;
-    }
-    incWithPrim(v) {
-        this.v1 += v;
-    }
-    incWithCon(c) {
-        this.v1 += c.v1;
+    incrementM() {
+        this.value++;
     }
 }
-let app = new spiders_js_1.Application();
-class Master extends CAPActor_1.CAPActor {
-    constructor() {
-        super();
-        this.ev = new TestEventual();
-    }
-    sendAndInc(toRef) {
-        console.log("SENDING");
-        toRef.getEv(this.ev);
-        this.ev.inc();
+class TestApp extends CAPplication_1.CAPplication {
+    sendTo(ref) {
+        let c = new Counter();
+        ref.getRep(c);
+        c.incrementM();
+        setTimeout(() => {
+            console.log("Value in application: " + c.value);
+        }, 2000);
     }
 }
-class Slave extends CAPActor_1.CAPActor {
-    getEv(anEv) {
-        console.log("Got EV");
-        this.ev = anEv;
-    }
-    test() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(this.ev.v1);
-            }, 2000);
-        });
+class TestAct extends CAPActor_1.CAPActor {
+    getRep(rep) {
+        setTimeout(() => {
+            console.log("Value in actor: " + rep.value);
+        }, 2000);
     }
 }
-let slave = app.spawnActor(Slave);
-let master = app.spawnActor(Master);
-master.sendAndInc(slave);
+let app = new TestApp();
+let act = app.spawnActor(TestAct);
+app.sendTo(act);
 //# sourceMappingURL=temp.js.map

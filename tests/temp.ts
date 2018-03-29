@@ -1,58 +1,42 @@
 import {CAPActor} from "../src/CAPActor";
 import {Actor, Application, SpiderIsolate} from "spiders.js";
 import {Eventual} from "../src/Eventual";
-class TestEventual extends Eventual{
-    v1
+import {Available} from "../src/Available";
+import set = Reflect.set;
+import {CAPplication} from "../src/CAPplication";
+class Counter extends Eventual {
+    value
 
     constructor(){
         super()
-        this.v1 = 5
+        this.value = 0
     }
 
-    inc(){
-        this.v1++
-        return 5
-    }
-
-    incWithPrim(v){
-        this.v1 += v
-    }
-
-    incWithCon(c){
-        this.v1 += c.v1
+    incrementM(){
+        this.value++
     }
 }
 
-let app = new Application()
-
-class Master extends CAPActor{
-    ev
-    constructor(){
-        super()
-        this.ev = new TestEventual()
-    }
-
-    sendAndInc(toRef){
-        console.log("SENDING")
-        toRef.getEv(this.ev)
-        this.ev.inc()
-    }
-}
-class Slave extends CAPActor{
-    ev
-    getEv(anEv){
-        console.log("Got EV")
-        this.ev = anEv
-    }
-    test(){
-        return new Promise((resolve)=>{
-            setTimeout(()=>{
-                resolve(this.ev.v1)
-            },2000)
-        })
+class TestApp extends CAPplication{
+    sendTo(ref){
+        let c = new Counter()
+        ref.getRep(c)
+        c.incrementM()
+        setTimeout(()=>{
+            console.log("Value in application: " + c.value)
+        },2000)
     }
 }
 
-let slave = app.spawnActor(Slave)
-let master = app.spawnActor(Master)
-master.sendAndInc(slave)
+class TestAct extends CAPActor{
+
+    getRep(rep){
+        setTimeout(()=>{
+            console.log("Value in actor: " + rep.value)
+        },2000)
+    }
+}
+
+let app = new TestApp()
+let act = app.spawnActor(TestAct)
+app.sendTo(act)
