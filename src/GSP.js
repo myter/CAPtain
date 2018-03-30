@@ -19,6 +19,8 @@ class GSP {
         this.eventualOwner = new Map();
         this.eventualHolders = new Map();
         this.replay = [];
+        this.tentativeListeners = [];
+        this.commitListeners = [];
     }
     //////////////////////////////////
     //Methods invoked by Eventuals  //

@@ -25,6 +25,8 @@ export class GSP{
     //Object id -> array of known peers having a eventual of a master eventual owned by this actor
     eventualHolders         : Map<string,Array<FarRef>>
     replay                  : Array<string>
+    tentativeListeners      : Array<(ev : Eventual)=>any>
+    commitListeners         : Array<(ev : Eventual)=>any>
 
     //Checks whether this instance is master of a given gsp object (using the gsp object's owner id)
     private isMaster(anId : string) : boolean{
@@ -48,6 +50,8 @@ export class GSP{
         this.eventualOwner          = new Map()
         this.eventualHolders        = new Map()
         this.replay                 = []
+        this.tentativeListeners     = []
+        this.commitListeners        = []
     }
 
     //////////////////////////////////

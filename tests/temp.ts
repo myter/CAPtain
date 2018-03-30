@@ -1,42 +1,53 @@
-import {CAPActor} from "../src/CAPActor";
-import {Actor, Application, SpiderIsolate} from "spiders.js";
 import {Eventual} from "../src/Eventual";
-import {Available} from "../src/Available";
-import set = Reflect.set;
 import {CAPplication} from "../src/CAPplication";
-class Counter extends Eventual {
-    value
+import {CAPActor} from "../src/CAPActor";
 
+class Test extends Eventual{
+    value
     constructor(){
         super()
         this.value = 0
     }
 
-    incrementM(){
+    incM(){
         this.value++
     }
 }
 
-class TestApp extends CAPplication{
+
+class TA extends CAPplication{
     sendTo(ref){
-        let c = new Counter()
-        ref.getRep(c)
-        c.incrementM()
+        let t = new Test()
+        t.onCommit((ev : Test)=>{
+            console.log("New commit val in app: " + ev.value)
+        })
+        t.onTentative((ev : Test)=>{
+            console.log("New tent val in app: " + ev.value)
+        })
+        ref.get(t)
         setTimeout(()=>{
-            console.log("Value in application: " + c.value)
+            console.log("Incrementing in app")
+            t.incM()
+        },5000)
+    }
+}
+
+class TAC extends CAPActor{
+    get(rep){
+        rep.onCommit((ev : Test)=>{
+            console.log("New commit val in act: " + ev.value)
+        })
+        rep.onTentative((ev : Test)=>{
+            console.log("New tent val in act: " + ev.value)
+        })
+        setTimeout(()=>{
+            console.log("Incrementing in act")
+            rep.incM()
         },2000)
     }
 }
 
-class TestAct extends CAPActor{
-
-    getRep(rep){
-        setTimeout(()=>{
-            console.log("Value in actor: " + rep.value)
-        },2000)
-    }
-}
-
-let app = new TestApp()
-let act = app.spawnActor(TestAct)
+let app = new TA()
+let act = app.spawnActor(TAC)
 app.sendTo(act)
+

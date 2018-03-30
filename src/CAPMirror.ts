@@ -34,8 +34,8 @@ export class CAPMirror extends SpiderActorMirror{
     }
 
     sendInvocation(target : FarRef,methodName : string,args : Array<any>,contactId = this.base.thisRef.ownerId,contactAddress = null,contactPort = null,mainId = null){
-        let eventualArgs = this.getEventualArgs(args)
-        let gsp = (this.base.behaviourObject as CAPActor).gsp
+        let eventualArgs    = this.getEventualArgs(args)
+        let gsp             = (this.base.behaviourObject as CAPActor).gsp
         eventualArgs.forEach((eventual : Eventual)=>{
             //An eventual is being sent to another actor, without that eventual being already registered
             //In other words, this eventual must have been created newly by the sending actor

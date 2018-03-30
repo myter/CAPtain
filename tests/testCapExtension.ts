@@ -520,6 +520,92 @@ let EventualConstraintPrimitive = ()=>{
 }
 scheduled.push(EventualConstraintPrimitive)
 
+class EventualTentativeMaster extends CAPActor{
+    ev
+    constructor(){
+        super()
+        this.ev = new TestEventual()
+    }
+
+    send(toRef){
+        toRef.getEv(this.ev)
+    }
+
+}
+class EventualTentativeSlave extends CAPActor{
+    val
+
+    getEv(anEv){
+        anEv.onTentative((ev)=>{
+            this.val = ev.v1
+        })
+        anEv.inc()
+    }
+
+    test(){
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.val)
+            },2000)
+        })
+    }
+}
+let EventualTentative = ()=>{
+    let slave = app.spawnActor(EventualTentativeSlave)
+    let master = app.spawnActor(EventualTentativeMaster)
+    master.send(slave)
+    return slave.test().then((v)=>{
+        log("Eventual Tentative Listener",v,6)
+    })
+}
+scheduled.push(EventualTentative)
+
+class EventualCommitMaster extends CAPActor{
+    ev
+    val
+    constructor(){
+        super()
+        this.ev = new TestEventual()
+    }
+
+    send(toRef){
+        this.ev.onCommit((ev)=>{
+            this.val = ev.v1
+        })
+        toRef.getEv(this.ev)
+    }
+
+    test(){
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.val)
+            },2000)
+        })
+    }
+
+}
+class EventualCommitSlave extends CAPActor{
+    val
+
+    getEv(anEv){
+        anEv.onTentative((ev)=>{
+            this.val = ev.v1
+        })
+        anEv.inc()
+    }
+
+
+}
+let EventualCommit = () =>{
+    let slave = app.spawnActor(EventualCommitSlave)
+    let master = app.spawnActor(EventualCommitMaster)
+    master.send(slave)
+    return master.test().then((v)=>{
+        log("Eventual Commit Listener",v,6)
+    })
+}
+scheduled.push(EventualCommit)
+
 class ConsistentContentSerialisationAct extends CAPActor{
     c
     constructor(){

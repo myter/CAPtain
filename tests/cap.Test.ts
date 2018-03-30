@@ -3,6 +3,7 @@ import {Available} from "../src/Available";
 import {Eventual} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
 import {CAPActor} from "../src/CAPActor";
+import set = Reflect.set;
 
 var assert                      = require('assert')
 var chai                        = require('chai')
@@ -612,6 +613,110 @@ describe("Eventuals",()=>{
                 anEv.inc()
 
             }
+        }
+        let slave = app.spawnActor(Slave)
+        let master = app.spawnActor(Master)
+        master.send(slave)
+        master.test().then((v)=>{
+            try{
+                expect(v).to.equal(6)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("tentative listener",function(done){
+        this.timeout(4000)
+        let app = new Application()
+        class Master extends CAPActor{
+            ev
+            constructor(){
+                super()
+                this.ev = new TestEventual()
+            }
+
+            send(toRef){
+                toRef.getEv(this.ev)
+            }
+
+        }
+        class Slave extends CAPActor{
+            val
+
+            getEv(anEv){
+                anEv.onTentative((ev)=>{
+                    this.val = ev.v1
+                })
+                anEv.inc()
+            }
+
+            test(){
+                return new Promise((resolve)=>{
+                    setTimeout(()=>{
+                        resolve(this.val)
+                    },2000)
+                })
+            }
+        }
+        let slave = app.spawnActor(Slave)
+        let master = app.spawnActor(Master)
+        master.send(slave)
+        slave.test().then((v)=>{
+            try{
+                expect(v).to.equal(6)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("commit listener",function(done) {
+        this.timeout(4000)
+        let app = new Application()
+        class Master extends CAPActor{
+            ev
+            val
+            constructor(){
+                super()
+                this.ev = new TestEventual()
+            }
+
+            send(toRef){
+                this.ev.onCommit((ev)=>{
+                    this.val = ev.v1
+                })
+                toRef.getEv(this.ev)
+            }
+
+            test(){
+                return new Promise((resolve)=>{
+                    setTimeout(()=>{
+                        resolve(this.val)
+                    },2000)
+                })
+            }
+
+        }
+        class Slave extends CAPActor{
+            val
+
+            getEv(anEv){
+                anEv.onTentative((ev)=>{
+                    this.val = ev.v1
+                })
+                anEv.inc()
+            }
+
+
         }
         let slave = app.spawnActor(Slave)
         let master = app.spawnActor(Master)

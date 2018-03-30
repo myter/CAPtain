@@ -49821,7 +49821,7 @@ class ActorSTDLib {
 }
 exports.ActorSTDLib = ActorSTDLib;
 
-},{"./MOP":255,"./PubSub/SubClient":259,"./PubSub/SubServer":260,"./PubSub/SubTag":261,"child_process":58,"express":317,"http":277,"path":187}],251:[function(require,module,exports){
+},{"./MOP":255,"./PubSub/SubClient":259,"./PubSub/SubServer":260,"./PubSub/SubTag":261,"child_process":58,"express":318,"http":277,"path":187}],251:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const CommMedium_1 = require("./CommMedium");
 /**
@@ -60899,7 +60899,23 @@ avMirrorScope.addElement("_IS_AVAILABLE_KEY_", _IS_AVAILABLE_KEY_);
 avMirrorScope.addElement("_EV_KEY_", _EV_KEY_);
 spiders_js_1.bundleScope(AvailableMirror, avMirrorScope);
 
-},{"./Eventual":313,"spiders.js":274}],311:[function(require,module,exports){
+},{"./Eventual":314,"spiders.js":274}],311:[function(require,module,exports){
+Object.defineProperty(exports, "__esModule", { value: true });
+const spiders_js_1 = require("spiders.js");
+const CAPMirror_1 = require("./CAPMirror");
+class CAPActor extends spiders_js_1.Actor {
+    constructor() {
+        super(new CAPMirror_1.CAPMirror());
+        this.GSP = require("./GSP").GSP;
+        this.Round = require("./Round").Round;
+    }
+    init() {
+        this.gsp = new this.GSP(this.libs.reflectOnActor().base.thisRef.ownerId, this.Round);
+    }
+}
+exports.CAPActor = CAPActor;
+
+},{"./CAPMirror":312,"./GSP":315,"./Round":316,"spiders.js":274}],312:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 class CAPMirror extends spiders_js_1.SpiderActorMirror {
@@ -60949,19 +60965,8 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
     }
 }
 exports.CAPMirror = CAPMirror;
-class CAPActor extends spiders_js_1.Actor {
-    constructor() {
-        super(new CAPMirror());
-        this.GSP = require("./GSP").GSP;
-        this.Round = require("./Round").Round;
-    }
-    init() {
-        this.gsp = new this.GSP(this.libs.reflectOnActor().base.thisRef.ownerId, this.Round);
-    }
-}
-exports.CAPActor = CAPActor;
 
-},{"./GSP":314,"./Round":315,"spiders.js":274}],312:[function(require,module,exports){
+},{"spiders.js":274}],313:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 var _IS_CONSISTENT_KEY_ = "_IS_CONSISTENT_";
@@ -61042,29 +61047,22 @@ let conMirrorScope = new spiders_js_1.LexScope();
 conMirrorScope.addElement("_IS_CONSISTENT_KEY_", _IS_CONSISTENT_KEY_);
 spiders_js_1.bundleScope(ConsistentMirror, conMirrorScope);
 
-},{"spiders.js":274}],313:[function(require,module,exports){
+},{"spiders.js":274}],314:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
 var _LOCAL_KEY_ = "_IS_EVENTUAL_";
 class Eventual extends spiders_js_1.SpiderIsolate {
+    //////////////////////////////////////
+    // GSP methods                      //
+    //////////////////////////////////////
     //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted() {
         Reflect.ownKeys(this).forEach((key) => {
-            if (key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_') {
+            if (key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentListeners" && key != "commListeners" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_') {
                 this.committedVals.set(key.toString(), this[key]);
             }
         });
-    }
-    constructor() {
-        super(new EventualMirror());
-        this[_LOCAL_KEY_] = true;
-        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-        this.isEventual = true;
-        this.committedVals = new Map();
     }
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp, hostId = undefined, isOwner) {
@@ -61073,6 +61071,14 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         if (isOwner) {
             this.ownerId = hostId;
         }
+        this.tentListeners.forEach((callback) => {
+            this.hostGsp.tentativeListeners.push(callback);
+        });
+        this.commListeners.forEach((callback) => {
+            this.hostGsp.commitListeners.push(callback);
+        });
+        this.tentListeners = [];
+        this.commListeners = [];
     }
     resetToCommit() {
         this.committedVals.forEach((committedVal, key) => {
@@ -61083,12 +61089,68 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         this.committedVals.forEach((_, key) => {
             this.committedVals.set(key, this[key]);
         });
+        this.triggerCommit();
+    }
+    constructor() {
+        super(new EventualMirror());
+        this[_LOCAL_KEY_] = true;
+        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        this.isEventual = true;
+        this.committedVals = new Map();
+        this.tentListeners = [];
+        this.commListeners = [];
+    }
+    //////////////////////////////////////
+    // API                              //
+    //////////////////////////////////////
+    triggerTentative() {
+        if (this.hostGsp) {
+            this.hostGsp.tentativeListeners.forEach((callback) => {
+                callback(this);
+            });
+        }
+        else {
+            this.tentListeners.forEach((callback) => {
+                callback(this);
+            });
+        }
+    }
+    onTentative(callback) {
+        if (this.hostGsp) {
+            this.hostGsp.tentativeListeners.push(callback);
+        }
+        else {
+            this.tentListeners.push(callback);
+        }
+    }
+    onCommit(callback) {
+        if (this.hostGsp) {
+            this.hostGsp.commitListeners.push(callback);
+        }
+        else {
+            this.commListeners.push(callback);
+        }
+    }
+    triggerCommit() {
+        if (this.hostGsp) {
+            this.hostGsp.commitListeners.forEach((callback) => {
+                callback(this);
+            });
+        }
+        else {
+            this.commListeners.forEach((callback) => {
+                callback(this);
+            });
+        }
     }
 }
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted";
+        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -61143,6 +61205,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                     baseEV.hostGsp.createRound(baseEV.id, baseEV.ownerId, methodName, args);
                     let ret = super.invoke(methodName, args);
                     baseEV.hostGsp.yield(baseEV.id, baseEV.ownerId);
+                    baseEV.triggerTentative();
                     return ret;
                 }
             }
@@ -61170,7 +61233,7 @@ let evMirrorScope = new spiders_js_1.LexScope();
 evMirrorScope.addElement("_LOCAL_KEY_", _LOCAL_KEY_);
 spiders_js_1.bundleScope(EventualMirror, evMirrorScope);
 
-},{"spiders.js":274}],314:[function(require,module,exports){
+},{"spiders.js":274}],315:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 class GSP {
     //Checks whether this instance is master of a given gsp object (using the gsp object's owner id)
@@ -61192,6 +61255,8 @@ class GSP {
         this.eventualOwner = new Map();
         this.eventualHolders = new Map();
         this.replay = [];
+        this.tentativeListeners = [];
+        this.commitListeners = [];
     }
     //////////////////////////////////
     //Methods invoked by Eventuals  //
@@ -61331,7 +61396,7 @@ class GSP {
 }
 exports.GSP = GSP;
 
-},{}],315:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 class Round extends spiders_js_1.SpiderIsolate {
@@ -61346,7 +61411,7 @@ class Round extends spiders_js_1.SpiderIsolate {
 }
 exports.Round = Round;
 
-},{"spiders.js":274}],316:[function(require,module,exports){
+},{"spiders.js":274}],317:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const CAPActor_1 = require("../src/CAPActor");
 const Available_1 = require("../src/Available");
@@ -61789,6 +61854,75 @@ let EventualConstraintPrimitive = () => {
     });
 };
 scheduled.push(EventualConstraintPrimitive);
+class EventualTentativeMaster extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.ev = new TestEventual();
+    }
+    send(toRef) {
+        toRef.getEv(this.ev);
+    }
+}
+class EventualTentativeSlave extends CAPActor_1.CAPActor {
+    getEv(anEv) {
+        anEv.onTentative((ev) => {
+            this.val = ev.v1;
+        });
+        anEv.inc();
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.val);
+            }, 2000);
+        });
+    }
+}
+let EventualTentative = () => {
+    let slave = app.spawnActor(EventualTentativeSlave);
+    let master = app.spawnActor(EventualTentativeMaster);
+    master.send(slave);
+    return slave.test().then((v) => {
+        log("Eventual Tentative Listener", v, 6);
+    });
+};
+scheduled.push(EventualTentative);
+class EventualCommitMaster extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.ev = new TestEventual();
+    }
+    send(toRef) {
+        this.ev.onCommit((ev) => {
+            this.val = ev.v1;
+        });
+        toRef.getEv(this.ev);
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.val);
+            }, 2000);
+        });
+    }
+}
+class EventualCommitSlave extends CAPActor_1.CAPActor {
+    getEv(anEv) {
+        anEv.onTentative((ev) => {
+            this.val = ev.v1;
+        });
+        anEv.inc();
+    }
+}
+let EventualCommit = () => {
+    let slave = app.spawnActor(EventualCommitSlave);
+    let master = app.spawnActor(EventualCommitMaster);
+    master.send(slave);
+    return master.test().then((v) => {
+        log("Eventual Commit Listener", v, 6);
+    });
+};
+scheduled.push(EventualCommit);
 class ConsistentContentSerialisationAct extends CAPActor_1.CAPActor {
     constructor() {
         super();
@@ -61936,7 +62070,7 @@ function performAll(nextTest) {
 }
 performAll(scheduled.pop());
 
-},{"../src/Available":310,"../src/CAPActor":311,"../src/Consistent":312,"../src/Eventual":313,"spiders.js":274}],317:[function(require,module,exports){
+},{"../src/Available":310,"../src/CAPActor":311,"../src/Consistent":313,"../src/Eventual":314,"spiders.js":274}],318:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -61949,7 +62083,7 @@ performAll(scheduled.pop());
 
 module.exports = require('./lib/express');
 
-},{"./lib/express":319}],318:[function(require,module,exports){
+},{"./lib/express":320}],319:[function(require,module,exports){
 (function (process){
 /*!
  * express
@@ -62596,7 +62730,7 @@ function tryRender(view, options, callback) {
 }
 
 }).call(this,require('_process'))
-},{"./middleware/init":320,"./middleware/query":321,"./router":324,"./utils":327,"./view":328,"_process":194,"array-flatten":338,"debug":343,"depd":346,"finalhandler":352,"http":277,"methods":356,"path":187,"utils-merge":384}],319:[function(require,module,exports){
+},{"./middleware/init":321,"./middleware/query":322,"./router":325,"./utils":328,"./view":329,"_process":194,"array-flatten":339,"debug":344,"depd":347,"finalhandler":353,"http":277,"methods":357,"path":187,"utils-merge":385}],320:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -62701,7 +62835,7 @@ exports.static = require('serve-static');
   });
 });
 
-},{"./application":318,"./middleware/query":321,"./request":322,"./response":323,"./router":324,"./router/route":326,"events":130,"merge-descriptors":355,"serve-static":378}],320:[function(require,module,exports){
+},{"./application":319,"./middleware/query":322,"./request":323,"./response":324,"./router":325,"./router/route":327,"events":130,"merge-descriptors":356,"serve-static":379}],321:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -62739,7 +62873,7 @@ exports.init = function(app){
 };
 
 
-},{}],321:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -62792,7 +62926,7 @@ module.exports = function query(options) {
   };
 };
 
-},{"parseurl":359,"qs":364}],322:[function(require,module,exports){
+},{"parseurl":360,"qs":365}],323:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -63283,7 +63417,7 @@ function defineGetter(obj, name, getter) {
   });
 };
 
-},{"accepts":329,"depd":346,"fresh":354,"http":277,"net":58,"parseurl":359,"proxy-addr":361,"range-parser":368,"type-is":379}],323:[function(require,module,exports){
+},{"accepts":330,"depd":347,"fresh":355,"http":277,"net":58,"parseurl":360,"proxy-addr":362,"range-parser":369,"type-is":380}],324:[function(require,module,exports){
 (function (Buffer){
 /*!
  * express
@@ -64340,7 +64474,7 @@ function sendfile(res, file, options, callback) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./utils":327,"buffer":60,"content-disposition":339,"cookie":342,"cookie-signature":341,"depd":346,"escape-html":350,"http":277,"on-finished":357,"path":187,"send":369,"utils-merge":384,"vary":385}],324:[function(require,module,exports){
+},{"./utils":328,"buffer":60,"content-disposition":340,"cookie":343,"cookie-signature":342,"depd":347,"escape-html":351,"http":277,"on-finished":358,"path":187,"send":370,"utils-merge":385,"vary":386}],325:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -64987,7 +65121,7 @@ function wrap(old, fn) {
   };
 }
 
-},{"./layer":325,"./route":326,"array-flatten":338,"debug":343,"depd":346,"methods":356,"parseurl":359,"utils-merge":384}],325:[function(require,module,exports){
+},{"./layer":326,"./route":327,"array-flatten":339,"debug":344,"depd":347,"methods":357,"parseurl":360,"utils-merge":385}],326:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -65165,7 +65299,7 @@ function decode_param(val) {
   }
 }
 
-},{"debug":343,"path-to-regexp":360}],326:[function(require,module,exports){
+},{"debug":344,"path-to-regexp":361}],327:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -65377,7 +65511,7 @@ methods.forEach(function(method){
   };
 });
 
-},{"./layer":325,"array-flatten":338,"debug":343,"methods":356}],327:[function(require,module,exports){
+},{"./layer":326,"array-flatten":339,"debug":344,"methods":357}],328:[function(require,module,exports){
 (function (Buffer){
 /*!
  * express
@@ -65681,7 +65815,7 @@ function newObject() {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"array-flatten":338,"buffer":60,"content-disposition":339,"content-type":340,"depd":346,"etag":351,"path":187,"proxy-addr":361,"qs":364,"querystring":204,"send":369}],328:[function(require,module,exports){
+},{"array-flatten":339,"buffer":60,"content-disposition":340,"content-type":341,"depd":347,"etag":352,"path":187,"proxy-addr":362,"qs":365,"querystring":204,"send":370}],329:[function(require,module,exports){
 /*!
  * express
  * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -65856,7 +65990,7 @@ function tryStat(path) {
   }
 }
 
-},{"./utils":327,"debug":343,"fs":58,"path":187}],329:[function(require,module,exports){
+},{"./utils":328,"debug":344,"fs":58,"path":187}],330:[function(require,module,exports){
 /*!
  * accepts
  * Copyright(c) 2014 Jonathan Ong
@@ -66089,7 +66223,7 @@ function validMime(type) {
   return typeof type === 'string';
 }
 
-},{"mime-types":330,"negotiator":333}],330:[function(require,module,exports){
+},{"mime-types":331,"negotiator":334}],331:[function(require,module,exports){
 /*!
  * mime-types
  * Copyright(c) 2014 Jonathan Ong
@@ -66279,7 +66413,7 @@ function populateMaps(extensions, types) {
   })
 }
 
-},{"mime-db":332,"path":187}],331:[function(require,module,exports){
+},{"mime-db":333,"path":187}],332:[function(require,module,exports){
 module.exports={
   "application/1d-interleaved-parityfec": {
     "source": "iana"
@@ -72785,9 +72919,9 @@ module.exports={
   }
 }
 
-},{}],332:[function(require,module,exports){
+},{}],333:[function(require,module,exports){
 arguments[4][159][0].apply(exports,arguments)
-},{"./db.json":331,"dup":159}],333:[function(require,module,exports){
+},{"./db.json":332,"dup":159}],334:[function(require,module,exports){
 
 var preferredCharsets = require('./lib/charset');
 var preferredEncodings = require('./lib/encoding');
@@ -72851,7 +72985,7 @@ Negotiator.prototype.preferredLanguages = Negotiator.prototype.languages;
 Negotiator.prototype.preferredMediaType = Negotiator.prototype.mediaType;
 Negotiator.prototype.preferredMediaTypes = Negotiator.prototype.mediaTypes;
 
-},{"./lib/charset":334,"./lib/encoding":335,"./lib/language":336,"./lib/mediaType":337}],334:[function(require,module,exports){
+},{"./lib/charset":335,"./lib/encoding":336,"./lib/language":337,"./lib/mediaType":338}],335:[function(require,module,exports){
 module.exports = preferredCharsets;
 preferredCharsets.preferredCharsets = preferredCharsets;
 
@@ -72955,7 +73089,7 @@ function isQuality(spec) {
   return spec.q > 0;
 }
 
-},{}],335:[function(require,module,exports){
+},{}],336:[function(require,module,exports){
 module.exports = preferredEncodings;
 preferredEncodings.preferredEncodings = preferredEncodings;
 
@@ -73075,7 +73209,7 @@ function isQuality(spec) {
   return spec.q > 0;
 }
 
-},{}],336:[function(require,module,exports){
+},{}],337:[function(require,module,exports){
 module.exports = preferredLanguages;
 preferredLanguages.preferredLanguages = preferredLanguages;
 
@@ -73189,7 +73323,7 @@ function isQuality(spec) {
   return spec.q > 0;
 }
 
-},{}],337:[function(require,module,exports){
+},{}],338:[function(require,module,exports){
 /**
  * negotiator
  * Copyright(c) 2012 Isaac Z. Schlueter
@@ -73370,7 +73504,7 @@ function splitMediaTypes(accept) {
   return accepts;
 }
 
-},{}],338:[function(require,module,exports){
+},{}],339:[function(require,module,exports){
 'use strict'
 
 /**
@@ -73436,7 +73570,7 @@ function arrayFlatten (array, depth) {
   return flattenWithDepth(array, [], depth)
 }
 
-},{}],339:[function(require,module,exports){
+},{}],340:[function(require,module,exports){
 (function (Buffer){
 /*!
  * content-disposition
@@ -73883,7 +74017,7 @@ function ContentDisposition(type, parameters) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":60,"path":187}],340:[function(require,module,exports){
+},{"buffer":60,"path":187}],341:[function(require,module,exports){
 /*!
  * content-type
  * Copyright(c) 2015 Douglas Christopher Wilson
@@ -74099,7 +74233,7 @@ function ContentType(type) {
   this.type = type
 }
 
-},{}],341:[function(require,module,exports){
+},{}],342:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -74152,7 +74286,7 @@ function sha1(str){
   return crypto.createHash('sha1').update(str).digest('hex');
 }
 
-},{"crypto":76}],342:[function(require,module,exports){
+},{"crypto":76}],343:[function(require,module,exports){
 /*!
  * cookie
  * Copyright(c) 2012-2014 Roman Shtylman
@@ -74270,7 +74404,7 @@ function tryDecode(str, decode) {
   }
 }
 
-},{}],343:[function(require,module,exports){
+},{}],344:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -74440,7 +74574,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":344}],344:[function(require,module,exports){
+},{"./debug":345}],345:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -74639,7 +74773,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":345}],345:[function(require,module,exports){
+},{"ms":346}],346:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -74766,7 +74900,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],346:[function(require,module,exports){
+},{}],347:[function(require,module,exports){
 (function (process){
 /*!
  * depd
@@ -75299,7 +75433,7 @@ function DeprecationError(namespace, message, stack) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/compat":349,"_process":194,"events":130,"path":187}],347:[function(require,module,exports){
+},{"./lib/compat":350,"_process":194,"events":130,"path":187}],348:[function(require,module,exports){
 (function (Buffer){
 /*!
  * depd
@@ -75336,7 +75470,7 @@ function bufferConcat(bufs) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":60}],348:[function(require,module,exports){
+},{"buffer":60}],349:[function(require,module,exports){
 /*!
  * depd
  * Copyright(c) 2014 Douglas Christopher Wilson
@@ -75439,7 +75573,7 @@ function getConstructorName(obj) {
   return (receiver.constructor && receiver.constructor.name) || null
 }
 
-},{}],349:[function(require,module,exports){
+},{}],350:[function(require,module,exports){
 (function (Buffer){
 /*!
  * depd
@@ -75512,7 +75646,7 @@ function toString(obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./buffer-concat":347,"./callsite-tostring":348,"buffer":60}],350:[function(require,module,exports){
+},{"./buffer-concat":348,"./callsite-tostring":349,"buffer":60}],351:[function(require,module,exports){
 /*!
  * escape-html
  * Copyright(c) 2012-2013 TJ Holowaychuk
@@ -75543,7 +75677,7 @@ function escapeHtml(html) {
     .replace(/>/g, '&gt;');
 }
 
-},{}],351:[function(require,module,exports){
+},{}],352:[function(require,module,exports){
 (function (Buffer){
 /*!
  * etag
@@ -75679,7 +75813,7 @@ function stattag(stat) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":60,"crypto":76,"fs":58}],352:[function(require,module,exports){
+},{"buffer":60,"crypto":76,"fs":58}],353:[function(require,module,exports){
 (function (process,Buffer){
 /*!
  * finalhandler
@@ -75834,7 +75968,7 @@ function send(req, res, status, body) {
 }
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":194,"buffer":60,"debug":343,"escape-html":350,"http":277,"on-finished":357,"unpipe":353}],353:[function(require,module,exports){
+},{"_process":194,"buffer":60,"debug":344,"escape-html":351,"http":277,"on-finished":358,"unpipe":354}],354:[function(require,module,exports){
 /*!
  * unpipe
  * Copyright(c) 2015 Douglas Christopher Wilson
@@ -75905,7 +76039,7 @@ function unpipe(stream) {
   }
 }
 
-},{}],354:[function(require,module,exports){
+},{}],355:[function(require,module,exports){
 
 /**
  * Expose `fresh()`.
@@ -75964,7 +76098,7 @@ function fresh(req, res) {
   return !! (etagMatches && notModified);
 }
 
-},{}],355:[function(require,module,exports){
+},{}],356:[function(require,module,exports){
 /*!
  * merge-descriptors
  * Copyright(c) 2014 Jonathan Ong
@@ -76023,7 +76157,7 @@ function merge(dest, src, redefine) {
   return dest
 }
 
-},{}],356:[function(require,module,exports){
+},{}],357:[function(require,module,exports){
 
 var http = require('http');
 
@@ -76067,7 +76201,7 @@ if (http.METHODS) {
 
 }
 
-},{"http":28}],357:[function(require,module,exports){
+},{"http":28}],358:[function(require,module,exports){
 (function (process){
 /*!
  * on-finished
@@ -76267,7 +76401,7 @@ function patchAssignSocket(res, callback) {
 }
 
 }).call(this,require('_process'))
-},{"_process":194,"ee-first":358}],358:[function(require,module,exports){
+},{"_process":194,"ee-first":359}],359:[function(require,module,exports){
 /*!
  * ee-first
  * Copyright(c) 2014 Jonathan Ong
@@ -76364,7 +76498,7 @@ function listener(event, done) {
   }
 }
 
-},{}],359:[function(require,module,exports){
+},{}],360:[function(require,module,exports){
 /*!
  * parseurl
  * Copyright(c) 2014 Jonathan Ong
@@ -76502,7 +76636,7 @@ function fresh(url, parsedUrl) {
     && parsedUrl._raw === url
 }
 
-},{"url":285}],360:[function(require,module,exports){
+},{"url":285}],361:[function(require,module,exports){
 /**
  * Expose `pathtoRegexp`.
  */
@@ -76633,7 +76767,7 @@ function pathtoRegexp(path, keys, options) {
   return new RegExp(path, flags);
 };
 
-},{}],361:[function(require,module,exports){
+},{}],362:[function(require,module,exports){
 /*!
  * proxy-addr
  * Copyright(c) 2014 Douglas Christopher Wilson
@@ -76982,7 +77116,7 @@ function trustSingle(subnet) {
   };
 }
 
-},{"forwarded":362,"ipaddr.js":363}],362:[function(require,module,exports){
+},{"forwarded":363,"ipaddr.js":364}],363:[function(require,module,exports){
 /*!
  * forwarded
  * Copyright(c) 2014 Douglas Christopher Wilson
@@ -77019,7 +77153,7 @@ function forwarded(req) {
   return addrs
 }
 
-},{}],363:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 (function() {
   var expandIPv6, ipaddr, ipv4Part, ipv4Regexes, ipv6Part, ipv6Regexes, matchCIDR, root;
 
@@ -77488,7 +77622,7 @@ function forwarded(req) {
 
 }).call(this);
 
-},{}],364:[function(require,module,exports){
+},{}],365:[function(require,module,exports){
 // Load modules
 
 var Stringify = require('./stringify');
@@ -77505,7 +77639,7 @@ module.exports = {
     parse: Parse
 };
 
-},{"./parse":365,"./stringify":366}],365:[function(require,module,exports){
+},{"./parse":366,"./stringify":367}],366:[function(require,module,exports){
 // Load modules
 
 var Utils = require('./utils');
@@ -77693,7 +77827,7 @@ module.exports = function (str, options) {
     return Utils.compact(obj);
 };
 
-},{"./utils":367}],366:[function(require,module,exports){
+},{"./utils":368}],367:[function(require,module,exports){
 // Load modules
 
 var Utils = require('./utils');
@@ -77816,7 +77950,7 @@ module.exports = function (obj, options) {
     return keys.join(delimiter);
 };
 
-},{"./utils":367}],367:[function(require,module,exports){
+},{"./utils":368}],368:[function(require,module,exports){
 // Load modules
 
 
@@ -78008,7 +78142,7 @@ exports.isBuffer = function (obj) {
               obj.constructor.isBuffer(obj));
 };
 
-},{}],368:[function(require,module,exports){
+},{}],369:[function(require,module,exports){
 /*!
  * range-parser
  * Copyright(c) 2012-2014 TJ Holowaychuk
@@ -78073,7 +78207,7 @@ function rangeParser(size, str) {
   return valid ? arr : -1;
 }
 
-},{}],369:[function(require,module,exports){
+},{}],370:[function(require,module,exports){
 (function (Buffer){
 /*!
  * send
@@ -78897,7 +79031,7 @@ function normalizeList(val, name) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":60,"debug":343,"depd":346,"destroy":370,"escape-html":350,"etag":351,"events":130,"fresh":354,"fs":58,"http-errors":371,"mime":373,"ms":375,"on-finished":357,"path":187,"range-parser":368,"statuses":377,"stream":276}],370:[function(require,module,exports){
+},{"buffer":60,"debug":344,"depd":347,"destroy":371,"escape-html":351,"etag":352,"events":130,"fresh":355,"fs":58,"http-errors":372,"mime":374,"ms":376,"on-finished":358,"path":187,"range-parser":369,"statuses":378,"stream":276}],371:[function(require,module,exports){
 var ReadStream = require('fs').ReadStream
 var Stream = require('stream')
 
@@ -78935,7 +79069,7 @@ function onopenClose() {
   }
 }
 
-},{"fs":58,"stream":276}],371:[function(require,module,exports){
+},{"fs":58,"stream":276}],372:[function(require,module,exports){
 
 var statuses = require('statuses');
 var inherits = require('inherits');
@@ -79057,9 +79191,9 @@ codes.forEach(function (code) {
 // backwards-compatibility
 exports["I'mateapot"] = exports.ImATeapot
 
-},{"inherits":372,"statuses":377}],372:[function(require,module,exports){
+},{"inherits":373,"statuses":378}],373:[function(require,module,exports){
 arguments[4][152][0].apply(exports,arguments)
-},{"dup":152}],373:[function(require,module,exports){
+},{"dup":152}],374:[function(require,module,exports){
 (function (process){
 var path = require('path');
 var fs = require('fs');
@@ -79171,12 +79305,12 @@ mime.charsets = {
 module.exports = mime;
 
 }).call(this,require('_process'))
-},{"./types.json":374,"_process":194,"fs":58,"path":187}],374:[function(require,module,exports){
+},{"./types.json":375,"_process":194,"fs":58,"path":187}],375:[function(require,module,exports){
 module.exports={"application/andrew-inset":["ez"],"application/applixware":["aw"],"application/atom+xml":["atom"],"application/atomcat+xml":["atomcat"],"application/atomsvc+xml":["atomsvc"],"application/ccxml+xml":["ccxml"],"application/cdmi-capability":["cdmia"],"application/cdmi-container":["cdmic"],"application/cdmi-domain":["cdmid"],"application/cdmi-object":["cdmio"],"application/cdmi-queue":["cdmiq"],"application/cu-seeme":["cu"],"application/dash+xml":["mdp"],"application/davmount+xml":["davmount"],"application/docbook+xml":["dbk"],"application/dssc+der":["dssc"],"application/dssc+xml":["xdssc"],"application/ecmascript":["ecma"],"application/emma+xml":["emma"],"application/epub+zip":["epub"],"application/exi":["exi"],"application/font-tdpfr":["pfr"],"application/font-woff":["woff"],"application/font-woff2":["woff2"],"application/gml+xml":["gml"],"application/gpx+xml":["gpx"],"application/gxf":["gxf"],"application/hyperstudio":["stk"],"application/inkml+xml":["ink","inkml"],"application/ipfix":["ipfix"],"application/java-archive":["jar"],"application/java-serialized-object":["ser"],"application/java-vm":["class"],"application/javascript":["js"],"application/json":["json","map"],"application/json5":["json5"],"application/jsonml+json":["jsonml"],"application/lost+xml":["lostxml"],"application/mac-binhex40":["hqx"],"application/mac-compactpro":["cpt"],"application/mads+xml":["mads"],"application/marc":["mrc"],"application/marcxml+xml":["mrcx"],"application/mathematica":["ma","nb","mb"],"application/mathml+xml":["mathml"],"application/mbox":["mbox"],"application/mediaservercontrol+xml":["mscml"],"application/metalink+xml":["metalink"],"application/metalink4+xml":["meta4"],"application/mets+xml":["mets"],"application/mods+xml":["mods"],"application/mp21":["m21","mp21"],"application/mp4":["mp4s","m4p"],"application/msword":["doc","dot"],"application/mxf":["mxf"],"application/octet-stream":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","buffer"],"application/oda":["oda"],"application/oebps-package+xml":["opf"],"application/ogg":["ogx"],"application/omdoc+xml":["omdoc"],"application/onenote":["onetoc","onetoc2","onetmp","onepkg"],"application/oxps":["oxps"],"application/patch-ops-error+xml":["xer"],"application/pdf":["pdf"],"application/pgp-encrypted":["pgp"],"application/pgp-signature":["asc","sig"],"application/pics-rules":["prf"],"application/pkcs10":["p10"],"application/pkcs7-mime":["p7m","p7c"],"application/pkcs7-signature":["p7s"],"application/pkcs8":["p8"],"application/pkix-attr-cert":["ac"],"application/pkix-cert":["cer"],"application/pkix-crl":["crl"],"application/pkix-pkipath":["pkipath"],"application/pkixcmp":["pki"],"application/pls+xml":["pls"],"application/postscript":["ai","eps","ps"],"application/prs.cww":["cww"],"application/pskc+xml":["pskcxml"],"application/rdf+xml":["rdf"],"application/reginfo+xml":["rif"],"application/relax-ng-compact-syntax":["rnc"],"application/resource-lists+xml":["rl"],"application/resource-lists-diff+xml":["rld"],"application/rls-services+xml":["rs"],"application/rpki-ghostbusters":["gbr"],"application/rpki-manifest":["mft"],"application/rpki-roa":["roa"],"application/rsd+xml":["rsd"],"application/rss+xml":["rss"],"application/rtf":["rtf"],"application/sbml+xml":["sbml"],"application/scvp-cv-request":["scq"],"application/scvp-cv-response":["scs"],"application/scvp-vp-request":["spq"],"application/scvp-vp-response":["spp"],"application/sdp":["sdp"],"application/set-payment-initiation":["setpay"],"application/set-registration-initiation":["setreg"],"application/shf+xml":["shf"],"application/smil+xml":["smi","smil"],"application/sparql-query":["rq"],"application/sparql-results+xml":["srx"],"application/srgs":["gram"],"application/srgs+xml":["grxml"],"application/sru+xml":["sru"],"application/ssdl+xml":["ssdl"],"application/ssml+xml":["ssml"],"application/tei+xml":["tei","teicorpus"],"application/thraud+xml":["tfi"],"application/timestamped-data":["tsd"],"application/vnd.3gpp.pic-bw-large":["plb"],"application/vnd.3gpp.pic-bw-small":["psb"],"application/vnd.3gpp.pic-bw-var":["pvb"],"application/vnd.3gpp2.tcap":["tcap"],"application/vnd.3m.post-it-notes":["pwn"],"application/vnd.accpac.simply.aso":["aso"],"application/vnd.accpac.simply.imp":["imp"],"application/vnd.acucobol":["acu"],"application/vnd.acucorp":["atc","acutc"],"application/vnd.adobe.air-application-installer-package+zip":["air"],"application/vnd.adobe.formscentral.fcdt":["fcdt"],"application/vnd.adobe.fxp":["fxp","fxpl"],"application/vnd.adobe.xdp+xml":["xdp"],"application/vnd.adobe.xfdf":["xfdf"],"application/vnd.ahead.space":["ahead"],"application/vnd.airzip.filesecure.azf":["azf"],"application/vnd.airzip.filesecure.azs":["azs"],"application/vnd.amazon.ebook":["azw"],"application/vnd.americandynamics.acc":["acc"],"application/vnd.amiga.ami":["ami"],"application/vnd.android.package-archive":["apk"],"application/vnd.anser-web-certificate-issue-initiation":["cii"],"application/vnd.anser-web-funds-transfer-initiation":["fti"],"application/vnd.antix.game-component":["atx"],"application/vnd.apple.installer+xml":["mpkg"],"application/vnd.apple.mpegurl":["m3u8"],"application/vnd.aristanetworks.swi":["swi"],"application/vnd.astraea-software.iota":["iota"],"application/vnd.audiograph":["aep"],"application/vnd.blueice.multipass":["mpm"],"application/vnd.bmi":["bmi"],"application/vnd.businessobjects":["rep"],"application/vnd.chemdraw+xml":["cdxml"],"application/vnd.chipnuts.karaoke-mmd":["mmd"],"application/vnd.cinderella":["cdy"],"application/vnd.claymore":["cla"],"application/vnd.cloanto.rp9":["rp9"],"application/vnd.clonk.c4group":["c4g","c4d","c4f","c4p","c4u"],"application/vnd.cluetrust.cartomobile-config":["c11amc"],"application/vnd.cluetrust.cartomobile-config-pkg":["c11amz"],"application/vnd.commonspace":["csp"],"application/vnd.contact.cmsg":["cdbcmsg"],"application/vnd.cosmocaller":["cmc"],"application/vnd.crick.clicker":["clkx"],"application/vnd.crick.clicker.keyboard":["clkk"],"application/vnd.crick.clicker.palette":["clkp"],"application/vnd.crick.clicker.template":["clkt"],"application/vnd.crick.clicker.wordbank":["clkw"],"application/vnd.criticaltools.wbs+xml":["wbs"],"application/vnd.ctc-posml":["pml"],"application/vnd.cups-ppd":["ppd"],"application/vnd.curl.car":["car"],"application/vnd.curl.pcurl":["pcurl"],"application/vnd.dart":["dart"],"application/vnd.data-vision.rdz":["rdz"],"application/vnd.dece.data":["uvf","uvvf","uvd","uvvd"],"application/vnd.dece.ttml+xml":["uvt","uvvt"],"application/vnd.dece.unspecified":["uvx","uvvx"],"application/vnd.dece.zip":["uvz","uvvz"],"application/vnd.denovo.fcselayout-link":["fe_launch"],"application/vnd.dna":["dna"],"application/vnd.dolby.mlp":["mlp"],"application/vnd.dpgraph":["dpg"],"application/vnd.dreamfactory":["dfac"],"application/vnd.ds-keypoint":["kpxx"],"application/vnd.dvb.ait":["ait"],"application/vnd.dvb.service":["svc"],"application/vnd.dynageo":["geo"],"application/vnd.ecowin.chart":["mag"],"application/vnd.enliven":["nml"],"application/vnd.epson.esf":["esf"],"application/vnd.epson.msf":["msf"],"application/vnd.epson.quickanime":["qam"],"application/vnd.epson.salt":["slt"],"application/vnd.epson.ssf":["ssf"],"application/vnd.eszigno3+xml":["es3","et3"],"application/vnd.ezpix-album":["ez2"],"application/vnd.ezpix-package":["ez3"],"application/vnd.fdf":["fdf"],"application/vnd.fdsn.mseed":["mseed"],"application/vnd.fdsn.seed":["seed","dataless"],"application/vnd.flographit":["gph"],"application/vnd.fluxtime.clip":["ftc"],"application/vnd.framemaker":["fm","frame","maker","book"],"application/vnd.frogans.fnc":["fnc"],"application/vnd.frogans.ltf":["ltf"],"application/vnd.fsc.weblaunch":["fsc"],"application/vnd.fujitsu.oasys":["oas"],"application/vnd.fujitsu.oasys2":["oa2"],"application/vnd.fujitsu.oasys3":["oa3"],"application/vnd.fujitsu.oasysgp":["fg5"],"application/vnd.fujitsu.oasysprs":["bh2"],"application/vnd.fujixerox.ddd":["ddd"],"application/vnd.fujixerox.docuworks":["xdw"],"application/vnd.fujixerox.docuworks.binder":["xbd"],"application/vnd.fuzzysheet":["fzs"],"application/vnd.genomatix.tuxedo":["txd"],"application/vnd.geogebra.file":["ggb"],"application/vnd.geogebra.tool":["ggt"],"application/vnd.geometry-explorer":["gex","gre"],"application/vnd.geonext":["gxt"],"application/vnd.geoplan":["g2w"],"application/vnd.geospace":["g3w"],"application/vnd.gmx":["gmx"],"application/vnd.google-earth.kml+xml":["kml"],"application/vnd.google-earth.kmz":["kmz"],"application/vnd.grafeq":["gqf","gqs"],"application/vnd.groove-account":["gac"],"application/vnd.groove-help":["ghf"],"application/vnd.groove-identity-message":["gim"],"application/vnd.groove-injector":["grv"],"application/vnd.groove-tool-message":["gtm"],"application/vnd.groove-tool-template":["tpl"],"application/vnd.groove-vcard":["vcg"],"application/vnd.hal+xml":["hal"],"application/vnd.handheld-entertainment+xml":["zmm"],"application/vnd.hbci":["hbci"],"application/vnd.hhe.lesson-player":["les"],"application/vnd.hp-hpgl":["hpgl"],"application/vnd.hp-hpid":["hpid"],"application/vnd.hp-hps":["hps"],"application/vnd.hp-jlyt":["jlt"],"application/vnd.hp-pcl":["pcl"],"application/vnd.hp-pclxl":["pclxl"],"application/vnd.ibm.minipay":["mpy"],"application/vnd.ibm.modcap":["afp","listafp","list3820"],"application/vnd.ibm.rights-management":["irm"],"application/vnd.ibm.secure-container":["sc"],"application/vnd.iccprofile":["icc","icm"],"application/vnd.igloader":["igl"],"application/vnd.immervision-ivp":["ivp"],"application/vnd.immervision-ivu":["ivu"],"application/vnd.insors.igm":["igm"],"application/vnd.intercon.formnet":["xpw","xpx"],"application/vnd.intergeo":["i2g"],"application/vnd.intu.qbo":["qbo"],"application/vnd.intu.qfx":["qfx"],"application/vnd.ipunplugged.rcprofile":["rcprofile"],"application/vnd.irepository.package+xml":["irp"],"application/vnd.is-xpr":["xpr"],"application/vnd.isac.fcs":["fcs"],"application/vnd.jam":["jam"],"application/vnd.jcp.javame.midlet-rms":["rms"],"application/vnd.jisp":["jisp"],"application/vnd.joost.joda-archive":["joda"],"application/vnd.kahootz":["ktz","ktr"],"application/vnd.kde.karbon":["karbon"],"application/vnd.kde.kchart":["chrt"],"application/vnd.kde.kformula":["kfo"],"application/vnd.kde.kivio":["flw"],"application/vnd.kde.kontour":["kon"],"application/vnd.kde.kpresenter":["kpr","kpt"],"application/vnd.kde.kspread":["ksp"],"application/vnd.kde.kword":["kwd","kwt"],"application/vnd.kenameaapp":["htke"],"application/vnd.kidspiration":["kia"],"application/vnd.kinar":["kne","knp"],"application/vnd.koan":["skp","skd","skt","skm"],"application/vnd.kodak-descriptor":["sse"],"application/vnd.las.las+xml":["lasxml"],"application/vnd.llamagraphics.life-balance.desktop":["lbd"],"application/vnd.llamagraphics.life-balance.exchange+xml":["lbe"],"application/vnd.lotus-1-2-3":["123"],"application/vnd.lotus-approach":["apr"],"application/vnd.lotus-freelance":["pre"],"application/vnd.lotus-notes":["nsf"],"application/vnd.lotus-organizer":["org"],"application/vnd.lotus-screencam":["scm"],"application/vnd.lotus-wordpro":["lwp"],"application/vnd.macports.portpkg":["portpkg"],"application/vnd.mcd":["mcd"],"application/vnd.medcalcdata":["mc1"],"application/vnd.mediastation.cdkey":["cdkey"],"application/vnd.mfer":["mwf"],"application/vnd.mfmp":["mfm"],"application/vnd.micrografx.flo":["flo"],"application/vnd.micrografx.igx":["igx"],"application/vnd.mif":["mif"],"application/vnd.mobius.daf":["daf"],"application/vnd.mobius.dis":["dis"],"application/vnd.mobius.mbk":["mbk"],"application/vnd.mobius.mqy":["mqy"],"application/vnd.mobius.msl":["msl"],"application/vnd.mobius.plc":["plc"],"application/vnd.mobius.txf":["txf"],"application/vnd.mophun.application":["mpn"],"application/vnd.mophun.certificate":["mpc"],"application/vnd.mozilla.xul+xml":["xul"],"application/vnd.ms-artgalry":["cil"],"application/vnd.ms-cab-compressed":["cab"],"application/vnd.ms-excel":["xls","xlm","xla","xlc","xlt","xlw"],"application/vnd.ms-excel.addin.macroenabled.12":["xlam"],"application/vnd.ms-excel.sheet.binary.macroenabled.12":["xlsb"],"application/vnd.ms-excel.sheet.macroenabled.12":["xlsm"],"application/vnd.ms-excel.template.macroenabled.12":["xltm"],"application/vnd.ms-fontobject":["eot"],"application/vnd.ms-htmlhelp":["chm"],"application/vnd.ms-ims":["ims"],"application/vnd.ms-lrm":["lrm"],"application/vnd.ms-officetheme":["thmx"],"application/vnd.ms-pki.seccat":["cat"],"application/vnd.ms-pki.stl":["stl"],"application/vnd.ms-powerpoint":["ppt","pps","pot"],"application/vnd.ms-powerpoint.addin.macroenabled.12":["ppam"],"application/vnd.ms-powerpoint.presentation.macroenabled.12":["pptm"],"application/vnd.ms-powerpoint.slide.macroenabled.12":["sldm"],"application/vnd.ms-powerpoint.slideshow.macroenabled.12":["ppsm"],"application/vnd.ms-powerpoint.template.macroenabled.12":["potm"],"application/vnd.ms-project":["mpp","mpt"],"application/vnd.ms-word.document.macroenabled.12":["docm"],"application/vnd.ms-word.template.macroenabled.12":["dotm"],"application/vnd.ms-works":["wps","wks","wcm","wdb"],"application/vnd.ms-wpl":["wpl"],"application/vnd.ms-xpsdocument":["xps"],"application/vnd.mseq":["mseq"],"application/vnd.musician":["mus"],"application/vnd.muvee.style":["msty"],"application/vnd.mynfc":["taglet"],"application/vnd.neurolanguage.nlu":["nlu"],"application/vnd.nitf":["ntf","nitf"],"application/vnd.noblenet-directory":["nnd"],"application/vnd.noblenet-sealer":["nns"],"application/vnd.noblenet-web":["nnw"],"application/vnd.nokia.n-gage.data":["ngdat"],"application/vnd.nokia.radio-preset":["rpst"],"application/vnd.nokia.radio-presets":["rpss"],"application/vnd.novadigm.edm":["edm"],"application/vnd.novadigm.edx":["edx"],"application/vnd.novadigm.ext":["ext"],"application/vnd.oasis.opendocument.chart":["odc"],"application/vnd.oasis.opendocument.chart-template":["otc"],"application/vnd.oasis.opendocument.database":["odb"],"application/vnd.oasis.opendocument.formula":["odf"],"application/vnd.oasis.opendocument.formula-template":["odft"],"application/vnd.oasis.opendocument.graphics":["odg"],"application/vnd.oasis.opendocument.graphics-template":["otg"],"application/vnd.oasis.opendocument.image":["odi"],"application/vnd.oasis.opendocument.image-template":["oti"],"application/vnd.oasis.opendocument.presentation":["odp"],"application/vnd.oasis.opendocument.presentation-template":["otp"],"application/vnd.oasis.opendocument.spreadsheet":["ods"],"application/vnd.oasis.opendocument.spreadsheet-template":["ots"],"application/vnd.oasis.opendocument.text":["odt"],"application/vnd.oasis.opendocument.text-master":["odm"],"application/vnd.oasis.opendocument.text-template":["ott"],"application/vnd.oasis.opendocument.text-web":["oth"],"application/vnd.olpc-sugar":["xo"],"application/vnd.oma.dd2+xml":["dd2"],"application/vnd.openofficeorg.extension":["oxt"],"application/vnd.openxmlformats-officedocument.presentationml.presentation":["pptx"],"application/vnd.openxmlformats-officedocument.presentationml.slide":["sldx"],"application/vnd.openxmlformats-officedocument.presentationml.slideshow":["ppsx"],"application/vnd.openxmlformats-officedocument.presentationml.template":["potx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":["xlsx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.template":["xltx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.document":["docx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.template":["dotx"],"application/vnd.osgeo.mapguide.package":["mgp"],"application/vnd.osgi.dp":["dp"],"application/vnd.osgi.subsystem":["esa"],"application/vnd.palm":["pdb","pqa","oprc"],"application/vnd.pawaafile":["paw"],"application/vnd.pg.format":["str"],"application/vnd.pg.osasli":["ei6"],"application/vnd.picsel":["efif"],"application/vnd.pmi.widget":["wg"],"application/vnd.pocketlearn":["plf"],"application/vnd.powerbuilder6":["pbd"],"application/vnd.previewsystems.box":["box"],"application/vnd.proteus.magazine":["mgz"],"application/vnd.publishare-delta-tree":["qps"],"application/vnd.pvi.ptid1":["ptid"],"application/vnd.quark.quarkxpress":["qxd","qxt","qwd","qwt","qxl","qxb"],"application/vnd.realvnc.bed":["bed"],"application/vnd.recordare.musicxml":["mxl"],"application/vnd.recordare.musicxml+xml":["musicxml"],"application/vnd.rig.cryptonote":["cryptonote"],"application/vnd.rim.cod":["cod"],"application/vnd.rn-realmedia":["rm"],"application/vnd.rn-realmedia-vbr":["rmvb"],"application/vnd.route66.link66+xml":["link66"],"application/vnd.sailingtracker.track":["st"],"application/vnd.seemail":["see"],"application/vnd.sema":["sema"],"application/vnd.semd":["semd"],"application/vnd.semf":["semf"],"application/vnd.shana.informed.formdata":["ifm"],"application/vnd.shana.informed.formtemplate":["itp"],"application/vnd.shana.informed.interchange":["iif"],"application/vnd.shana.informed.package":["ipk"],"application/vnd.simtech-mindmapper":["twd","twds"],"application/vnd.smaf":["mmf"],"application/vnd.smart.teacher":["teacher"],"application/vnd.solent.sdkm+xml":["sdkm","sdkd"],"application/vnd.spotfire.dxp":["dxp"],"application/vnd.spotfire.sfs":["sfs"],"application/vnd.stardivision.calc":["sdc"],"application/vnd.stardivision.draw":["sda"],"application/vnd.stardivision.impress":["sdd"],"application/vnd.stardivision.math":["smf"],"application/vnd.stardivision.writer":["sdw","vor"],"application/vnd.stardivision.writer-global":["sgl"],"application/vnd.stepmania.package":["smzip"],"application/vnd.stepmania.stepchart":["sm"],"application/vnd.sun.xml.calc":["sxc"],"application/vnd.sun.xml.calc.template":["stc"],"application/vnd.sun.xml.draw":["sxd"],"application/vnd.sun.xml.draw.template":["std"],"application/vnd.sun.xml.impress":["sxi"],"application/vnd.sun.xml.impress.template":["sti"],"application/vnd.sun.xml.math":["sxm"],"application/vnd.sun.xml.writer":["sxw"],"application/vnd.sun.xml.writer.global":["sxg"],"application/vnd.sun.xml.writer.template":["stw"],"application/vnd.sus-calendar":["sus","susp"],"application/vnd.svd":["svd"],"application/vnd.symbian.install":["sis","sisx"],"application/vnd.syncml+xml":["xsm"],"application/vnd.syncml.dm+wbxml":["bdm"],"application/vnd.syncml.dm+xml":["xdm"],"application/vnd.tao.intent-module-archive":["tao"],"application/vnd.tcpdump.pcap":["pcap","cap","dmp"],"application/vnd.tmobile-livetv":["tmo"],"application/vnd.trid.tpt":["tpt"],"application/vnd.triscape.mxs":["mxs"],"application/vnd.trueapp":["tra"],"application/vnd.ufdl":["ufd","ufdl"],"application/vnd.uiq.theme":["utz"],"application/vnd.umajin":["umj"],"application/vnd.unity":["unityweb"],"application/vnd.uoml+xml":["uoml"],"application/vnd.vcx":["vcx"],"application/vnd.visio":["vsd","vst","vss","vsw"],"application/vnd.visionary":["vis"],"application/vnd.vsf":["vsf"],"application/vnd.wap.wbxml":["wbxml"],"application/vnd.wap.wmlc":["wmlc"],"application/vnd.wap.wmlscriptc":["wmlsc"],"application/vnd.webturbo":["wtb"],"application/vnd.wolfram.player":["nbp"],"application/vnd.wordperfect":["wpd"],"application/vnd.wqd":["wqd"],"application/vnd.wt.stf":["stf"],"application/vnd.xara":["xar"],"application/vnd.xfdl":["xfdl"],"application/vnd.yamaha.hv-dic":["hvd"],"application/vnd.yamaha.hv-script":["hvs"],"application/vnd.yamaha.hv-voice":["hvp"],"application/vnd.yamaha.openscoreformat":["osf"],"application/vnd.yamaha.openscoreformat.osfpvg+xml":["osfpvg"],"application/vnd.yamaha.smaf-audio":["saf"],"application/vnd.yamaha.smaf-phrase":["spf"],"application/vnd.yellowriver-custom-menu":["cmp"],"application/vnd.zul":["zir","zirz"],"application/vnd.zzazz.deck+xml":["zaz"],"application/voicexml+xml":["vxml"],"application/widget":["wgt"],"application/winhlp":["hlp"],"application/wsdl+xml":["wsdl"],"application/wspolicy+xml":["wspolicy"],"application/x-7z-compressed":["7z"],"application/x-abiword":["abw"],"application/x-ace-compressed":["ace"],"application/x-apple-diskimage":["dmg"],"application/x-authorware-bin":["aab","x32","u32","vox"],"application/x-authorware-map":["aam"],"application/x-authorware-seg":["aas"],"application/x-bcpio":["bcpio"],"application/x-bittorrent":["torrent"],"application/x-blorb":["blb","blorb"],"application/x-bzip":["bz"],"application/x-bzip2":["bz2","boz"],"application/x-cbr":["cbr","cba","cbt","cbz","cb7"],"application/x-cdlink":["vcd"],"application/x-cfs-compressed":["cfs"],"application/x-chat":["chat"],"application/x-chess-pgn":["pgn"],"application/x-chrome-extension":["crx"],"application/x-conference":["nsc"],"application/x-cpio":["cpio"],"application/x-csh":["csh"],"application/x-debian-package":["deb","udeb"],"application/x-dgc-compressed":["dgc"],"application/x-director":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"],"application/x-doom":["wad"],"application/x-dtbncx+xml":["ncx"],"application/x-dtbook+xml":["dtb"],"application/x-dtbresource+xml":["res"],"application/x-dvi":["dvi"],"application/x-envoy":["evy"],"application/x-eva":["eva"],"application/x-font-bdf":["bdf"],"application/x-font-ghostscript":["gsf"],"application/x-font-linux-psf":["psf"],"application/x-font-otf":["otf"],"application/x-font-pcf":["pcf"],"application/x-font-snf":["snf"],"application/x-font-ttf":["ttf","ttc"],"application/x-font-type1":["pfa","pfb","pfm","afm"],"application/x-freearc":["arc"],"application/x-futuresplash":["spl"],"application/x-gca-compressed":["gca"],"application/x-glulx":["ulx"],"application/x-gnumeric":["gnumeric"],"application/x-gramps-xml":["gramps"],"application/x-gtar":["gtar"],"application/x-hdf":["hdf"],"application/x-install-instructions":["install"],"application/x-iso9660-image":["iso"],"application/x-java-jnlp-file":["jnlp"],"application/x-latex":["latex"],"application/x-lua-bytecode":["luac"],"application/x-lzh-compressed":["lzh","lha"],"application/x-mie":["mie"],"application/x-mobipocket-ebook":["prc","mobi"],"application/x-ms-application":["application"],"application/x-ms-shortcut":["lnk"],"application/x-ms-wmd":["wmd"],"application/x-ms-wmz":["wmz"],"application/x-ms-xbap":["xbap"],"application/x-msaccess":["mdb"],"application/x-msbinder":["obd"],"application/x-mscardfile":["crd"],"application/x-msclip":["clp"],"application/x-msdownload":["exe","dll","com","bat","msi"],"application/x-msmediaview":["mvb","m13","m14"],"application/x-msmetafile":["wmf","wmz","emf","emz"],"application/x-msmoney":["mny"],"application/x-mspublisher":["pub"],"application/x-msschedule":["scd"],"application/x-msterminal":["trm"],"application/x-mswrite":["wri"],"application/x-netcdf":["nc","cdf"],"application/x-nzb":["nzb"],"application/x-pkcs12":["p12","pfx"],"application/x-pkcs7-certificates":["p7b","spc"],"application/x-pkcs7-certreqresp":["p7r"],"application/x-rar-compressed":["rar"],"application/x-research-info-systems":["ris"],"application/x-sh":["sh"],"application/x-shar":["shar"],"application/x-shockwave-flash":["swf"],"application/x-silverlight-app":["xap"],"application/x-sql":["sql"],"application/x-stuffit":["sit"],"application/x-stuffitx":["sitx"],"application/x-subrip":["srt"],"application/x-sv4cpio":["sv4cpio"],"application/x-sv4crc":["sv4crc"],"application/x-t3vm-image":["t3"],"application/x-tads":["gam"],"application/x-tar":["tar"],"application/x-tcl":["tcl"],"application/x-tex":["tex"],"application/x-tex-tfm":["tfm"],"application/x-texinfo":["texinfo","texi"],"application/x-tgif":["obj"],"application/x-ustar":["ustar"],"application/x-wais-source":["src"],"application/x-web-app-manifest+json":["webapp"],"application/x-x509-ca-cert":["der","crt"],"application/x-xfig":["fig"],"application/x-xliff+xml":["xlf"],"application/x-xpinstall":["xpi"],"application/x-xz":["xz"],"application/x-zmachine":["z1","z2","z3","z4","z5","z6","z7","z8"],"application/xaml+xml":["xaml"],"application/xcap-diff+xml":["xdf"],"application/xenc+xml":["xenc"],"application/xhtml+xml":["xhtml","xht"],"application/xml":["xml","xsl","xsd"],"application/xml-dtd":["dtd"],"application/xop+xml":["xop"],"application/xproc+xml":["xpl"],"application/xslt+xml":["xslt"],"application/xspf+xml":["xspf"],"application/xv+xml":["mxml","xhvml","xvml","xvm"],"application/yang":["yang"],"application/yin+xml":["yin"],"application/zip":["zip"],"audio/adpcm":["adp"],"audio/basic":["au","snd"],"audio/midi":["mid","midi","kar","rmi"],"audio/mp4":["mp4a","m4a"],"audio/mpeg":["mpga","mp2","mp2a","mp3","m2a","m3a"],"audio/ogg":["oga","ogg","spx"],"audio/s3m":["s3m"],"audio/silk":["sil"],"audio/vnd.dece.audio":["uva","uvva"],"audio/vnd.digital-winds":["eol"],"audio/vnd.dra":["dra"],"audio/vnd.dts":["dts"],"audio/vnd.dts.hd":["dtshd"],"audio/vnd.lucent.voice":["lvp"],"audio/vnd.ms-playready.media.pya":["pya"],"audio/vnd.nuera.ecelp4800":["ecelp4800"],"audio/vnd.nuera.ecelp7470":["ecelp7470"],"audio/vnd.nuera.ecelp9600":["ecelp9600"],"audio/vnd.rip":["rip"],"audio/webm":["weba"],"audio/x-aac":["aac"],"audio/x-aiff":["aif","aiff","aifc"],"audio/x-caf":["caf"],"audio/x-flac":["flac"],"audio/x-matroska":["mka"],"audio/x-mpegurl":["m3u"],"audio/x-ms-wax":["wax"],"audio/x-ms-wma":["wma"],"audio/x-pn-realaudio":["ram","ra"],"audio/x-pn-realaudio-plugin":["rmp"],"audio/x-wav":["wav"],"audio/xm":["xm"],"chemical/x-cdx":["cdx"],"chemical/x-cif":["cif"],"chemical/x-cmdf":["cmdf"],"chemical/x-cml":["cml"],"chemical/x-csml":["csml"],"chemical/x-xyz":["xyz"],"font/opentype":["otf"],"image/bmp":["bmp"],"image/cgm":["cgm"],"image/g3fax":["g3"],"image/gif":["gif"],"image/ief":["ief"],"image/jpeg":["jpeg","jpg","jpe"],"image/ktx":["ktx"],"image/png":["png"],"image/prs.btif":["btif"],"image/sgi":["sgi"],"image/svg+xml":["svg","svgz"],"image/tiff":["tiff","tif"],"image/vnd.adobe.photoshop":["psd"],"image/vnd.dece.graphic":["uvi","uvvi","uvg","uvvg"],"image/vnd.djvu":["djvu","djv"],"image/vnd.dvb.subtitle":["sub"],"image/vnd.dwg":["dwg"],"image/vnd.dxf":["dxf"],"image/vnd.fastbidsheet":["fbs"],"image/vnd.fpx":["fpx"],"image/vnd.fst":["fst"],"image/vnd.fujixerox.edmics-mmr":["mmr"],"image/vnd.fujixerox.edmics-rlc":["rlc"],"image/vnd.ms-modi":["mdi"],"image/vnd.ms-photo":["wdp"],"image/vnd.net-fpx":["npx"],"image/vnd.wap.wbmp":["wbmp"],"image/vnd.xiff":["xif"],"image/webp":["webp"],"image/x-3ds":["3ds"],"image/x-cmu-raster":["ras"],"image/x-cmx":["cmx"],"image/x-freehand":["fh","fhc","fh4","fh5","fh7"],"image/x-icon":["ico"],"image/x-mrsid-image":["sid"],"image/x-pcx":["pcx"],"image/x-pict":["pic","pct"],"image/x-portable-anymap":["pnm"],"image/x-portable-bitmap":["pbm"],"image/x-portable-graymap":["pgm"],"image/x-portable-pixmap":["ppm"],"image/x-rgb":["rgb"],"image/x-tga":["tga"],"image/x-xbitmap":["xbm"],"image/x-xpixmap":["xpm"],"image/x-xwindowdump":["xwd"],"message/rfc822":["eml","mime"],"model/iges":["igs","iges"],"model/mesh":["msh","mesh","silo"],"model/vnd.collada+xml":["dae"],"model/vnd.dwf":["dwf"],"model/vnd.gdl":["gdl"],"model/vnd.gtw":["gtw"],"model/vnd.mts":["mts"],"model/vnd.vtu":["vtu"],"model/vrml":["wrl","vrml"],"model/x3d+binary":["x3db","x3dbz"],"model/x3d+vrml":["x3dv","x3dvz"],"model/x3d+xml":["x3d","x3dz"],"text/cache-manifest":["appcache","manifest"],"text/calendar":["ics","ifb"],"text/coffeescript":["coffee"],"text/css":["css"],"text/csv":["csv"],"text/hjson":["hjson"],"text/html":["html","htm"],"text/jade":["jade"],"text/jsx":["jsx"],"text/less":["less"],"text/n3":["n3"],"text/plain":["txt","text","conf","def","list","log","in","ini"],"text/prs.lines.tag":["dsc"],"text/richtext":["rtx"],"text/sgml":["sgml","sgm"],"text/stylus":["stylus","styl"],"text/tab-separated-values":["tsv"],"text/troff":["t","tr","roff","man","me","ms"],"text/turtle":["ttl"],"text/uri-list":["uri","uris","urls"],"text/vcard":["vcard"],"text/vnd.curl":["curl"],"text/vnd.curl.dcurl":["dcurl"],"text/vnd.curl.mcurl":["mcurl"],"text/vnd.curl.scurl":["scurl"],"text/vnd.dvb.subtitle":["sub"],"text/vnd.fly":["fly"],"text/vnd.fmi.flexstor":["flx"],"text/vnd.graphviz":["gv"],"text/vnd.in3d.3dml":["3dml"],"text/vnd.in3d.spot":["spot"],"text/vnd.sun.j2me.app-descriptor":["jad"],"text/vnd.wap.wml":["wml"],"text/vnd.wap.wmlscript":["wmls"],"text/vtt":["vtt"],"text/x-asm":["s","asm"],"text/x-c":["c","cc","cxx","cpp","h","hh","dic"],"text/x-component":["htc"],"text/x-fortran":["f","for","f77","f90"],"text/x-handlebars-template":["hbs"],"text/x-java-source":["java"],"text/x-lua":["lua"],"text/x-markdown":["markdown","md","mkd"],"text/x-nfo":["nfo"],"text/x-opml":["opml"],"text/x-pascal":["p","pas"],"text/x-sass":["sass"],"text/x-scss":["scss"],"text/x-setext":["etx"],"text/x-sfv":["sfv"],"text/x-uuencode":["uu"],"text/x-vcalendar":["vcs"],"text/x-vcard":["vcf"],"text/yaml":["yaml","yml"],"video/3gpp":["3gp"],"video/3gpp2":["3g2"],"video/h261":["h261"],"video/h263":["h263"],"video/h264":["h264"],"video/jpeg":["jpgv"],"video/jpm":["jpm","jpgm"],"video/mj2":["mj2","mjp2"],"video/mp2t":["ts"],"video/mp4":["mp4","mp4v","mpg4"],"video/mpeg":["mpeg","mpg","mpe","m1v","m2v"],"video/ogg":["ogv"],"video/quicktime":["qt","mov"],"video/vnd.dece.hd":["uvh","uvvh"],"video/vnd.dece.mobile":["uvm","uvvm"],"video/vnd.dece.pd":["uvp","uvvp"],"video/vnd.dece.sd":["uvs","uvvs"],"video/vnd.dece.video":["uvv","uvvv"],"video/vnd.dvb.file":["dvb"],"video/vnd.fvt":["fvt"],"video/vnd.mpegurl":["mxu","m4u"],"video/vnd.ms-playready.media.pyv":["pyv"],"video/vnd.uvvu.mp4":["uvu","uvvu"],"video/vnd.vivo":["viv"],"video/webm":["webm"],"video/x-f4v":["f4v"],"video/x-fli":["fli"],"video/x-flv":["flv"],"video/x-m4v":["m4v"],"video/x-matroska":["mkv","mk3d","mks"],"video/x-mng":["mng"],"video/x-ms-asf":["asf","asx"],"video/x-ms-vob":["vob"],"video/x-ms-wm":["wm"],"video/x-ms-wmv":["wmv"],"video/x-ms-wmx":["wmx"],"video/x-ms-wvx":["wvx"],"video/x-msvideo":["avi"],"video/x-sgi-movie":["movie"],"video/x-smv":["smv"],"x-conference/x-cooltalk":["ice"]}
 
-},{}],375:[function(require,module,exports){
-arguments[4][345][0].apply(exports,arguments)
-},{"dup":345}],376:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
+arguments[4][346][0].apply(exports,arguments)
+},{"dup":346}],377:[function(require,module,exports){
 module.exports={
   "100": "Continue",
   "101": "Switching Protocols",
@@ -79241,7 +79375,7 @@ module.exports={
   "510": "Not Extended",
   "511": "Network Authentication Required"
 }
-},{}],377:[function(require,module,exports){
+},{}],378:[function(require,module,exports){
 
 var codes = require('./codes.json');
 
@@ -79303,7 +79437,7 @@ function status(code) {
   return n;
 }
 
-},{"./codes.json":376}],378:[function(require,module,exports){
+},{"./codes.json":377}],379:[function(require,module,exports){
 (function (Buffer){
 /*!
  * serve-static
@@ -79494,7 +79628,7 @@ function createRedirectDirectoryListener() {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":60,"escape-html":350,"parseurl":359,"path":187,"send":369,"url":285}],379:[function(require,module,exports){
+},{"buffer":60,"escape-html":351,"parseurl":360,"path":187,"send":370,"url":285}],380:[function(require,module,exports){
 /*!
  * type-is
  * Copyright(c) 2014 Jonathan Ong
@@ -79758,7 +79892,7 @@ function tryNormalizeType(value) {
   }
 }
 
-},{"media-typer":380,"mime-types":381}],380:[function(require,module,exports){
+},{"media-typer":381,"mime-types":382}],381:[function(require,module,exports){
 /*!
  * media-typer
  * Copyright(c) 2014 Douglas Christopher Wilson
@@ -80030,13 +80164,13 @@ function splitType(string) {
   return obj
 }
 
-},{}],381:[function(require,module,exports){
-arguments[4][330][0].apply(exports,arguments)
-},{"dup":330,"mime-db":383,"path":187}],382:[function(require,module,exports){
+},{}],382:[function(require,module,exports){
 arguments[4][331][0].apply(exports,arguments)
-},{"dup":331}],383:[function(require,module,exports){
+},{"dup":331,"mime-db":384,"path":187}],383:[function(require,module,exports){
+arguments[4][332][0].apply(exports,arguments)
+},{"dup":332}],384:[function(require,module,exports){
 arguments[4][159][0].apply(exports,arguments)
-},{"./db.json":382,"dup":159}],384:[function(require,module,exports){
+},{"./db.json":383,"dup":159}],385:[function(require,module,exports){
 /**
  * Merge object b with object a.
  *
@@ -80061,7 +80195,7 @@ exports = module.exports = function(a, b){
   return a;
 };
 
-},{}],385:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 /*!
  * vary
  * Copyright(c) 2014-2015 Douglas Christopher Wilson
@@ -80180,4 +80314,4 @@ function vary(res, field) {
   }
 }
 
-},{}]},{},[316]);
+},{}]},{},[317]);

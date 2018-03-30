@@ -553,6 +553,93 @@ describe("Eventuals", () => {
             }
         });
     });
+    it("tentative listener", function (done) {
+        this.timeout(4000);
+        let app = new spiders_js_1.Application();
+        class Master extends CAPActor_1.CAPActor {
+            constructor() {
+                super();
+                this.ev = new TestEventual();
+            }
+            send(toRef) {
+                toRef.getEv(this.ev);
+            }
+        }
+        class Slave extends CAPActor_1.CAPActor {
+            getEv(anEv) {
+                anEv.onTentative((ev) => {
+                    this.val = ev.v1;
+                });
+                anEv.inc();
+            }
+            test() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(this.val);
+                    }, 2000);
+                });
+            }
+        }
+        let slave = app.spawnActor(Slave);
+        let master = app.spawnActor(Master);
+        master.send(slave);
+        slave.test().then((v) => {
+            try {
+                expect(v).to.equal(6);
+                app.kill();
+                done();
+            }
+            catch (e) {
+                app.kill();
+                done(e);
+            }
+        });
+    });
+    it("commit listener", function (done) {
+        this.timeout(4000);
+        let app = new spiders_js_1.Application();
+        class Master extends CAPActor_1.CAPActor {
+            constructor() {
+                super();
+                this.ev = new TestEventual();
+            }
+            send(toRef) {
+                this.ev.onCommit((ev) => {
+                    this.val = ev.v1;
+                });
+                toRef.getEv(this.ev);
+            }
+            test() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(this.val);
+                    }, 2000);
+                });
+            }
+        }
+        class Slave extends CAPActor_1.CAPActor {
+            getEv(anEv) {
+                anEv.onTentative((ev) => {
+                    this.val = ev.v1;
+                });
+                anEv.inc();
+            }
+        }
+        let slave = app.spawnActor(Slave);
+        let master = app.spawnActor(Master);
+        master.send(slave);
+        master.test().then((v) => {
+            try {
+                expect(v).to.equal(6);
+                app.kill();
+                done();
+            }
+            catch (e) {
+                app.kill();
+                done(e);
+            }
+        });
+    });
 });
 describe("Consistents", () => {
     class TestConsistent extends Consistent_1.Consistent {

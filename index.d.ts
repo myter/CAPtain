@@ -17,8 +17,11 @@ export class CAPplication{
 }
 
 export type native = string | boolean | number
-
-export class Eventual{}
+type callback = (ev : Eventual) => any
+export class Eventual{
+    onCommit(callback : callback)
+    onTentative(callback : callback)
+}
 
 export class Available{}
 

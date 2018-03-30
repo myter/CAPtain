@@ -10,6 +10,8 @@ export class Eventual extends SpiderIsolate{
     ownerId             : string
     id                  : string
     committedVals       : Map<string,any>
+    tentListeners       : Array<(ev : Eventual)=>any>
+    commListeners       : Array<(ev : Eventual)=>any>
     isEventual
 
 
@@ -20,7 +22,7 @@ export class Eventual extends SpiderIsolate{
     //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted(){
         Reflect.ownKeys(this).forEach((key)=>{
-            if(key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_'){
+            if(key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentListeners" && key != "commListeners" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_'){
                 this.committedVals.set(key.toString(),this[key])
             }
         })
@@ -33,6 +35,14 @@ export class Eventual extends SpiderIsolate{
         if(isOwner){
             this.ownerId = hostId
         }
+        this.tentListeners.forEach((callback)=>{
+            this.hostGsp.tentativeListeners.push(callback)
+        })
+        this.commListeners.forEach((callback)=>{
+            this.hostGsp.commitListeners.push(callback)
+        })
+        this.tentListeners = []
+        this.commListeners = []
     }
 
     resetToCommit(){
@@ -45,6 +55,7 @@ export class Eventual extends SpiderIsolate{
         this.committedVals.forEach((_,key)=>{
             this.committedVals.set(key,this[key])
         })
+        this.triggerCommit()
     }
 
     constructor(){
@@ -56,11 +67,61 @@ export class Eventual extends SpiderIsolate{
         })
         this.isEventual         = true
         this.committedVals      = new Map()
+        this.tentListeners      = []
+        this.commListeners      = []
+    }
+
+    //////////////////////////////////////
+    // API                              //
+    //////////////////////////////////////
+
+    triggerTentative(){
+        if(this.hostGsp){
+            this.hostGsp.tentativeListeners.forEach((callback)=>{
+                callback(this)
+            })
+        }
+        else{
+            this.tentListeners.forEach((callback)=>{
+                callback(this)
+            })
+        }
+    }
+
+    onTentative(callback : (ev : Eventual)=>any){
+        if(this.hostGsp){
+            this.hostGsp.tentativeListeners.push(callback)
+        }
+        else{
+            this.tentListeners.push(callback)
+        }
+    }
+
+    onCommit(callback : (ev : Eventual)=>any){
+        if(this.hostGsp){
+            this.hostGsp.commitListeners.push(callback)
+        }
+        else{
+            this.commListeners.push(callback)
+        }
+    }
+
+    triggerCommit(){
+        if(this.hostGsp){
+            this.hostGsp.commitListeners.forEach((callback)=>{
+                callback(this)
+            })
+        }
+        else{
+            this.commListeners.forEach((callback)=>{
+                callback(this)
+            })
+        }
     }
 }
 export class EventualMirror extends SpiderIsolateMirror{
     private ignoreInvoc(methodName){
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted"
+        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative"
     }
 
     private checkArg(arg){
@@ -118,6 +179,7 @@ export class EventualMirror extends SpiderIsolateMirror{
                     baseEV.hostGsp.createRound(baseEV.id,baseEV.ownerId,methodName,args)
                     let ret = super.invoke(methodName,args)
                     baseEV.hostGsp.yield(baseEV.id,baseEV.ownerId)
+                    baseEV.triggerTentative()
                     return ret
                 }
             }
