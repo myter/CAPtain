@@ -3,165 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/CHANGELOG.md" afterPath="$PROJECT_DIR$/node_modules/browser-pack/CHANGELOG.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/_prelude.js" afterPath="$PROJECT_DIR$/node_modules/browser-pack/_prelude.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/bin/prepublish.js" afterPath="$PROJECT_DIR$/node_modules/browser-pack/bin/prepublish.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/index.js" afterPath="$PROJECT_DIR$/node_modules/browser-pack/index.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/package.json" afterPath="$PROJECT_DIR$/node_modules/browser-pack/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/readme.markdown" afterPath="$PROJECT_DIR$/node_modules/browser-pack/readme.markdown" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browser-pack/test/source-maps.js" afterPath="$PROJECT_DIR$/node_modules/browser-pack/test/source-maps.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browserify-aes/decrypter.js" afterPath="$PROJECT_DIR$/node_modules/browserify-aes/decrypter.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/browserify-aes/package.json" afterPath="$PROJECT_DIR$/node_modules/browserify-aes/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/.eslintrc" afterPath="$PROJECT_DIR$/node_modules/debug/.eslintrc" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/.travis.yml" afterPath="$PROJECT_DIR$/node_modules/debug/.travis.yml" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/CHANGELOG.md" afterPath="$PROJECT_DIR$/node_modules/debug/CHANGELOG.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/Makefile" afterPath="$PROJECT_DIR$/node_modules/debug/Makefile" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/Readme.md" afterPath="$PROJECT_DIR$/node_modules/debug/Readme.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/component.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/package.json" afterPath="$PROJECT_DIR$/node_modules/debug/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/src/browser.js" afterPath="$PROJECT_DIR$/node_modules/debug/src/browser.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/src/debug.js" afterPath="$PROJECT_DIR$/node_modules/debug/src/debug.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/src/index.js" afterPath="$PROJECT_DIR$/node_modules/debug/src/index.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/src/inspector-log.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/debug/src/node.js" afterPath="$PROJECT_DIR$/node_modules/debug/src/node.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/Jakefile" afterPath="$PROJECT_DIR$/node_modules/ejs/Jakefile" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/README.md" afterPath="$PROJECT_DIR$/node_modules/ejs/README.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/ejs.js" afterPath="$PROJECT_DIR$/node_modules/ejs/ejs.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/ejs.min.js" afterPath="$PROJECT_DIR$/node_modules/ejs/ejs.min.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/lib/ejs.js" afterPath="$PROJECT_DIR$/node_modules/ejs/lib/ejs.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/lib/utils.js" afterPath="$PROJECT_DIR$/node_modules/ejs/lib/utils.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ejs/package.json" afterPath="$PROJECT_DIR$/node_modules/ejs/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/.coveralls.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/.eslintrc" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/.travis.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/CHANGELOG.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/Makefile" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/karma.conf.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/src/browser.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/src/debug.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/src/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/node_modules/debug/src/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io-client/package.json" afterPath="$PROJECT_DIR$/node_modules/engine.io-client/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/README.md" afterPath="$PROJECT_DIR$/node_modules/engine.io/README.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/lib/server.js" afterPath="$PROJECT_DIR$/node_modules/engine.io/lib/server.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/lib/transports/polling.js" afterPath="$PROJECT_DIR$/node_modules/engine.io/lib/transports/polling.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/.coveralls.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/.eslintrc" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/.travis.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/CHANGELOG.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/Makefile" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/karma.conf.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/src/browser.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/src/debug.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/src/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/node_modules/debug/src/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/engine.io/package.json" afterPath="$PROJECT_DIR$/node_modules/engine.io/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/ieee754/package.json" afterPath="$PROJECT_DIR$/node_modules/ieee754/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/.travis.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/example/two-files-short.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/example/two-files.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/lib/mappings-from-map.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/lib/path-is-absolute.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/lib/path-is-absolute.license" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/node_modules/combine-source-map/test/combine-source-map.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/package.json" afterPath="$PROJECT_DIR$/node_modules/insert-module-globals/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/readme.markdown" afterPath="$PROJECT_DIR$/node_modules/insert-module-globals/readme.markdown" />
-      <change beforePath="$PROJECT_DIR$/node_modules/insert-module-globals/test/sourcemap.js" afterPath="$PROJECT_DIR$/node_modules/insert-module-globals/test/sourcemap.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/README.md" afterPath="$PROJECT_DIR$/node_modules/readable-stream/README.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_duplex.js" afterPath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_duplex.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_readable.js" afterPath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_readable.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_writable.js" afterPath="$PROJECT_DIR$/node_modules/readable-stream/lib/_stream_writable.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/README.md" afterPath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/README.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/lib/string_decoder.js" afterPath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/lib/string_decoder.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/package.json" afterPath="$PROJECT_DIR$/node_modules/readable-stream/node_modules/string_decoder/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/readable-stream/package.json" afterPath="$PROJECT_DIR$/node_modules/readable-stream/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.js" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.js.map" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.slim.js" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.slim.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.slim.js.map" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/dist/socket.io.slim.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/lib/socket.js" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/lib/socket.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-client/package.json" afterPath="$PROJECT_DIR$/node_modules/socket.io-client/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/index.js" afterPath="$PROJECT_DIR$/node_modules/socket.io-parser/index.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/is-buffer.js" afterPath="$PROJECT_DIR$/node_modules/socket.io-parser/is-buffer.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/.coveralls.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/.eslintrc" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/.npmignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/.travis.yml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/CHANGELOG.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/LICENSE" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/Makefile" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/Readme.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/karma.conf.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/src/browser.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/src/debug.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/src/index.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/node_modules/debug/src/node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io-parser/package.json" afterPath="$PROJECT_DIR$/node_modules/socket.io-parser/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/LICENSE" afterPath="$PROJECT_DIR$/node_modules/socket.io/LICENSE" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/Readme.md" afterPath="$PROJECT_DIR$/node_modules/socket.io/Readme.md" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/lib/client.js" afterPath="$PROJECT_DIR$/node_modules/socket.io/lib/client.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/lib/index.js" afterPath="$PROJECT_DIR$/node_modules/socket.io/lib/index.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/lib/namespace.js" afterPath="$PROJECT_DIR$/node_modules/socket.io/lib/namespace.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/lib/socket.js" afterPath="$PROJECT_DIR$/node_modules/socket.io/lib/socket.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/socket.io/package.json" afterPath="$PROJECT_DIR$/node_modules/socket.io/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/index.d.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/index.d.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/package.json" afterPath="$PROJECT_DIR$/node_modules/spiders.js/package.json" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.js" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.js.map" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MAP.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js.map" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.js" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.js.map" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/messageHandler.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js.map" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.js" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.js" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.js.map" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.js.map" />
-      <change beforePath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.ts" afterPath="$PROJECT_DIR$/node_modules/spiders.js/src/spiders.ts" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uws/build/config.gypi" afterPath="$PROJECT_DIR$/node_modules/uws/build/config.gypi" />
-      <change beforePath="$PROJECT_DIR$/node_modules/uws/package.json" afterPath="$PROJECT_DIR$/node_modules/uws/package.json" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change beforePath="$PROJECT_DIR$/src/CAPMirror.js" afterPath="$PROJECT_DIR$/src/CAPMirror.js" />
-      <change beforePath="$PROJECT_DIR$/src/CAPMirror.js.map" afterPath="$PROJECT_DIR$/src/CAPMirror.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/CAPMirror.ts" afterPath="$PROJECT_DIR$/src/CAPMirror.ts" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js" afterPath="$PROJECT_DIR$/src/Eventual.js" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js.map" afterPath="$PROJECT_DIR$/src/Eventual.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.ts" afterPath="$PROJECT_DIR$/src/Eventual.ts" />
-      <change beforePath="$PROJECT_DIR$/src/GSP.js.map" afterPath="$PROJECT_DIR$/src/GSP.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/GSP.ts" afterPath="$PROJECT_DIR$/src/GSP.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" afterPath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.js" afterPath="$PROJECT_DIR$/tests/cap.Test.js" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.js.map" afterPath="$PROJECT_DIR$/tests/cap.Test.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.ts" afterPath="$PROJECT_DIR$/tests/cap.Test.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js" afterPath="$PROJECT_DIR$/tests/temp.js" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js.map" afterPath="$PROJECT_DIR$/tests/temp.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.ts" afterPath="$PROJECT_DIR$/tests/temp.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.js" afterPath="$PROJECT_DIR$/tests/testCapExtension.js" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.js.map" afterPath="$PROJECT_DIR$/tests/testCapExtension.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.ts" afterPath="$PROJECT_DIR$/tests/testCapExtension.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -174,7 +15,20 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Consistent.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="23" column="19" lean-forward="false" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+              <folding>
+                <element signature="n#!!block;n#write#0;n#ConsistentMirror#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -206,7 +60,6 @@
       <list>
         <option value="$PROJECT_DIR$/src/Available.ts" />
         <option value="$PROJECT_DIR$/src/Round.ts" />
-        <option value="$PROJECT_DIR$/src/Consistent.ts" />
         <option value="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js" />
         <option value="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js" />
         <option value="$PROJECT_DIR$/index.D.ts" />
@@ -222,6 +75,7 @@
         <option value="$PROJECT_DIR$/src/CAPMirror.ts" />
         <option value="$PROJECT_DIR$/tests/cap.Test.ts" />
         <option value="$PROJECT_DIR$/tests/testCapExtension.ts" />
+        <option value="$PROJECT_DIR$/src/Consistent.ts" />
       </list>
     </option>
   </component>
@@ -377,7 +231,7 @@
       <workItem from="1522325663038" duration="4727000" />
       <workItem from="1522395403000" duration="626000" />
       <workItem from="1522928316289" duration="2676000" />
-      <workItem from="1522933336184" duration="3135000" />
+      <workItem from="1522933336184" duration="3251000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -435,7 +289,14 @@
       <option name="project" value="LOCAL" />
       <updated>1522310031653</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Eventual Linkage now happens through MOP:resolve call">
+      <created>1522940716798</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1522940716798</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -471,10 +332,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28871000" />
+    <option name="totallyTimeSpent" value="28987000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="813" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -483,7 +345,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15715292" sideWeight="0.5074946" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32805756" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1564482" sideWeight="0.49250534" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1564482" sideWeight="0.49250534" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Statistic" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -545,12 +407,14 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="Migrated from main project" />
     <MESSAGE value="Fixed issue where mirror would be assigned to committed values" />
     <MESSAGE value="Added type declarations" />
     <MESSAGE value="Added main exports" />
     <MESSAGE value="Implemented CAPplication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented CAPplication" />
+    <MESSAGE value="Eventual Linkage now happens through MOP:resolve call" />
+    <option name="LAST_COMMIT_MESSAGE" value="Eventual Linkage now happens through MOP:resolve call" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -865,13 +729,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="65" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Available.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1134,6 +991,16 @@
             <element signature="n#ConsistentConstraintConsistentAct#0" expanded="false" />
             <element signature="n#ConsistentConstraintPrimitiveAct#0" expanded="false" />
             <element signature="e#18539#18590#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="23" column="19" lean-forward="false" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+          <folding>
+            <element signature="n#!!block;n#write#0;n#ConsistentMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>
