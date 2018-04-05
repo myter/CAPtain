@@ -4,6 +4,7 @@ const Available_1 = require("../src/Available");
 const Eventual_1 = require("../src/Eventual");
 const Consistent_1 = require("../src/Consistent");
 const spiders_js_1 = require("spiders.js");
+const CAPplication_1 = require("../src/CAPplication");
 var scheduled = [];
 function log(testName, result, expected) {
     var ul = document.getElementById("resultList");
@@ -18,7 +19,7 @@ function log(testName, result, expected) {
     }
     ul.appendChild(li);
 }
-var app = new spiders_js_1.Application();
+var app = new CAPplication_1.CAPplication();
 class TestAvailable extends Available_1.Available {
     constructor() {
         super();

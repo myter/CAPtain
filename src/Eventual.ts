@@ -1,6 +1,8 @@
 import {GSP} from "./GSP";
-import {bundleScope,LexScope,SpiderIsolate,SpiderIsolateMirror} from "spiders.js";
+import {bundleScope, LexScope, SpiderActorMirror, SpiderIsolate, SpiderIsolateMirror} from "spiders.js";
 import {native} from "../index";
+import {CAPMirror} from "./CAPMirror";
+import {CAPActor} from "./CAPActor";
 
 export var _IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_"
 var _LOCAL_KEY_ = "_IS_EVENTUAL_"
@@ -196,6 +198,16 @@ export class EventualMirror extends SpiderIsolateMirror{
         }
         else{
             return super.write(fieldName,value)
+        }
+    }
+
+    resolve(hostActorMirror : CAPMirror){
+        //Dirty trick, but it could be that this eventual is resolved to an actor which hasn't been initialised (i.e. as part of a scope serialisation)
+        if(hostActorMirror.base.behaviourObject){
+            let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp
+            let oldGSP = (this.base as Eventual).hostGsp;
+            (this.base as Eventual).setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
+            newGsp.registerHolderEventual(this.base as Eventual,oldGSP)
         }
     }
 }

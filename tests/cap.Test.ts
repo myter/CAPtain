@@ -1,9 +1,10 @@
-import {Actor,Application} from "spiders.js";
+import {Actor, Application, FarRef} from "spiders.js";
 import {Available} from "../src/Available";
 import {Eventual} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
 import {CAPActor} from "../src/CAPActor";
 import set = Reflect.set;
+import {CAPplication} from "../src/CAPplication";
 
 var assert                      = require('assert')
 var chai                        = require('chai')
@@ -41,7 +42,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -70,7 +71,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -108,7 +109,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -136,7 +137,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(6)
                 app.kill()
@@ -165,7 +166,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v.value).to.equal(5)
                 app.kill()
@@ -179,7 +180,7 @@ describe("Availables",()=>{
     })
 
     it("Check OK Assignment (Eventual)",(done)=>{
-        let app = new Application()
+        let app = new CAPplication()
         class TestEventual extends Eventual{
             value
             constructor(){
@@ -203,7 +204,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v.value).to.equal(5)
                 app.kill()
@@ -231,7 +232,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -252,7 +253,7 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -270,8 +271,8 @@ describe("Availables",()=>{
                 return c.value
             }
         }
-        let app = new Application()
-        app.spawnActor(Act).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()
@@ -296,8 +297,8 @@ describe("Availables",()=>{
                 return this.c.value
             }
         }
-        let app = new Application()
-        app.spawnActor(Act2).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act2) as FarRef<Act2>).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()
@@ -349,7 +350,7 @@ describe("Eventuals",()=>{
                 return c.v1
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act)as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -378,7 +379,7 @@ describe("Eventuals",()=>{
                 return c.v1
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -406,7 +407,7 @@ describe("Eventuals",()=>{
                 return c.v1
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(6)
                 app.kill()
@@ -420,7 +421,7 @@ describe("Eventuals",()=>{
     })
 
     it("Check OK Assignment (Eventual)",(done)=>{
-        let app = new Application()
+        let app = new CAPplication()
         class Act extends CAPActor{
             TestConsistent
             constructor(){
@@ -435,7 +436,7 @@ describe("Eventuals",()=>{
                 return c.v1
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v.v1).to.equal(5)
                 app.kill()
@@ -463,7 +464,7 @@ describe("Eventuals",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -484,7 +485,7 @@ describe("Eventuals",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -502,8 +503,8 @@ describe("Eventuals",()=>{
                 return ev.v1
             }
         }
-        let app = new Application()
-        app.spawnActor(Act).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()
@@ -517,7 +518,7 @@ describe("Eventuals",()=>{
     })
 
     it("Eventual Serialisation",function(done){
-        class Act2 extends Actor{
+        class Act2 extends CAPActor{
             ev
             constructor(){
                 super()
@@ -528,8 +529,8 @@ describe("Eventuals",()=>{
                 return this.ev.v1
             }
         }
-        let app = new Application()
-        app.spawnActor(Act2).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act2) as Act2).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()
@@ -570,8 +571,8 @@ describe("Eventuals",()=>{
                 })
             }
         }
-        let slave = app.spawnActor(Slave)
-        let master = app.spawnActor(Master)
+        let slave : FarRef<Slave> = app.spawnActor(Slave)
+        let master : FarRef<Master> = app.spawnActor(Master)
         master.sendAndInc(slave)
         slave.test().then((v)=>{
             try{
@@ -614,8 +615,8 @@ describe("Eventuals",()=>{
 
             }
         }
-        let slave = app.spawnActor(Slave)
-        let master = app.spawnActor(Master)
+        let slave : FarRef<Slave> = app.spawnActor(Slave)
+        let master : FarRef<Master> = app.spawnActor(Master)
         master.send(slave)
         master.test().then((v)=>{
             try{
@@ -663,8 +664,8 @@ describe("Eventuals",()=>{
                 })
             }
         }
-        let slave = app.spawnActor(Slave)
-        let master = app.spawnActor(Master)
+        let slave : FarRef<Slave> = app.spawnActor(Slave)
+        let master : FarRef<Master> = app.spawnActor(Master)
         master.send(slave)
         slave.test().then((v)=>{
             try{
@@ -718,8 +719,8 @@ describe("Eventuals",()=>{
 
 
         }
-        let slave = app.spawnActor(Slave)
-        let master = app.spawnActor(Master)
+        let slave : FarRef<Slave> = app.spawnActor(Slave)
+        let master : FarRef<Master> = app.spawnActor(Master)
         master.send(slave)
         master.test().then((v)=>{
             try{
@@ -769,7 +770,7 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -799,7 +800,7 @@ describe("Consistents",()=>{
                 })
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(10)
                 app.kill()
@@ -827,7 +828,7 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(6)
                 app.kill()
@@ -856,7 +857,7 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().then((v)=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             v.value.then((vv)=>{
                 try{
                     expect(vv).to.equal(5)
@@ -886,7 +887,7 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -907,7 +908,7 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        app.spawnActor(Act).test().catch(()=>{
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
             app.kill()
             done()
         })
@@ -925,8 +926,8 @@ describe("Consistents",()=>{
                 return c.value
             }
         }
-        let app = new Application()
-        app.spawnActor(Act).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()
@@ -951,8 +952,8 @@ describe("Consistents",()=>{
                 return this.c.value
             }
         }
-        let app = new Application()
-        app.spawnActor(Act2).test().then((v)=>{
+        let app = new CAPplication();
+        (app.spawnActor(Act2) as FarRef<Act2>).test().then((v)=>{
             try{
                 expect(v).to.equal(5)
                 app.kill()

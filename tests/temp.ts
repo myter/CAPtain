@@ -1,8 +1,9 @@
 import {Eventual} from "../src/Eventual";
 import {CAPplication} from "../src/CAPplication";
 import {CAPActor} from "../src/CAPActor";
+import {FarRef} from "spiders.js";
 
-class Test extends Eventual{
+/*class Test extends Eventual{
     value
     constructor(){
         super()
@@ -16,38 +17,72 @@ class Test extends Eventual{
 
 
 class TA extends CAPplication{
-    sendTo(ref){
-        let t = new Test()
-        t.onCommit((ev : Test)=>{
-            console.log("New commit val in app: " + ev.value)
+    getFrom(ref){
+        ref.giveMe().then((rep)=>{
+            console.log("got rep")
+            rep.incM()
         })
-        t.onTentative((ev : Test)=>{
-            console.log("New tent val in app: " + ev.value)
-        })
-        ref.get(t)
-        setTimeout(()=>{
-            console.log("Incrementing in app")
-            t.incM()
-        },5000)
     }
 }
 
 class TAC extends CAPActor{
-    get(rep){
-        rep.onCommit((ev : Test)=>{
-            console.log("New commit val in act: " + ev.value)
+    Test
+    constructor(){
+        super()
+        this.Test = Test
+    }
+    
+    giveMe(){
+        let t = new this.Test()
+        t.onCommit(()=>{
+            console.log("Changed commit val in actor")
         })
-        rep.onTentative((ev : Test)=>{
-            console.log("New tent val in act: " + ev.value)
-        })
-        setTimeout(()=>{
-            console.log("Incrementing in act")
-            rep.incM()
-        },2000)
+        return t
     }
 }
 
 let app = new TA()
 let act = app.spawnActor(TAC)
-app.sendTo(act)
+app.getFrom(act)*/
+class TestEventual extends Eventual{
+    v1
+
+    constructor(){
+        super()
+        this.v1 = 5
+    }
+
+    inc(){
+        this.v1++
+        return 5
+    }
+
+    incWithPrim(v){
+        this.v1 += v
+    }
+
+    incWithCon(c){
+        this.v1 += c.v1
+    }
+}
+class Act2 extends CAPActor{
+    ev
+    constructor(){
+        super()
+        this.ev = new TestEventual()
+    }
+
+    init(){
+        console.log("init ok")
+    }
+
+    test(){
+        console.log("Test invoked")
+        return this.ev.v1
+    }
+}
+let app = new CAPplication();
+(app.spawnActor(Act2) as Act2).test().then((v)=>{
+    console.log(v)
+})
 

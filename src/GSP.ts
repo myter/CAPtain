@@ -21,9 +21,9 @@ export class GSP{
     //Object id -> last confirmed round number
     roundNumbers            : Map<string,number>
     //Keeps track of the master owner of each eventual
-    eventualOwner           : Map<string,FarRef>
+    eventualOwner           : Map<string,FarRef<any>>
     //Object id -> array of known peers having a eventual of a master eventual owned by this actor
-    eventualHolders         : Map<string,Array<FarRef>>
+    eventualHolders         : Map<string,Array<FarRef<any>>>
     replay                  : Array<string>
     tentativeListeners      : Array<(ev : Eventual)=>any>
     commitListeners         : Array<(ev : Eventual)=>any>
@@ -91,7 +91,7 @@ export class GSP{
         this.commitRound(round)
         //Broadcast round to all holders of replicaOwners
         if(this.eventualHolders.has(round.objectId)){
-            this.eventualHolders.get(round.objectId).forEach((replicaOwner : FarRef)=>{
+            this.eventualHolders.get(round.objectId).forEach((replicaOwner : FarRef<any>)=>{
                 replicaOwner.newRound(round)
                 //this.environment.commMedium.sendMessage(replicaHolderId,new GSPRoundMessage(this.environment.thisRef,round))
             })
@@ -170,14 +170,14 @@ export class GSP{
         this.eventuals.set(ev.id,ev)
     }
 
-    registerHolderEventual(ev : Eventual,masterRef : FarRef){
+    registerHolderEventual(ev : Eventual,masterRef : FarRef<any>){
         this.eventuals.set(ev.id,ev)
         this.roundNumbers.set(ev.id,0)
         this.eventualOwner.set(ev.id,masterRef)
         masterRef.newHolder(ev.id,this.roundNumbers.get(ev.id),this)
     }
 
-    newHolder(eventualId : string,roundNr : number,holderRef : FarRef){
+    newHolder(eventualId : string,roundNr : number,holderRef : FarRef<any>){
         if(!(this.eventualHolders.has(eventualId))){
             this.eventualHolders.set(eventualId,[])
         }
@@ -198,7 +198,7 @@ export class GSP{
         }
     }
 
-    sync(eventualId : string,senderRef : FarRef){
+    sync(eventualId : string,senderRef : FarRef<any>){
         this.committed.get(eventualId).forEach((round : Round)=>{
             senderRef.newRound(round)
         })

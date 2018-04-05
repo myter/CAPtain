@@ -4,7 +4,7 @@ import {ActorSTDLib, FarRef} from "spiders.js";
 
 export * from "spiders.js"
 export class CAPActor{
-    parent  : FarRef
+    parent  : FarRef<any>
     libs    : ActorSTDLib
 }
 

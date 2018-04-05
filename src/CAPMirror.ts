@@ -16,24 +16,47 @@ export class CAPMirror extends SpiderActorMirror{
         })
     }
 
-    receiveInvocation(sender : FarRef,targetObject : Object,methodName : string,args : Array<any>,performInvocation : () => undefined = () => undefined){
+    receiveInvocation(sender : FarRef<any>,targetObject : Object,methodName : string,args : Array<any>,performInvocation : () => any = () => {return undefined},sendReturn : (retVal : any)=>any = ()=>{return undefined}){
         let eventualArgs = this.getEventualArgs(args)
         let gsp = (this.base.behaviourObject as CAPActor).gsp
-        if(eventualArgs.length > 0){
+        let cont = ()=>{
+            let retVal = performInvocation()
+            if(retVal){
+                if(retVal.isEventual){
+                    if(!gsp.knownEventual(retVal.id)){
+                        if(retVal.committedVals.size == 0){
+                            //This is the first invocation on this eventual, populate its committed map
+                            retVal.populateCommitted()
+                        }
+                        gsp.registerMasterEventual(retVal)
+                        retVal.setHost(gsp,this.base.thisRef.ownerId,true)
+                    }
+                    sendReturn(retVal)
+                }
+                else{
+                    sendReturn(retVal)
+                }
+            }
+            else{
+                sendReturn(retVal)
+            }
+        }
+        /*if(eventualArgs.length > 0){
             sender.gsp.then((senderGSPRef)=>{
                 eventualArgs.forEach((eventual : Eventual)=>{
                     eventual.setHost(gsp,this.base.thisRef.ownerId,false)
                     gsp.registerHolderEventual(eventual,senderGSPRef)
                 })
-                super.receiveInvocation(sender,targetObject,methodName,args,performInvocation)
+                cont()
             })
         }
         else{
-            super.receiveInvocation(sender,targetObject,methodName,args,performInvocation)
-        }
+            cont()
+        }*/
+        cont()
     }
 
-    sendInvocation(target : FarRef,methodName : string,args : Array<any>,contactId = this.base.thisRef.ownerId,contactAddress = null,contactPort = null,mainId = null){
+    sendInvocation(target : FarRef<any>,methodName : string,args : Array<any>,contactId = this.base.thisRef.ownerId,contactAddress = null,contactPort = null,mainId = null){
         let eventualArgs    = this.getEventualArgs(args)
         let gsp             = (this.base.behaviourObject as CAPActor).gsp
         eventualArgs.forEach((eventual : Eventual)=>{

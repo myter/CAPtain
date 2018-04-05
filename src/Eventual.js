@@ -173,6 +173,15 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             return super.write(fieldName, value);
         }
     }
+    resolve(hostActorMirror) {
+        //Dirty trick, but it could be that this eventual is resolved to an actor which hasn't been initialised (i.e. as part of a scope serialisation)
+        if (hostActorMirror.base.behaviourObject) {
+            let newGsp = hostActorMirror.base.behaviourObject.gsp;
+            let oldGSP = this.base.hostGsp;
+            this.base.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
+            newGsp.registerHolderEventual(this.base, oldGSP);
+        }
+    }
 }
 exports.EventualMirror = EventualMirror;
 let evScope = new spiders_js_1.LexScope();

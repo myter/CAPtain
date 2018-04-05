@@ -12,21 +12,44 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
             }
         });
     }
-    receiveInvocation(sender, targetObject, methodName, args, performInvocation = () => undefined) {
+    receiveInvocation(sender, targetObject, methodName, args, performInvocation = () => { return undefined; }, sendReturn = () => { return undefined; }) {
         let eventualArgs = this.getEventualArgs(args);
         let gsp = this.base.behaviourObject.gsp;
-        if (eventualArgs.length > 0) {
-            sender.gsp.then((senderGSPRef) => {
-                eventualArgs.forEach((eventual) => {
-                    eventual.setHost(gsp, this.base.thisRef.ownerId, false);
-                    gsp.registerHolderEventual(eventual, senderGSPRef);
-                });
-                super.receiveInvocation(sender, targetObject, methodName, args, performInvocation);
-            });
+        let cont = () => {
+            let retVal = performInvocation();
+            if (retVal) {
+                if (retVal.isEventual) {
+                    if (!gsp.knownEventual(retVal.id)) {
+                        if (retVal.committedVals.size == 0) {
+                            //This is the first invocation on this eventual, populate its committed map
+                            retVal.populateCommitted();
+                        }
+                        gsp.registerMasterEventual(retVal);
+                        retVal.setHost(gsp, this.base.thisRef.ownerId, true);
+                    }
+                    sendReturn(retVal);
+                }
+                else {
+                    sendReturn(retVal);
+                }
+            }
+            else {
+                sendReturn(retVal);
+            }
+        };
+        /*if(eventualArgs.length > 0){
+            sender.gsp.then((senderGSPRef)=>{
+                eventualArgs.forEach((eventual : Eventual)=>{
+                    eventual.setHost(gsp,this.base.thisRef.ownerId,false)
+                    gsp.registerHolderEventual(eventual,senderGSPRef)
+                })
+                cont()
+            })
         }
-        else {
-            super.receiveInvocation(sender, targetObject, methodName, args, performInvocation);
-        }
+        else{
+            cont()
+        }*/
+        cont();
     }
     sendInvocation(target, methodName, args, contactId = this.base.thisRef.ownerId, contactAddress = null, contactPort = null, mainId = null) {
         let eventualArgs = this.getEventualArgs(args);

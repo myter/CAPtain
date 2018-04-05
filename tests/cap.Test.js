@@ -4,6 +4,7 @@ const Available_1 = require("../src/Available");
 const Eventual_1 = require("../src/Eventual");
 const Consistent_1 = require("../src/Consistent");
 const CAPActor_1 = require("../src/CAPActor");
+const CAPplication_1 = require("../src/CAPplication");
 var assert = require('assert');
 var chai = require('chai');
 var expect = chai.expect;
@@ -156,7 +157,7 @@ describe("Availables", () => {
         });
     });
     it("Check OK Assignment (Eventual)", (done) => {
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class TestEventual extends Eventual_1.Eventual {
             constructor() {
                 super();
@@ -235,7 +236,7 @@ describe("Availables", () => {
                 return c.value;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act).test().then((v) => {
             try {
                 expect(v).to.equal(5);
@@ -258,7 +259,7 @@ describe("Availables", () => {
                 return this.c.value;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act2).test().then((v) => {
             try {
                 expect(v).to.equal(5);
@@ -366,7 +367,7 @@ describe("Eventuals", () => {
         });
     });
     it("Check OK Assignment (Eventual)", (done) => {
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class Act extends CAPActor_1.CAPActor {
             constructor() {
                 super();
@@ -438,7 +439,7 @@ describe("Eventuals", () => {
                 return ev.v1;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act).test().then((v) => {
             try {
                 expect(v).to.equal(5);
@@ -452,7 +453,7 @@ describe("Eventuals", () => {
         });
     });
     it("Eventual Serialisation", function (done) {
-        class Act2 extends spiders_js_1.Actor {
+        class Act2 extends CAPActor_1.CAPActor {
             constructor() {
                 super();
                 this.ev = new TestEventual();
@@ -461,7 +462,7 @@ describe("Eventuals", () => {
                 return this.ev.v1;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act2).test().then((v) => {
             try {
                 expect(v).to.equal(5);
@@ -808,7 +809,7 @@ describe("Consistents", () => {
                 return c.value;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act).test().then((v) => {
             try {
                 expect(v).to.equal(5);
@@ -831,7 +832,7 @@ describe("Consistents", () => {
                 return this.c.value;
             }
         }
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         app.spawnActor(Act2).test().then((v) => {
             try {
                 expect(v).to.equal(5);

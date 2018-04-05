@@ -2,7 +2,8 @@ import {CAPActor} from "../src/CAPActor";
 import {Available} from "../src/Available";
 import {Eventual} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
-import {Application,Actor} from "spiders.js"
+import { Actor, FarRef} from "spiders.js"
+import {CAPplication} from "../src/CAPplication";
 
 var scheduled           = []
 function log(testName,result,expected){
@@ -19,7 +20,7 @@ function log(testName,result,expected){
     }
     ul.appendChild(li);
 }
-var app                 = new Application()
+var app                 = new CAPplication()
 class TestAvailable extends Available{
     value
     constructor(){
@@ -86,7 +87,7 @@ class AvailableContentSerActor extends CAPActor{
     }
 }
 let AvailableContentSer = ()=> {
-    return app.spawnActor(AvailableContentSerActor).test().then((v)=>{
+    return (app.spawnActor(AvailableContentSerActor) as FarRef<any>).test().then((v)=>{
         log("Available Content Serialisation",v,5)
     })
 }
@@ -104,7 +105,7 @@ class AvailableClassSerActor extends Actor{
     }
 }
 let AvailableClassSer = () => {
-    return app.spawnActor(AvailableClassSerActor).test().then((v)=>{
+    return (app.spawnActor(AvailableClassSerActor) as FarRef<any>).test().then((v)=>{
         log("Available Class Serialisation",v,5)
     })
 }
@@ -124,7 +125,7 @@ class AvailableNOKAssignmentAct extends CAPActor{
     }
 }
 let AvailableNOKAssignment = () => {
-    return app.spawnActor(AvailableNOKAssignmentAct).test().catch(()=>{
+    return (app.spawnActor(AvailableNOKAssignmentAct) as any).test().catch(()=>{
         log("Available NOK Assignment","N.A.","N.A.")
     })
 }
@@ -143,7 +144,7 @@ class AvailableNOKConstraintAct extends CAPActor{
     }
 }
 let AvailableNOKConstraint = () => {
-    return app.spawnActor(AvailableNOKConstraintAct).test().catch(()=>{
+    return (app.spawnActor(AvailableNOKConstraintAct) as any).test().catch(()=>{
         log("Available NOK Constraint","N.A.","N.A.")
     })
 }
@@ -173,7 +174,7 @@ class AvailableAssignmentEventualAct extends CAPActor{
     }
 }
 let AvailableAssignmentEventual = ()=>{
-    return app.spawnActor(AvailableAssignmentEventualAct).test().then((v)=>{
+    return (app.spawnActor(AvailableAssignmentEventualAct) as any).test().then((v)=>{
         log("Available Assignment (Eventual)",v.value,5)
     })
 }
@@ -194,7 +195,7 @@ class AvailableAssignmentAvailableAct extends CAPActor{
     }
 }
 let AvailableAssignmentAvailable = () => {
-    return app.spawnActor(AvailableAssignmentAvailableAct).test().then((v)=>{
+    return (app.spawnActor(AvailableAssignmentAvailableAct) as any).test().then((v)=>{
         log("Available Assignment (Available)",v.value,5)
     })
 }
@@ -214,7 +215,7 @@ class AvailableAssignmentPrimitiveAct extends Actor{
     }
 }
 let AvailableAssignmentPrimitive = () => {
-    return app.spawnActor(AvailableAssignmentPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(AvailableAssignmentPrimitiveAct) as any).test().then((v)=>{
         log("Available Assignment (Primitive)",v,6)
     })
 }
@@ -244,7 +245,7 @@ class AvailableConstraintEventualAct extends CAPActor{
     }
 }
 let AvailableConstraintEventual = ()=>{
-    return app.spawnActor(AvailableConstraintEventualAct).test().then((v)=>{
+    return (app.spawnActor(AvailableConstraintEventualAct) as any).test().then((v)=>{
         log("Available Constraint (Eventual)",v,10)
     })
 }
@@ -265,7 +266,7 @@ class AvailableConstraintAvailableAct extends CAPActor{
     }
 }
 let AvailableConstraintAvailable = ()=>{
-    return app.spawnActor(AvailableConstraintAvailableAct).test().then((v)=>{
+    return (app.spawnActor(AvailableConstraintAvailableAct) as any).test().then((v)=>{
         log("Available Constraint (Available)",v,10)
     })
 }
@@ -285,7 +286,7 @@ class AvailableConstraintPrimitiveAct extends Actor{
     }
 }
 let AvailableConstraintPrimitive = ()=>{
-    return app.spawnActor(AvailableConstraintPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(AvailableConstraintPrimitiveAct) as any).test().then((v)=>{
         log("Available Constraint (Primitive)",v,10)
     })
 }
@@ -317,8 +318,8 @@ class SlaveSlaveChangeAct extends CAPActor{
     }
 }
 let EventualReplicationSlaveChange = ()=>{
-    let slave = app.spawnActor(SlaveSlaveChangeAct)
-    let master = app.spawnActor(MasterSlaveChangeAct)
+    let slave : FarRef<SlaveSlaveChangeAct> = app.spawnActor(SlaveSlaveChangeAct)
+    let master : FarRef<MasterSlaveChangeAct> = app.spawnActor(MasterSlaveChangeAct)
     master.send(slave)
     return master.test().then((v)=>{
         log("Eventual Simple Replication, Slave Change",v,6)
@@ -352,8 +353,8 @@ class SlaveMasterChange extends CAPActor{
     }
 }
 let EventualReplicationMasterchange = () =>{
-    let slave = app.spawnActor(SlaveMasterChange)
-    let master = app.spawnActor(MasterMasterChange)
+    let slave : FarRef<SlaveMasterChange> = app.spawnActor(SlaveMasterChange)
+    let master : FarRef<MasterMasterChange> = app.spawnActor(MasterMasterChange)
     master.sendAndInc(slave)
     return slave.test().then((v)=>{
         log("Eventual Simple Replication, Master Change",v,6)
@@ -373,7 +374,7 @@ class EventualContentSerialisationAct extends Actor{
     }
 }
 let EventualContentSerialisation = ()=>{
-    return app.spawnActor(EventualContentSerialisationAct).test().then((v)=>{
+    return (app.spawnActor(EventualContentSerialisationAct) as any).test().then((v)=>{
         log("Eventual Content Serialisation",v,5)
     })
 }
@@ -391,7 +392,7 @@ class EventualClassSerialisationAct extends Actor{
     }
 }
 let EventualClassSerialisation = ()=>{
-    return app.spawnActor(EventualClassSerialisationAct).test().then((v)=>{
+    return (app.spawnActor(EventualClassSerialisationAct) as any).test().then((v)=>{
         log("Eventual Class Serialisation",v,5)
     })
 }
@@ -411,7 +412,7 @@ class EventualNOKAssignmentAct extends CAPActor{
     }
 }
 let EventualNOKAssignment = () =>{
-    return app.spawnActor(EventualNOKAssignmentAct).test().catch(()=>{
+    return (app.spawnActor(EventualNOKAssignmentAct) as any).test().catch(()=>{
         log("Eventual NOK Assignment","N.A.","N.A.")
     })
 }
@@ -431,7 +432,7 @@ class EventualNOKConstraintAct extends CAPActor{
     }
 }
 let EventualNOKConstraint = ()=>{
-    return app.spawnActor(EventualNOKConstraintAct).test().catch(()=>{
+    return (app.spawnActor(EventualNOKConstraintAct) as any).test().catch(()=>{
         log("Eventual NOK Constraint","N.A.","N.A.")
     })
 
@@ -453,7 +454,7 @@ class EventualAssignmentEventualAct extends CAPActor{
     }
 }
 let EventualAssignmentEventual = ()=>{
-    return app.spawnActor(EventualAssignmentEventualAct).test().then((v)=>{
+    return (app.spawnActor(EventualAssignmentEventualAct) as any).test().then((v)=>{
         log("Eventual Assignment (Eventual)",v.v1,5)
     })
 }
@@ -473,7 +474,7 @@ class EventualAssignmentPrimitiveAct extends Actor{
     }
 }
 let EventualAssignmentPrimitive = ()=>{
-    return app.spawnActor(EventualAssignmentPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(EventualAssignmentPrimitiveAct) as any).test().then((v)=>{
         log("Eventual Assignment (Primitive)",v,6)
     })
 }
@@ -494,7 +495,7 @@ class EventualConstraintEventualAct extends CAPActor{
     }
 }
 let EventualConstraintEventual = ()=>{
-    return app.spawnActor(EventualConstraintEventualAct).test().then((v)=>{
+    return (app.spawnActor(EventualConstraintEventualAct) as any).test().then((v)=>{
         log("Eventual Constraint (Eventual)",v,10)
     })
 }
@@ -514,7 +515,7 @@ class EventualConstraintPrimitiveAct extends Actor{
     }
 }
 let EventualConstraintPrimitive = ()=>{
-    return app.spawnActor(EventualConstraintPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(EventualConstraintPrimitiveAct) as any).test().then((v)=>{
         log("Eventual Constraint (Primitive)",v,10)
     })
 }
@@ -551,8 +552,8 @@ class EventualTentativeSlave extends CAPActor{
     }
 }
 let EventualTentative = ()=>{
-    let slave = app.spawnActor(EventualTentativeSlave)
-    let master = app.spawnActor(EventualTentativeMaster)
+    let slave : FarRef<EventualTentativeSlave> = app.spawnActor(EventualTentativeSlave)
+    let master : FarRef<EventualTentativeMaster> = app.spawnActor(EventualTentativeMaster)
     master.send(slave)
     return slave.test().then((v)=>{
         log("Eventual Tentative Listener",v,6)
@@ -597,8 +598,8 @@ class EventualCommitSlave extends CAPActor{
 
 }
 let EventualCommit = () =>{
-    let slave = app.spawnActor(EventualCommitSlave)
-    let master = app.spawnActor(EventualCommitMaster)
+    let slave : FarRef<EventualCommitSlave> = app.spawnActor(EventualCommitSlave)
+    let master : FarRef<EventualCommitMaster> = app.spawnActor(EventualCommitMaster)
     master.send(slave)
     return master.test().then((v)=>{
         log("Eventual Commit Listener",v,6)
@@ -618,7 +619,7 @@ class ConsistentContentSerialisationAct extends CAPActor{
     }
 }
 let ConsistentContentSerialisation = ()=>{
-    return app.spawnActor(ConsistentContentSerialisationAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentContentSerialisationAct) as any).test().then((v)=>{
         log("Consistent Content Serialisation",v,5)
     })
 }
@@ -636,7 +637,7 @@ class ConsistentClassSerialisationAct extends Actor{
     }
 }
 let ConsistentClassSerialisation = ()=>{
-    return app.spawnActor(ConsistentClassSerialisationAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentClassSerialisationAct) as any).test().then((v)=>{
         log("Consistent Class Serialisation",v,5)
     })
 }
@@ -656,7 +657,7 @@ class ConsistentNOKAssignmentAct extends CAPActor{
     }
 }
 let ConsistentNOKAssignment = ()=>{
-    return app.spawnActor(ConsistentNOKAssignmentAct).test().catch(()=>{
+    return (app.spawnActor(ConsistentNOKAssignmentAct) as any).test().catch(()=>{
         log("Consistent NOK Assignment","N.A.","N.A.")
     })
 }
@@ -676,7 +677,7 @@ class ConsistentNOKConstraintAct extends CAPActor{
     }
 }
 let ConsistentNOKConstraint = ()=>{
-    return app.spawnActor(ConsistentNOKConstraintAct).test().catch(()=>{
+    return (app.spawnActor(ConsistentNOKConstraintAct) as any).test().catch(()=>{
         log("Consistent NOK Constraint","N.A.","N.A.")
     })
 }
@@ -697,7 +698,7 @@ class ConsistentAssignmentConsistentAct extends CAPActor{
     }
 }
 let ConsistentAssignmentConsistent = ()=>{
-    return app.spawnActor(ConsistentAssignmentConsistentAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentAssignmentConsistentAct) as any).test().then((v)=>{
         return v.value.then((vv)=>{
             log("Consistent Assignment (Consistent)",vv,5)
         })
@@ -719,7 +720,7 @@ class ConsistentAssignmentPrimitiveAct extends Actor{
     }
 }
 let ConsistentAssignmentPrimitive = ()=>{
-    return app.spawnActor(ConsistentAssignmentPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentAssignmentPrimitiveAct) as any).test().then((v)=>{
         log("Consistent Assignment (Primitive)",v,6)
     })
 }
@@ -741,7 +742,7 @@ class ConsistentConstraintConsistentAct extends CAPActor{
     }
 }
 let ConsistentConstraintConsistent = ()=>{
-    return app.spawnActor(ConsistentConstraintConsistentAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentConstraintConsistentAct) as any).test().then((v)=>{
         log("Consistent Constraint (Consistent)",v,10)
     })
 }
@@ -761,7 +762,7 @@ class ConsistentConstraintPrimitiveAct extends Actor{
     }
 }
 let ConsistentConstraintPrimitive = ()=>{
-    return app.spawnActor(ConsistentConstraintPrimitiveAct).test().then((v)=>{
+    return (app.spawnActor(ConsistentConstraintPrimitiveAct) as any).test().then((v)=>{
         log("Consistent Constraint (Primitive)",v,10)
     })
 }
