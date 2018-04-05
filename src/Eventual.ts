@@ -6,6 +6,7 @@ import {CAPActor} from "./CAPActor";
 
 export var _IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_"
 var _LOCAL_KEY_ = "_IS_EVENTUAL_"
+
 export class Eventual extends SpiderIsolate{
     hostGsp             : GSP
     hostId              : string
@@ -121,6 +122,7 @@ export class Eventual extends SpiderIsolate{
         }
     }
 }
+
 export class EventualMirror extends SpiderIsolateMirror{
     private ignoreInvoc(methodName){
         return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative"
@@ -208,6 +210,23 @@ export class EventualMirror extends SpiderIsolateMirror{
             let oldGSP = (this.base as Eventual).hostGsp;
             (this.base as Eventual).setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
             newGsp.registerHolderEventual(this.base as Eventual,oldGSP)
+        }
+    }
+
+    pass(hostActorMirror : CAPMirror){
+        //Same "hack" as for resolve
+        if(hostActorMirror.base.behaviourObject){
+            let gsp         = (hostActorMirror.base.behaviourObject as CAPActor).gsp
+            let eventual    = this.base as Eventual;
+            if(!gsp.knownEventual(eventual.id)){
+                if(eventual.committedVals.size == 0){
+                    //This is the first invocation on this eventual, populate its committed map
+                    eventual.populateCommitted()
+                }
+                gsp.registerMasterEventual(eventual)
+                eventual.setHost(gsp,hostActorMirror.base.thisRef.ownerId,true)
+            }
+            return super.pass(hostActorMirror)
         }
     }
 }

@@ -36,7 +36,9 @@ class TAC extends CAPActor{
         t.onCommit(()=>{
             console.log("Changed commit val in actor")
         })
-        return t
+        return new Promise((resolve)=>{
+            resolve(t)
+        })
     }
 }
 
@@ -59,21 +61,38 @@ class TestEventual extends Eventual_1.Eventual {
         this.v1 += c.v1;
     }
 }
-class Act2 extends CAPActor_1.CAPActor {
+let app = new CAPplication_1.CAPplication();
+class Master extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.ev = new TestEventual();
     }
-    init() {
-        console.log("init ok");
+    send(toRef) {
+        this.ev.onCommit((ev) => {
+            this.val = ev.v1;
+        });
+        toRef.getEv(this.ev);
     }
     test() {
-        console.log("Test invoked");
-        return this.ev.v1;
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.val);
+            }, 2000);
+        });
     }
 }
-let app = new CAPplication_1.CAPplication();
-app.spawnActor(Act2).test().then((v) => {
-    console.log(v);
+class Slave extends CAPActor_1.CAPActor {
+    getEv(anEv) {
+        anEv.onTentative((ev) => {
+            this.val = ev.v1;
+        });
+        anEv.inc();
+    }
+}
+let slave = app.spawnActor(Slave);
+let master = app.spawnActor(Master);
+master.send(slave);
+master.test().then((v) => {
+    console.log("Got back : " + v);
 });
 //# sourceMappingURL=temp.js.map

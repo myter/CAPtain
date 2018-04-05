@@ -545,7 +545,7 @@ describe("Eventuals",()=>{
 
     it("Simple Replication, master change",function(done){
         this.timeout(4000)
-        let app = new Application()
+        let app = new CAPplication()
         class Master extends CAPActor{
             ev
             constructor(){
@@ -589,7 +589,7 @@ describe("Eventuals",()=>{
 
     it("Simple Replication, slave change",function(done){
         this.timeout(4000)
-        let app = new Application()
+        let app = new CAPplication()
         class Master extends CAPActor{
             ev
             constructor(){
@@ -633,7 +633,7 @@ describe("Eventuals",()=>{
 
     it("tentative listener",function(done){
         this.timeout(4000)
-        let app = new Application()
+        let app = new CAPplication()
         class Master extends CAPActor{
             ev
             constructor(){
@@ -682,7 +682,7 @@ describe("Eventuals",()=>{
 
     it("commit listener",function(done) {
         this.timeout(4000)
-        let app = new Application()
+        let app = new CAPplication()
         class Master extends CAPActor{
             ev
             val

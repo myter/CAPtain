@@ -37,7 +37,9 @@ class TAC extends CAPActor{
         t.onCommit(()=>{
             console.log("Changed commit val in actor")
         })
-        return t
+        return new Promise((resolve)=>{
+            resolve(t)
+        })
     }
 }
 
@@ -65,24 +67,47 @@ class TestEventual extends Eventual{
         this.v1 += c.v1
     }
 }
-class Act2 extends CAPActor{
+let app = new CAPplication()
+class Master extends CAPActor{
     ev
+    val
     constructor(){
         super()
         this.ev = new TestEventual()
     }
 
-    init(){
-        console.log("init ok")
+    send(toRef){
+        this.ev.onCommit((ev)=>{
+            this.val = ev.v1
+        })
+        toRef.getEv(this.ev)
     }
 
     test(){
-        console.log("Test invoked")
-        return this.ev.v1
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.val)
+            },2000)
+        })
     }
+
 }
-let app = new CAPplication();
-(app.spawnActor(Act2) as Act2).test().then((v)=>{
-    console.log(v)
+class Slave extends CAPActor{
+    val
+
+    getEv(anEv){
+        anEv.onTentative((ev)=>{
+            this.val = ev.v1
+        })
+        anEv.inc()
+    }
+
+
+}
+let slave : FarRef<Slave> = app.spawnActor(Slave)
+let master : FarRef<Master> = app.spawnActor(Master)
+master.send(slave)
+master.test().then((v)=>{
+    console.log("Got back : " + v)
 })
 

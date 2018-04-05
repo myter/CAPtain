@@ -3,74 +3,22 @@ import {FarRef, SpiderActorMirror} from "spiders.js";
 import {Eventual} from "./Eventual";
 
 export class CAPMirror extends SpiderActorMirror{
-
-    private getEventualArgs(args : Array<any>){
-        return args.filter((arg,index)=>{
-            if(arg){
-                //No this isn't some dumb mistake, must ensure that it is true and not a true-like value!
-                return arg.isEventual == true
-            }
-            else{
-                return false
-            }
-        })
-    }
-
-    receiveInvocation(sender : FarRef<any>,targetObject : Object,methodName : string,args : Array<any>,performInvocation : () => any = () => {return undefined},sendReturn : (retVal : any)=>any = ()=>{return undefined}){
-        let eventualArgs = this.getEventualArgs(args)
-        let gsp = (this.base.behaviourObject as CAPActor).gsp
-        let cont = ()=>{
-            let retVal = performInvocation()
-            if(retVal){
-                if(retVal.isEventual){
-                    if(!gsp.knownEventual(retVal.id)){
-                        if(retVal.committedVals.size == 0){
-                            //This is the first invocation on this eventual, populate its committed map
-                            retVal.populateCommitted()
-                        }
-                        gsp.registerMasterEventual(retVal)
-                        retVal.setHost(gsp,this.base.thisRef.ownerId,true)
+    initialise(stdLib,appActor,parentRef){
+        super.initialise(stdLib,appActor,parentRef)
+        let behaviour = this.base.behaviourObject
+        let gsp       = (behaviour as CAPActor).gsp
+        Reflect.ownKeys(behaviour).forEach((key)=>{
+            let val = behaviour[key]
+            if(val.isEventual == true){
+                if(!gsp.knownEventual(val.id)){
+                    if(val.committedVals.size == 0){
+                        //This is the first invocation on this eventual, populate its committed map
+                        val.populateCommitted()
                     }
-                    sendReturn(retVal)
+                    gsp.registerMasterEventual(val)
+                    val.setHost(gsp,this.base.thisRef.ownerId,true)
                 }
-                else{
-                    sendReturn(retVal)
-                }
-            }
-            else{
-                sendReturn(retVal)
-            }
-        }
-        /*if(eventualArgs.length > 0){
-            sender.gsp.then((senderGSPRef)=>{
-                eventualArgs.forEach((eventual : Eventual)=>{
-                    eventual.setHost(gsp,this.base.thisRef.ownerId,false)
-                    gsp.registerHolderEventual(eventual,senderGSPRef)
-                })
-                cont()
-            })
-        }
-        else{
-            cont()
-        }*/
-        cont()
-    }
-
-    sendInvocation(target : FarRef<any>,methodName : string,args : Array<any>,contactId = this.base.thisRef.ownerId,contactAddress = null,contactPort = null,mainId = null){
-        let eventualArgs    = this.getEventualArgs(args)
-        let gsp             = (this.base.behaviourObject as CAPActor).gsp
-        eventualArgs.forEach((eventual : Eventual)=>{
-            //An eventual is being sent to another actor, without that eventual being already registered
-            //In other words, this eventual must have been created newly by the sending actor
-            if(!gsp.knownEventual(eventual.id)){
-                if(eventual.committedVals.size == 0){
-                    //This is the first invocation on this eventual, populate its committed map
-                    eventual.populateCommitted()
-                }
-                gsp.registerMasterEventual(eventual)
-                eventual.setHost(gsp,this.base.thisRef.ownerId,true)
             }
         })
-        return super.sendInvocation(target,methodName,args,contactId,contactAddress,contactPort,mainId)
     }
 }

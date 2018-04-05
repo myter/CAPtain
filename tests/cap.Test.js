@@ -477,7 +477,7 @@ describe("Eventuals", () => {
     });
     it("Simple Replication, master change", function (done) {
         this.timeout(4000);
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
@@ -517,7 +517,7 @@ describe("Eventuals", () => {
     });
     it("Simple Replication, slave change", function (done) {
         this.timeout(4000);
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
@@ -556,7 +556,7 @@ describe("Eventuals", () => {
     });
     it("tentative listener", function (done) {
         this.timeout(4000);
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
@@ -598,7 +598,7 @@ describe("Eventuals", () => {
     });
     it("commit listener", function (done) {
         this.timeout(4000);
-        let app = new spiders_js_1.Application();
+        let app = new CAPplication_1.CAPplication();
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();

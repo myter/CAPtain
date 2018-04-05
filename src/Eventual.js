@@ -182,6 +182,22 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             newGsp.registerHolderEventual(this.base, oldGSP);
         }
     }
+    pass(hostActorMirror) {
+        //Same "hack" as for resolve
+        if (hostActorMirror.base.behaviourObject) {
+            let gsp = hostActorMirror.base.behaviourObject.gsp;
+            let eventual = this.base;
+            if (!gsp.knownEventual(eventual.id)) {
+                if (eventual.committedVals.size == 0) {
+                    //This is the first invocation on this eventual, populate its committed map
+                    eventual.populateCommitted();
+                }
+                gsp.registerMasterEventual(eventual);
+                eventual.setHost(gsp, hostActorMirror.base.thisRef.ownerId, true);
+            }
+            return super.pass(hostActorMirror);
+        }
+    }
 }
 exports.EventualMirror = EventualMirror;
 let evScope = new spiders_js_1.LexScope();
