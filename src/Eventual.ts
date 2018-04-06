@@ -5,7 +5,6 @@ import {CAPMirror} from "./CAPMirror";
 import {CAPActor} from "./CAPActor";
 
 export var _IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_"
-var _LOCAL_KEY_ = "_IS_EVENTUAL_"
 
 export class Eventual extends SpiderIsolate{
     hostGsp             : GSP
@@ -63,7 +62,7 @@ export class Eventual extends SpiderIsolate{
 
     constructor(){
         super(new EventualMirror())
-        this[_LOCAL_KEY_] = true
+        this["_IS_EVENTUAL_"]       = true
         this.id                 = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
@@ -122,7 +121,6 @@ export class Eventual extends SpiderIsolate{
         }
     }
 }
-
 export class EventualMirror extends SpiderIsolateMirror{
     private ignoreInvoc(methodName){
         return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative"
@@ -135,7 +133,7 @@ export class EventualMirror extends SpiderIsolateMirror{
         }
         else if(typeof arg == 'object'){
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
-            if(!arg[_LOCAL_KEY_]){
+            if(!arg["_IS_EVENTUAL_"]){
                 return true
             }
             else{
@@ -232,9 +230,5 @@ export class EventualMirror extends SpiderIsolateMirror{
 }
 
 let evScope         = new LexScope()
-evScope.addElement("_LOCAL_KEY_",_LOCAL_KEY_)
 evScope.addElement("EventualMirror",EventualMirror)
 bundleScope(Eventual,evScope)
-let evMirrorScope   = new LexScope()
-evMirrorScope.addElement("_LOCAL_KEY_",_LOCAL_KEY_)
-bundleScope(EventualMirror,evMirrorScope)

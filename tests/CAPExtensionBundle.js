@@ -60876,7 +60876,6 @@ spiders_js_1.bundleScope(ConsistentMirror, conMirrorScope);
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
-var _LOCAL_KEY_ = "_IS_EVENTUAL_";
 class Eventual extends spiders_js_1.SpiderIsolate {
     //////////////////////////////////////
     // GSP methods                      //
@@ -60918,7 +60917,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     constructor() {
         super(new EventualMirror());
-        this[_LOCAL_KEY_] = true;
+        this["_IS_EVENTUAL_"] = true;
         this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
@@ -60984,7 +60983,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
         else if (typeof arg == 'object') {
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
-            if (!arg[_LOCAL_KEY_]) {
+            if (!arg["_IS_EVENTUAL_"]) {
                 return true;
             }
             else {
@@ -61076,12 +61075,8 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
 }
 exports.EventualMirror = EventualMirror;
 let evScope = new spiders_js_1.LexScope();
-evScope.addElement("_LOCAL_KEY_", _LOCAL_KEY_);
 evScope.addElement("EventualMirror", EventualMirror);
 spiders_js_1.bundleScope(Eventual, evScope);
-let evMirrorScope = new spiders_js_1.LexScope();
-evMirrorScope.addElement("_LOCAL_KEY_", _LOCAL_KEY_);
-spiders_js_1.bundleScope(EventualMirror, evMirrorScope);
 
 },{"spiders.js":269}],311:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
