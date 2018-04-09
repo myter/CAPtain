@@ -2,16 +2,67 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
 class Eventual extends spiders_js_1.SpiderIsolate {
+    constructor() {
+        super(new EventualMirror());
+        this.populated = false;
+        this["_IS_EVENTUAL_"] = true;
+        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        this.isEventual = true;
+        this.committedVals = new Map();
+        this.tentativeVals = new Map();
+        this.tentListeners = [];
+        this.commListeners = [];
+    }
+    clone(value) {
+        if (typeof value != 'object') {
+            return value;
+        }
+        else if (value instanceof Array) {
+            let res = [];
+            value.forEach((val) => {
+                res.push(this.clone(val));
+            });
+            return res;
+        }
+        else if (value instanceof Map) {
+            let res = new Map();
+            value.forEach((val, key) => {
+                res.set(key, this.clone(val));
+            });
+            return res;
+        }
+        else if (value.isEventual) {
+            /*console.log("Cloning inner eventual")
+            let c = new (this.constructor as any)()
+            Reflect.ownKeys(value).forEach((key)=>{
+                //console.log("Deep cloning: " + key.toString())
+                //console.log("Is eventual? " + value[key].isEventual)
+                c[key] = this.clone(value[key])
+            })
+            return c*/
+            /*Reflect.ownKeys(value).forEach((key)=>{
+                value[key] = this.clone(value[key])
+            })*/
+            return value;
+        }
+        else {
+            return value;
+        }
+    }
     //////////////////////////////////////
     // GSP methods                      //
     //////////////////////////////////////
-    //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted() {
-        Reflect.ownKeys(this).forEach((key) => {
-            if (key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentListeners" && key != "commListeners" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_') {
-                this.committedVals.set(key.toString(), this[key]);
+        /*Reflect.ownKeys(this).forEach((key)=>{
+            if(typeof this[key] != 'function' && key != "hostGsp" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentativeVals" && key != "tentListeners" && key != "commListeners" && key != "populated" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_'){
+                this.committedVals.set(key.toString(),this.clone(this[key]))
+                this.tentativeVals.set(key.toString(),this.clone(this[key]))
             }
-        });
+        })*/
+        this.populated = true;
     }
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp, hostId = undefined, isOwner) {
@@ -20,44 +71,44 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         if (isOwner) {
             this.ownerId = hostId;
         }
+        if (!this.hostGsp.tentativeListeners.has(this.id)) {
+            this.hostGsp.tentativeListeners.set(this.id, []);
+        }
+        if (!this.hostGsp.commitListeners.has(this.id)) {
+            this.hostGsp.commitListeners.set(this.id, []);
+        }
         this.tentListeners.forEach((callback) => {
-            this.hostGsp.tentativeListeners.push(callback);
+            this.hostGsp.tentativeListeners.get(this.id).push(callback);
         });
         this.commListeners.forEach((callback) => {
-            this.hostGsp.commitListeners.push(callback);
+            this.hostGsp.commitListeners.get(this.id).push(callback);
         });
         this.tentListeners = [];
         this.commListeners = [];
     }
     resetToCommit() {
         this.committedVals.forEach((committedVal, key) => {
-            this[key] = committedVal;
+            /*console.log("Inside: " + this.hostGsp.thisActorId)
+            console.log(key)
+            console.log("Resetting to commit from: " + committedVal + " to " + this.tentativeVals.get(key))*/
+            this.tentativeVals.set(key, committedVal);
         });
     }
     commit() {
-        this.committedVals.forEach((_, key) => {
-            this.committedVals.set(key, this[key]);
+        this.tentativeVals.forEach((tentativeVal, key) => {
+            this.committedVals.set(key, tentativeVal);
         });
+        /*console.log("Inside: " + this.hostGsp.thisActorId)
+        console.log("After commit for: " + this.id)
+        console.log(this.tentativeVals.get("innerVal"))*/
         this.triggerCommit();
-    }
-    constructor() {
-        super(new EventualMirror());
-        this["_IS_EVENTUAL_"] = true;
-        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-        this.isEventual = true;
-        this.committedVals = new Map();
-        this.tentListeners = [];
-        this.commListeners = [];
     }
     //////////////////////////////////////
     // API                              //
     //////////////////////////////////////
     triggerTentative() {
         if (this.hostGsp) {
-            this.hostGsp.tentativeListeners.forEach((callback) => {
+            this.hostGsp.tentativeListeners.get(this.id).forEach((callback) => {
                 callback(this);
             });
         }
@@ -69,7 +120,10 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     onTentative(callback) {
         if (this.hostGsp) {
-            this.hostGsp.tentativeListeners.push(callback);
+            if (!this.hostGsp.tentativeListeners.has(this.id)) {
+                this.hostGsp.tentativeListeners.set(this.id, []);
+            }
+            this.hostGsp.tentativeListeners.get(this.id).push(callback);
         }
         else {
             this.tentListeners.push(callback);
@@ -77,7 +131,10 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     onCommit(callback) {
         if (this.hostGsp) {
-            this.hostGsp.commitListeners.push(callback);
+            if (!this.hostGsp.commitListeners.has(this.id)) {
+                this.hostGsp.commitListeners.set(this.id, []);
+            }
+            this.hostGsp.commitListeners.get(this.id).push(callback);
         }
         else {
             this.commListeners.push(callback);
@@ -85,7 +142,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     triggerCommit() {
         if (this.hostGsp) {
-            this.hostGsp.commitListeners.forEach((callback) => {
+            this.hostGsp.commitListeners.get(this.id).forEach((callback) => {
                 callback(this);
             });
         }
@@ -99,12 +156,21 @@ class Eventual extends spiders_js_1.SpiderIsolate {
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative";
+        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
             let wrongArgs = arg.filter(this.checkArg);
             return wrongArgs.length > 0;
+        }
+        if (arg instanceof Map) {
+            let foundWrongArg = false;
+            arg.forEach((val) => {
+                if (this.checkArg(val)) {
+                    foundWrongArg = true;
+                }
+            });
+            return foundWrongArg;
         }
         else if (typeof arg == 'object') {
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
@@ -139,6 +205,10 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             }
             else {
                 if (this.canInvoke(methodName, args)) {
+                    //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
+                    //Safe to trigger both tentative and commit handlers
+                    baseEV.triggerTentative();
+                    baseEV.triggerCommit();
                     return super.invoke(methodName, args);
                 }
             }
@@ -150,7 +220,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 }
             }
             else {
-                if (this.canInvoke(methodName, args)) {
+                if (this.canInvoke(methodName, args) && methodName.includes("MUT")) {
                     baseEV.hostGsp.createRound(baseEV.id, baseEV.ownerId, methodName, args);
                     let ret = super.invoke(methodName, args);
                     baseEV.hostGsp.yield(baseEV.id, baseEV.ownerId);
@@ -165,11 +235,33 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     write(fieldName, value) {
-        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals") {
+        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName);
         }
-        else {
+        else if (fieldName == "hostGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
+        }
+        else {
+            let base = this.base;
+            if (base.tentativeVals) {
+                if (base.tentativeVals.has(fieldName)) {
+                    base.tentativeVals.set(fieldName, value);
+                }
+                else {
+                    base.tentativeVals.set(fieldName, base.clone(value));
+                    base.committedVals.set(fieldName, base.clone(value));
+                }
+            }
+            return super.write(fieldName, value);
+        }
+    }
+    access(fieldName) {
+        let base = this.base;
+        if (base.tentativeVals.has(fieldName)) {
+            return base.tentativeVals.get(fieldName);
+        }
+        else {
+            return super.access(fieldName);
         }
     }
     resolve(hostActorMirror) {
@@ -178,7 +270,9 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
             let oldGSP = this.base.hostGsp;
             this.base.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
-            newGsp.registerHolderEventual(this.base, oldGSP);
+            if (!newGsp.knownEventual(this.base.id)) {
+                newGsp.registerHolderEventual(this.base, oldGSP);
+            }
         }
     }
     pass(hostActorMirror) {

@@ -4,6 +4,7 @@
 import {Eventual} from "./Eventual";
 import {Round} from "./Round";
 import {FarRef} from "spiders.js";
+import {GroceryList} from "../MyoTests/Defs";
 /**
  * Created by flo on 09/03/2017.
  */
@@ -25,8 +26,8 @@ export class GSP{
     //Object id -> array of known peers having a eventual of a master eventual owned by this actor
     eventualHolders         : Map<string,Array<FarRef<any>>>
     replay                  : Array<string>
-    tentativeListeners      : Array<(ev : Eventual)=>any>
-    commitListeners         : Array<(ev : Eventual)=>any>
+    tentativeListeners      : Map<string,Array<(ev : Eventual)=>any>>
+    commitListeners         : Map<string,Array<(ev : Eventual)=>any>>
 
     //Checks whether this instance is master of a given gsp object (using the gsp object's owner id)
     private isMaster(anId : string) : boolean{
@@ -34,8 +35,28 @@ export class GSP{
     }
 
     private playRound(round : Round){
-        let ev = this.eventuals.get(round.objectId)
-        ev[round.methodName](round.args)
+        let ev              = this.eventuals.get(round.objectId)
+        let filteredArgs    = []
+        round.args.forEach((arg)=>{
+            if(arg.isEventual){
+                if(this.knownEventual((arg as Eventual).id)){
+                    /*console.log("Filtering test 1")
+                    console.log(arg.innerVal)
+                    console.log("Filtering test 2")
+                    console.log(this.eventuals.get((arg as Eventual).id))
+                    console.log(this.eventuals.get((arg as Eventual).id).innerVal)
+                    console.log("END")*/
+                    filteredArgs.push(this.eventuals.get((arg as Eventual).id))
+                }
+                else{
+                    filteredArgs.push(arg)
+                }
+            }
+            else{
+                filteredArgs.push(arg)
+            }
+        })
+        ev[round.methodName](...filteredArgs)
     }
 
 
@@ -50,8 +71,8 @@ export class GSP{
         this.eventualOwner          = new Map()
         this.eventualHolders        = new Map()
         this.replay                 = []
-        this.tentativeListeners     = []
-        this.commitListeners        = []
+        this.tentativeListeners     = new Map()
+        this.commitListeners        = new Map()
     }
 
     //////////////////////////////////
@@ -93,7 +114,6 @@ export class GSP{
         if(this.eventualHolders.has(round.objectId)){
             this.eventualHolders.get(round.objectId).forEach((replicaOwner : FarRef<any>)=>{
                 replicaOwner.newRound(round)
-                //this.environment.commMedium.sendMessage(replicaHolderId,new GSPRoundMessage(this.environment.thisRef,round))
             })
         }
     }
@@ -113,7 +133,7 @@ export class GSP{
         if(!this.roundNumbers.has(round.objectId)){
             this.roundNumbers.set(round.objectId,0)
         }
-        if(round.roundNumber == this.roundNumbers.get(round.objectId) + 1){
+        if(round.roundNumber >= this.roundNumbers.get(round.objectId)){
             //Remove all older pending rounds
             if(this.pending.has(round.objectId)){
                 let res = this.pending.get(round.objectId).filter((pendingRound : Round)=>{
@@ -174,10 +194,10 @@ export class GSP{
         this.eventuals.set(ev.id,ev)
         this.roundNumbers.set(ev.id,0)
         this.eventualOwner.set(ev.id,masterRef)
-        masterRef.newHolder(ev.id,this.roundNumbers.get(ev.id),this)
+        masterRef.newHolder(ev.id,this.roundNumbers.get(ev.id),this.thisActorId,this)
     }
 
-    newHolder(eventualId : string,roundNr : number,holderRef : FarRef<any>){
+    newHolder(eventualId : string,roundNr : number,holderId : string,holderRef : FarRef<any>){
         if(!(this.eventualHolders.has(eventualId))){
             this.eventualHolders.set(eventualId,[])
         }

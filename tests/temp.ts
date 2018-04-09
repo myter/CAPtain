@@ -1,113 +1,78 @@
 import {Eventual} from "../src/Eventual";
 import {CAPplication} from "../src/CAPplication";
 import {CAPActor} from "../src/CAPActor";
-import {FarRef} from "spiders.js";
+import {FarRef, SpiderObject, SpiderObjectMirror} from "spiders.js";
+import set = Reflect.set;
 
-/*class Test extends Eventual{
-    value
-    constructor(){
-        super()
-        this.value = 0
-    }
-
-    incM(){
-        this.value++
-    }
-}
-
-
-class TA extends CAPplication{
-    getFrom(ref){
-        ref.giveMe().then((rep)=>{
-            console.log("got rep")
-            rep.incM()
-        })
-    }
-}
-
-class TAC extends CAPActor{
-    Test
-    constructor(){
-        super()
-        this.Test = Test
-    }
-    
-    giveMe(){
-        let t = new this.Test()
-        t.onCommit(()=>{
-            console.log("Changed commit val in actor")
-        })
-        return new Promise((resolve)=>{
-            resolve(t)
-        })
-    }
-}
-
-let app = new TA()
-let act = app.spawnActor(TAC)
-app.getFrom(act)*/
-class TestEventual extends Eventual{
-    v1
+class Contained extends Eventual{
+    innerVal
 
     constructor(){
         super()
-        this.v1 = 5
+        this.innerVal = 5
     }
 
-    inc(){
-        this.v1++
-        return 5
-    }
-
-    incWithPrim(v){
-        this.v1 += v
-    }
-
-    incWithCon(c){
-        this.v1 += c.v1
+    incMUT(){
+        this.innerVal++
     }
 }
-let app = new CAPplication()
-class Master extends CAPActor{
-    ev
-    val
+
+class Container extends Eventual{
+    inners
+
     constructor(){
         super()
-        this.ev = new TestEventual()
+        this.inners = []
     }
 
-    send(toRef){
-        this.ev.onCommit((ev)=>{
-            this.val = ev.v1
-        })
-        toRef.getEv(this.ev)
+    addInnersMUT(inner){
+        this.inners.push(inner)
     }
-
-    test(){
-        return new Promise((resolve)=>{
-            setTimeout(()=>{
-                resolve(this.val)
-            },2000)
-        })
-    }
-
 }
-class Slave extends CAPActor{
-    val
 
-    getEv(anEv){
-        anEv.onTentative((ev)=>{
-            this.val = ev.v1
+class App extends CAPplication{
+
+    cont
+
+    sendEV(toRef : FarRef<Act>){
+        this.cont = new Container()
+        toRef.getContainer(this.cont)
+    }
+
+    print(){
+        console.log("Printing state")
+        this.cont.inners.forEach((inner : Contained)=>{
+            console.log(inner.innerVal)
         })
-        anEv.inc()
+    }
+}
+
+class Act extends CAPActor{
+    Contained
+
+    constructor(){
+        super()
+        this.Contained = Contained
     }
 
 
+    getContainer(container : Container){
+        let inner = new this.Contained()
+        container.addInnersMUT(inner)
+        inner.incMUT()
+        let inner2 = new this.Contained()
+        container.addInnersMUT(inner2)
+        inner2.incMUT()
+    }
 }
-let slave : FarRef<Slave> = app.spawnActor(Slave)
-let master : FarRef<Master> = app.spawnActor(Master)
-master.send(slave)
-master.test().then((v)=>{
-    console.log("Got back : " + v)
-})
+
+let app = new App()
+let act : FarRef<Act> = app.spawnActor(Act)
+app.sendEV(act)
+setTimeout(()=>{
+    app.print()
+},5000)
+
+
+
 

@@ -10,7 +10,7 @@ var assert                      = require('assert')
 var chai                        = require('chai')
 var expect                      = chai.expect
 
-describe("Availables",()=>{
+/*describe("Availables",()=>{
     class TestAvailable extends Available{
         value
         constructor(){
@@ -310,32 +310,38 @@ describe("Availables",()=>{
             }
         })
     })
-})
+})*/
 
 describe("Eventuals",()=>{
     class TestEventual extends Eventual{
         v1
+        sensitive
 
         constructor(){
             super()
             this.v1 = 5
+            this.sensitive = [5]
         }
 
-        inc(){
+        incMUT(){
             this.v1++
             return 5
         }
 
-        incWithPrim(v){
+        addMUT(val){
+            this.sensitive.push(val)
+        }
+
+        incWithPrimMUT(v){
             this.v1 += v
         }
 
-        incWithCon(c){
+        incWithConMUT(c){
             this.v1 += c.v1
         }
     }
 
-    it("Check OK Constraint (primitive)",(done)=>{
+    /*it("Check OK Constraint (primitive)",(done)=>{
         let app = new Application()
         class Act extends Actor{
             TestConsistent
@@ -346,7 +352,7 @@ describe("Eventuals",()=>{
 
             test(){
                 let c = new this.TestConsistent()
-                c.incWithPrim(5)
+                c.incWithPrimMUT(5)
                 return c.v1
             }
         }
@@ -375,7 +381,7 @@ describe("Eventuals",()=>{
             test(){
                 let c   = new this.TestConsistent()
                 let cc  = new this.TestConsistent()
-                c.incWithCon(cc)
+                c.incWithConMUT(cc)
                 return c.v1
             }
         }
@@ -460,7 +466,7 @@ describe("Eventuals",()=>{
 
             test(){
                 let c   = new this.TestConsistent()
-                c.incWithCon({value:5})
+                c.incWithConMUT({value:5})
                 return c.value
             }
         }
@@ -555,7 +561,7 @@ describe("Eventuals",()=>{
 
             sendAndInc(toRef){
                 toRef.getEv(this.ev)
-                this.ev.inc()
+                this.ev.incMUT()
             }
         }
         class Slave extends CAPActor{
@@ -611,7 +617,7 @@ describe("Eventuals",()=>{
         }
         class Slave extends CAPActor{
             getEv(anEv){
-                anEv.inc()
+                anEv.incMUT()
 
             }
         }
@@ -629,6 +635,130 @@ describe("Eventuals",()=>{
                 done(e)
             }
         })
+    })
+
+    it("Clone sensitive replication",function(done){
+        this.timeout(4000)
+        let app = new CAPplication()
+        class Master extends CAPActor{
+            ev
+            constructor(){
+                super()
+                this.ev = new TestEventual()
+            }
+
+            send(toRef){
+                toRef.getEv(this.ev)
+            }
+
+            test(){
+                return new Promise((resolve)=>{
+                    setTimeout(()=>{
+                        resolve(this.ev.sensitive)
+                    },2000)
+                })
+            }
+        }
+        class Slave extends CAPActor{
+            getEv(anEv){
+                anEv.addMUT(6)
+
+            }
+        }
+        let slave : FarRef<Slave> = app.spawnActor(Slave)
+        let master : FarRef<Master> = app.spawnActor(Master)
+        master.send(slave)
+        master.test().then((v)=>{
+            try{
+                expect(v[0]).to.equal(5)
+                expect(v[1]).to.equal(6)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })*/
+
+    it("Nested replication",function(done){
+        this.timeout(5000)
+        class Contained extends Eventual{
+            innerVal
+
+            constructor(){
+                super()
+                this.innerVal = 5
+            }
+
+            incMUT(){
+                this.innerVal++
+            }
+        }
+
+        class Container extends Eventual{
+            inner
+
+            constructor(){
+                super()
+            }
+
+            addInnersMUT(inner){
+                this.inner = inner
+            }
+        }
+
+        class Act1 extends CAPActor{
+            Container
+            cont
+
+            constructor(){
+                super()
+                this.Container = Container
+            }
+
+            sendTo(ref : FarRef<Act2>){
+                this.cont = new this.Container()
+                ref.getContainer(this.cont)
+            }
+
+            test(){
+                return this.cont.inner.innerVal
+            }
+        }
+
+        class Act2 extends CAPActor{
+            Contained
+
+            constructor(){
+                super()
+                this.Contained = Contained
+            }
+
+            getContainer(cont : Container){
+                let contained = new this.Contained()
+                cont.addInnersMUT(contained)
+                contained.incMUT()
+            }
+        }
+        let app = new CAPplication()
+        let act1 : FarRef<Act1> = app.spawnActor(Act1)
+        let act2 : FarRef<Act2> = app.spawnActor(Act2)
+        act1.sendTo(act2)
+        setTimeout(()=>{
+            act1.test().then((v)=>{
+                try{
+                    expect(v).to.equal(6)
+                    app.kill()
+                    done()
+                }
+                catch(e){
+                    app.kill()
+                    done(e)
+                }
+            })
+        },2000)
     })
 
     it("tentative listener",function(done){
@@ -653,7 +783,7 @@ describe("Eventuals",()=>{
                 anEv.onTentative((ev)=>{
                     this.val = ev.v1
                 })
-                anEv.inc()
+                anEv.incMUT()
             }
 
             test(){
@@ -714,10 +844,8 @@ describe("Eventuals",()=>{
                 anEv.onTentative((ev)=>{
                     this.val = ev.v1
                 })
-                anEv.inc()
+                anEv.incMUT()
             }
-
-
         }
         let slave : FarRef<Slave> = app.spawnActor(Slave)
         let master : FarRef<Master> = app.spawnActor(Master)
@@ -736,7 +864,7 @@ describe("Eventuals",()=>{
     })
 })
 
-describe("Consistents",()=>{
+/*describe("Consistents",()=>{
     class TestConsistent extends Consistent{
         value
         constructor(){
@@ -965,5 +1093,5 @@ describe("Consistents",()=>{
             }
         })
     })
-})
+})*/
 

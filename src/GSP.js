@@ -6,7 +6,27 @@ class GSP {
     }
     playRound(round) {
         let ev = this.eventuals.get(round.objectId);
-        ev[round.methodName](round.args);
+        let filteredArgs = [];
+        round.args.forEach((arg) => {
+            if (arg.isEventual) {
+                if (this.knownEventual(arg.id)) {
+                    /*console.log("Filtering test 1")
+                    console.log(arg.innerVal)
+                    console.log("Filtering test 2")
+                    console.log(this.eventuals.get((arg as Eventual).id))
+                    console.log(this.eventuals.get((arg as Eventual).id).innerVal)
+                    console.log("END")*/
+                    filteredArgs.push(this.eventuals.get(arg.id));
+                }
+                else {
+                    filteredArgs.push(arg);
+                }
+            }
+            else {
+                filteredArgs.push(arg);
+            }
+        });
+        ev[round.methodName](...filteredArgs);
     }
     constructor(thisActorId, Round) {
         this.Round = Round;
@@ -19,8 +39,8 @@ class GSP {
         this.eventualOwner = new Map();
         this.eventualHolders = new Map();
         this.replay = [];
-        this.tentativeListeners = [];
-        this.commitListeners = [];
+        this.tentativeListeners = new Map();
+        this.commitListeners = new Map();
     }
     //////////////////////////////////
     //Methods invoked by Eventuals  //
@@ -57,7 +77,6 @@ class GSP {
         if (this.eventualHolders.has(round.objectId)) {
             this.eventualHolders.get(round.objectId).forEach((replicaOwner) => {
                 replicaOwner.newRound(round);
-                //this.environment.commMedium.sendMessage(replicaHolderId,new GSPRoundMessage(this.environment.thisRef,round))
             });
         }
     }
@@ -75,7 +94,7 @@ class GSP {
         if (!this.roundNumbers.has(round.objectId)) {
             this.roundNumbers.set(round.objectId, 0);
         }
-        if (round.roundNumber == this.roundNumbers.get(round.objectId) + 1) {
+        if (round.roundNumber >= this.roundNumbers.get(round.objectId)) {
             //Remove all older pending rounds
             if (this.pending.has(round.objectId)) {
                 let res = this.pending.get(round.objectId).filter((pendingRound) => {
@@ -131,9 +150,9 @@ class GSP {
         this.eventuals.set(ev.id, ev);
         this.roundNumbers.set(ev.id, 0);
         this.eventualOwner.set(ev.id, masterRef);
-        masterRef.newHolder(ev.id, this.roundNumbers.get(ev.id), this);
+        masterRef.newHolder(ev.id, this.roundNumbers.get(ev.id), this.thisActorId, this);
     }
-    newHolder(eventualId, roundNr, holderRef) {
+    newHolder(eventualId, roundNr, holderId, holderRef) {
         if (!(this.eventualHolders.has(eventualId))) {
             this.eventualHolders.set(eventualId, []);
         }
