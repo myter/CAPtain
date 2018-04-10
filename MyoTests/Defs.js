@@ -9,6 +9,9 @@ class UserLists extends Eventual_1.Eventual {
     newListMUT(list) {
         this.lists.set(list.listName, list);
     }
+    asString() {
+        return "<USER-LISTS> : " + this.owner;
+    }
 }
 exports.UserLists = UserLists;
 class GroceryList extends Eventual_1.Eventual {
@@ -19,6 +22,9 @@ class GroceryList extends Eventual_1.Eventual {
     }
     addGroceryItemMUT(item) {
         this.items.push(item);
+    }
+    asString() {
+        return "<LIST> : " + this.listName;
     }
 }
 exports.GroceryList = GroceryList;
@@ -36,6 +42,9 @@ class GroceryItem extends Eventual_1.Eventual {
     }
     decQuantityMUT() {
         this.quantity--;
+    }
+    asString() {
+        return "<ITEM> : " + this.groceryName;
     }
 }
 exports.GroceryItem = GroceryItem;

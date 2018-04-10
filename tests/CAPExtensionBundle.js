@@ -49527,7 +49527,10 @@ class BufferedMirror extends MOP_1.SpiderObjectMirror {
     }
     access(fieldName) {
         let base = this.base;
-        if (base.isConnected) {
+        if (fieldName == "thisMirror") {
+            return base.thisMirror;
+        }
+        else if (base.isConnected) {
             return base.realRef[fieldName];
         }
         else {
@@ -50195,6 +50198,9 @@ class SpiderObjectMirror {
     bindBase(base) {
         this.base = base;
     }
+    bindProxy(proxy) {
+        this.proxyBase = proxy;
+    }
     invoke(methodName, args) {
         return this.base[methodName](...args);
     }
@@ -50220,6 +50226,9 @@ class SpiderIsolateMirror {
     }
     bindBase(base) {
         this.base = base;
+    }
+    bindProxy(proxy) {
+        this.proxyBase = proxy;
     }
     invoke(methodName, args) {
         return this.base[methodName](...args);
@@ -50303,7 +50312,14 @@ class SpiderObject {
         this[SpiderObjectMirror.mirrorAccessKey] = this.mirror;
         //Make sure the object's prototypes are wrapped as well
         wrapPrototypes(this, this.mirror);
-        return makeSpiderObjectProxy(thisClone, this.mirror);
+        let proxied = makeSpiderObjectProxy(thisClone, this.mirror);
+        for (var i in thisClone) {
+            if (typeof thisClone[i] == 'function' && i != "constructor") {
+                thisClone[i] = thisClone[i].bind(proxied);
+            }
+        }
+        objectMirror.bindProxy(proxied);
+        return proxied;
     }
 }
 SpiderObject.spiderObjectKey = "_SPIDER_OBJECT_";
@@ -50322,7 +50338,14 @@ class SpiderIsolate {
         thisClone[SpiderObjectMirror.mirrorAccessKey] = objectMirror;
         //Make sure the object's prototypes are wrapped as well
         wrapPrototypes(this, this.mirror);
-        return makeSpiderObjectProxy(thisClone, this.mirror);
+        let proxied = makeSpiderObjectProxy(thisClone, this.mirror);
+        for (var i in thisClone) {
+            if (typeof thisClone[i] == 'function') {
+                thisClone[i] = thisClone[i].bind(proxied);
+            }
+        }
+        objectMirror.bindProxy(proxied);
+        return proxied;
     }
     //Called by serialise on an already constructed isolate which has just been passed
     instantiate(objectMirror, isolClone, wrapPrototypes, makeSpiderObjectProxy) {
@@ -50331,7 +50354,14 @@ class SpiderIsolate {
         isolClone["_SPIDER_OBJECT_MIRROR_"] = objectMirror;
         //Make sure the object's prototypes are wrapped as well
         wrapPrototypes(this, this.mirror);
-        return makeSpiderObjectProxy(isolClone, this.mirror);
+        let proxied = makeSpiderObjectProxy(isolClone, this.mirror);
+        for (var i in isolClone) {
+            if (typeof isolClone[i] == 'function') {
+                isolClone[i] = isolClone[i].bind(proxied);
+            }
+        }
+        objectMirror.bindProxy(proxied);
+        return proxied;
     }
 }
 exports.SpiderIsolate = SpiderIsolate;
@@ -53244,14 +53274,17 @@ function serialise(value, receiverId, environment) {
         else if (value[SpiderIsolateContainer.checkIsolateFuncKey]) {
             let mirror = value[MOP_1.SpiderObjectMirror.mirrorAccessKey];
             let baseOb = mirror.pass(environment.actorMirror);
+            let proxyBase = mirror.proxyBase;
             //Remove base reference from mirror to avoid serialising the base object twice
             delete mirror.base;
             delete baseOb[MOP_1.SpiderObjectMirror.mirrorAccessKey];
+            delete mirror.proxyBase;
             let [vars, methods] = deconstructBehaviour(baseOb, 0, [], [], receiverId, environment, "toString");
             let [mVars, mMethods] = deconstructBehaviour(mirror, 0, [], [], receiverId, environment, "toString");
             let container = new SpiderIsolateContainer(JSON.stringify(vars), JSON.stringify(methods), JSON.stringify(mVars), JSON.stringify(mMethods));
             //Reset base object <=> mirror link
             mirror.base = baseOb;
+            mirror.proxyBase = proxyBase;
             baseOb[MOP_1.SpiderObjectMirror.mirrorAccessKey] = mirror;
             return container;
         }
@@ -53290,7 +53323,7 @@ function serialise(value, receiverId, environment) {
         }
         else if (value[MOP_1.SpiderObject.spiderObjectKey]) {
             let objectMirror = value[MOP_1.SpiderObjectMirror.mirrorAccessKey];
-            return serialise(objectMirror.pass(), receiverId, environment);
+            return serialise(objectMirror.pass(environment.actorMirror), receiverId, environment);
         }
         else {
             return serialiseObject(value, environment.thisRef, environment.objectPool);
@@ -53732,7 +53765,7 @@ class ServerActor extends ActorBase {
         var deconActorMirror = serialisation_1.deconstructBehaviour(this.actorMirror, 0, [], [], actorId, app.mainEnvironment, "toString");
         var actorMirrorVariables = deconActorMirror[0];
         var actorMirrorMethods = deconActorMirror[1];
-        var actor = fork(__dirname + '/actorProto.js', [false, app.mainIp, port, actorId, app.mainId, app.mainPort, JSON.stringify(actorVariables), JSON.stringify(actorMethods), JSON.stringify(staticProperties), JSON.stringify(actorMirrorVariables), JSON.stringify(actorMirrorMethods)]);
+        var actor = fork(__dirname + '/ActorProto.js', [false, app.mainIp, port, actorId, app.mainId, app.mainPort, JSON.stringify(actorVariables), JSON.stringify(actorMethods), JSON.stringify(staticProperties), JSON.stringify(actorMirrorVariables), JSON.stringify(actorMirrorMethods)]);
         app.spawnedActors.push(actor);
         let [fieldNames, methodNames] = serialisation_1.getObjectNames(this, "spawn");
         var ref = new FarRef_1.ServerFarReference(ObjectPool_1.ObjectPool._BEH_OBJ_ID, fieldNames, methodNames, actorId, app.mainIp, port, app.mainEnvironment);
@@ -53748,7 +53781,7 @@ class ServerActor extends ActorBase {
         constructorArgs.forEach((constructorArg) => {
             serialisedArgs.push(serialisation_1.serialise(constructorArg, actorId, app.mainEnvironment));
         });
-        var actor = fork(__dirname + '/actorProto.js', [true, app.mainIp, port, actorId, app.mainId, app.mainPort, filePath, actorClassName, JSON.stringify(serialisedArgs)]);
+        var actor = fork(__dirname + '/ActorProto.js', [true, app.mainIp, port, actorId, app.mainId, app.mainPort, filePath, actorClassName, JSON.stringify(serialisedArgs)]);
         app.spawnedActors.push(actor);
         //Impossible to know the actor's fields and methods at this point
         var ref = new FarRef_1.ServerFarReference(ObjectPool_1.ObjectPool._BEH_OBJ_ID, [], [], actorId, app.mainIp, port, app.mainEnvironment);
@@ -60877,16 +60910,67 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
 class Eventual extends spiders_js_1.SpiderIsolate {
+    constructor() {
+        super(new EventualMirror());
+        this.populated = false;
+        this["_IS_EVENTUAL_"] = true;
+        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        this.isEventual = true;
+        this.committedVals = new Map();
+        this.tentativeVals = new Map();
+        this.tentListeners = [];
+        this.commListeners = [];
+    }
+    clone(value) {
+        if (typeof value != 'object') {
+            return value;
+        }
+        else if (value instanceof Array) {
+            let res = [];
+            value.forEach((val) => {
+                res.push(this.clone(val));
+            });
+            return res;
+        }
+        else if (value instanceof Map) {
+            let res = new Map();
+            value.forEach((val, key) => {
+                res.set(key, this.clone(val));
+            });
+            return res;
+        }
+        else if (value.isEventual) {
+            /*console.log("Cloning inner eventual")
+            let c = new (this.constructor as any)()
+            Reflect.ownKeys(value).forEach((key)=>{
+                //console.log("Deep cloning: " + key.toString())
+                //console.log("Is eventual? " + value[key].isEventual)
+                c[key] = this.clone(value[key])
+            })
+            return c*/
+            /*Reflect.ownKeys(value).forEach((key)=>{
+                value[key] = this.clone(value[key])
+            })*/
+            return value;
+        }
+        else {
+            return value;
+        }
+    }
     //////////////////////////////////////
     // GSP methods                      //
     //////////////////////////////////////
-    //Calling this at construction time is dangerous but ok for now. A problem could arise if an eventual is created and serialised at actor construction-time (some elements in the map might be serialised as far references)
     populateCommitted() {
-        Reflect.ownKeys(this).forEach((key) => {
-            if (key != "hostGSP" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentListeners" && key != "commListeners" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_') {
-                this.committedVals.set(key.toString(), this[key]);
+        /*Reflect.ownKeys(this).forEach((key)=>{
+            if(typeof this[key] != 'function' && key != "hostGsp" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentativeVals" && key != "tentListeners" && key != "commListeners" && key != "populated" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_'){
+                this.committedVals.set(key.toString(),this.clone(this[key]))
+                this.tentativeVals.set(key.toString(),this.clone(this[key]))
             }
-        });
+        })*/
+        this.populated = true;
     }
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp, hostId = undefined, isOwner) {
@@ -60895,44 +60979,38 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         if (isOwner) {
             this.ownerId = hostId;
         }
+        if (!this.hostGsp.tentativeListeners.has(this.id)) {
+            this.hostGsp.tentativeListeners.set(this.id, []);
+        }
+        if (!this.hostGsp.commitListeners.has(this.id)) {
+            this.hostGsp.commitListeners.set(this.id, []);
+        }
         this.tentListeners.forEach((callback) => {
-            this.hostGsp.tentativeListeners.push(callback);
+            this.hostGsp.tentativeListeners.get(this.id).push(callback);
         });
         this.commListeners.forEach((callback) => {
-            this.hostGsp.commitListeners.push(callback);
+            this.hostGsp.commitListeners.get(this.id).push(callback);
         });
         this.tentListeners = [];
         this.commListeners = [];
     }
     resetToCommit() {
         this.committedVals.forEach((committedVal, key) => {
-            this[key] = committedVal;
+            this.tentativeVals.set(key, committedVal);
         });
     }
     commit() {
-        this.committedVals.forEach((_, key) => {
-            this.committedVals.set(key, this[key]);
+        this.tentativeVals.forEach((tentativeVal, key) => {
+            this.committedVals.set(key, this.clone(tentativeVal));
         });
         this.triggerCommit();
-    }
-    constructor() {
-        super(new EventualMirror());
-        this["_IS_EVENTUAL_"] = true;
-        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-        this.isEventual = true;
-        this.committedVals = new Map();
-        this.tentListeners = [];
-        this.commListeners = [];
     }
     //////////////////////////////////////
     // API                              //
     //////////////////////////////////////
     triggerTentative() {
         if (this.hostGsp) {
-            this.hostGsp.tentativeListeners.forEach((callback) => {
+            this.hostGsp.tentativeListeners.get(this.id).forEach((callback) => {
                 callback(this);
             });
         }
@@ -60944,7 +61022,10 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     onTentative(callback) {
         if (this.hostGsp) {
-            this.hostGsp.tentativeListeners.push(callback);
+            if (!this.hostGsp.tentativeListeners.has(this.id)) {
+                this.hostGsp.tentativeListeners.set(this.id, []);
+            }
+            this.hostGsp.tentativeListeners.get(this.id).push(callback);
         }
         else {
             this.tentListeners.push(callback);
@@ -60952,7 +61033,10 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     onCommit(callback) {
         if (this.hostGsp) {
-            this.hostGsp.commitListeners.push(callback);
+            if (!this.hostGsp.commitListeners.has(this.id)) {
+                this.hostGsp.commitListeners.set(this.id, []);
+            }
+            this.hostGsp.commitListeners.get(this.id).push(callback);
         }
         else {
             this.commListeners.push(callback);
@@ -60960,7 +61044,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     triggerCommit() {
         if (this.hostGsp) {
-            this.hostGsp.commitListeners.forEach((callback) => {
+            this.hostGsp.commitListeners.get(this.id).forEach((callback) => {
                 callback(this);
             });
         }
@@ -60974,12 +61058,21 @@ class Eventual extends spiders_js_1.SpiderIsolate {
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative";
+        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
             let wrongArgs = arg.filter(this.checkArg);
             return wrongArgs.length > 0;
+        }
+        if (arg instanceof Map) {
+            let foundWrongArg = false;
+            arg.forEach((val) => {
+                if (this.checkArg(val)) {
+                    foundWrongArg = true;
+                }
+            });
+            return foundWrongArg;
         }
         else if (typeof arg == 'object') {
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
@@ -61014,6 +61107,10 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             }
             else {
                 if (this.canInvoke(methodName, args)) {
+                    //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
+                    //Safe to trigger both tentative and commit handlers
+                    baseEV.triggerTentative();
+                    baseEV.triggerCommit();
                     return super.invoke(methodName, args);
                 }
             }
@@ -61025,7 +61122,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 }
             }
             else {
-                if (this.canInvoke(methodName, args)) {
+                if (this.canInvoke(methodName, args) && methodName.includes("MUT")) {
                     baseEV.hostGsp.createRound(baseEV.id, baseEV.ownerId, methodName, args);
                     let ret = super.invoke(methodName, args);
                     baseEV.hostGsp.yield(baseEV.id, baseEV.ownerId);
@@ -61040,11 +61137,33 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     write(fieldName, value) {
-        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals") {
+        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName);
         }
-        else {
+        else if (fieldName == "hostGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
+        }
+        else {
+            let base = this.base;
+            if (base.tentativeVals) {
+                if (base.tentativeVals.has(fieldName)) {
+                    base.tentativeVals.set(fieldName, value);
+                }
+                else {
+                    base.tentativeVals.set(fieldName, base.clone(value));
+                    base.committedVals.set(fieldName, base.clone(value));
+                }
+            }
+            return super.write(fieldName, value);
+        }
+    }
+    access(fieldName) {
+        let base = this.base;
+        if (base.tentativeVals.has(fieldName)) {
+            return base.tentativeVals.get(fieldName);
+        }
+        else {
+            return super.access(fieldName);
         }
     }
     resolve(hostActorMirror) {
@@ -61053,7 +61172,9 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
             let oldGSP = this.base.hostGsp;
             this.base.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
-            newGsp.registerHolderEventual(this.base, oldGSP);
+            if (!newGsp.knownEventual(this.base.id)) {
+                newGsp.registerHolderEventual(this.proxyBase, oldGSP);
+            }
         }
     }
     pass(hostActorMirror) {
@@ -61066,7 +61187,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                     //This is the first invocation on this eventual, populate its committed map
                     eventual.populateCommitted();
                 }
-                gsp.registerMasterEventual(eventual);
+                gsp.registerMasterEventual(this.proxyBase);
                 eventual.setHost(gsp, hostActorMirror.base.thisRef.ownerId, true);
             }
             return super.pass(hostActorMirror);
@@ -61087,7 +61208,22 @@ class GSP {
     }
     playRound(round) {
         let ev = this.eventuals.get(round.objectId);
-        ev[round.methodName](round.args);
+        let filteredArgs = [];
+        round.args.forEach((arg) => {
+            if (arg.isEventual) {
+                let argId = arg.id;
+                if (this.knownEventual(argId)) {
+                    filteredArgs.push(this.eventuals.get(argId));
+                }
+                else {
+                    filteredArgs.push(arg);
+                }
+            }
+            else {
+                filteredArgs.push(arg);
+            }
+        });
+        ev[round.methodName](...filteredArgs);
     }
     constructor(thisActorId, Round) {
         this.Round = Round;
@@ -61100,8 +61236,8 @@ class GSP {
         this.eventualOwner = new Map();
         this.eventualHolders = new Map();
         this.replay = [];
-        this.tentativeListeners = [];
-        this.commitListeners = [];
+        this.tentativeListeners = new Map();
+        this.commitListeners = new Map();
     }
     //////////////////////////////////
     //Methods invoked by Eventuals  //
@@ -61138,7 +61274,6 @@ class GSP {
         if (this.eventualHolders.has(round.objectId)) {
             this.eventualHolders.get(round.objectId).forEach((replicaOwner) => {
                 replicaOwner.newRound(round);
-                //this.environment.commMedium.sendMessage(replicaHolderId,new GSPRoundMessage(this.environment.thisRef,round))
             });
         }
     }
@@ -61150,13 +61285,12 @@ class GSP {
         }
         this.pending.get(round.objectId).push(round);
         this.eventualOwner.get(round.objectId).newRound(round);
-        //this.environment.commMedium.sendMessage(roundMasterOwnerId(round),new GSPRoundMessage(this.environment.thisRef,round))
     }
     confirmMasterRound(round) {
         if (!this.roundNumbers.has(round.objectId)) {
             this.roundNumbers.set(round.objectId, 0);
         }
-        if (round.roundNumber == this.roundNumbers.get(round.objectId) + 1) {
+        if (round.roundNumber >= this.roundNumbers.get(round.objectId)) {
             //Remove all older pending rounds
             if (this.pending.has(round.objectId)) {
                 let res = this.pending.get(round.objectId).filter((pendingRound) => {
@@ -61212,9 +61346,9 @@ class GSP {
         this.eventuals.set(ev.id, ev);
         this.roundNumbers.set(ev.id, 0);
         this.eventualOwner.set(ev.id, masterRef);
-        masterRef.newHolder(ev.id, this.roundNumbers.get(ev.id), this);
+        masterRef.newHolder(ev.id, this.roundNumbers.get(ev.id), this.thisActorId, this);
     }
-    newHolder(eventualId, roundNr, holderRef) {
+    newHolder(eventualId, roundNr, holderId, holderRef) {
         if (!(this.eventualHolders.has(eventualId))) {
             this.eventualHolders.set(eventualId, []);
         }
@@ -61296,7 +61430,7 @@ class TestEventual extends Eventual_1.Eventual {
         super();
         this.v1 = 5;
     }
-    inc() {
+    incMUT() {
         this.v1++;
     }
     incWithPrim(v) {
@@ -61312,11 +61446,15 @@ class TestConsistent extends Consistent_1.Consistent {
         this.value = 5;
     }
     incWithPrim(num) {
-        this.value += num;
+        return this.value.then((v) => {
+            this.value = v + num;
+        });
     }
     incWithCon(con) {
-        con.value.then((v) => {
-            this.value += v;
+        return con.value.then((v) => {
+            return this.value.then((vv) => {
+                this.value = v + vv;
+            });
         });
     }
 }
@@ -61522,7 +61660,7 @@ class MasterSlaveChangeAct extends CAPActor_1.CAPActor {
 }
 class SlaveSlaveChangeAct extends CAPActor_1.CAPActor {
     getEv(anEv) {
-        anEv.inc();
+        anEv.incMUT();
     }
 }
 let EventualReplicationSlaveChange = () => {
@@ -61541,7 +61679,7 @@ class MasterMasterChange extends CAPActor_1.CAPActor {
     }
     sendAndInc(toRef) {
         toRef.getEv(this.ev);
-        this.ev.inc();
+        this.ev.incMUT();
     }
 }
 class SlaveMasterChange extends CAPActor_1.CAPActor {
@@ -61714,7 +61852,7 @@ class EventualTentativeSlave extends CAPActor_1.CAPActor {
         anEv.onTentative((ev) => {
             this.val = ev.v1;
         });
-        anEv.inc();
+        anEv.incMUT();
     }
     test() {
         return new Promise((resolve) => {
@@ -61757,7 +61895,7 @@ class EventualCommitSlave extends CAPActor_1.CAPActor {
         anEv.onTentative((ev) => {
             this.val = ev.v1;
         });
-        anEv.inc();
+        anEv.incMUT();
     }
 }
 let EventualCommit = () => {
@@ -61769,6 +61907,112 @@ let EventualCommit = () => {
     });
 };
 scheduled.push(EventualCommit);
+class ExtendedEventual extends Eventual_1.Eventual {
+    constructor() {
+        super();
+        this.v1 = 5;
+        this.sensitive = [5];
+    }
+    incMUT() {
+        this.v1++;
+        return 5;
+    }
+    addMUT(val) {
+        this.sensitive.push(val);
+    }
+    incWithPrimMUT(v) {
+        this.v1 += v;
+    }
+    incWithConMUT(c) {
+        this.v1 += c.v1;
+    }
+}
+class EventualSensistiveMaster extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.ev = new ExtendedEventual();
+    }
+    send(toRef) {
+        toRef.getEv(this.ev);
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.ev.sensitive);
+            }, 2000);
+        });
+    }
+}
+class EventualSensitiveSlave extends CAPActor_1.CAPActor {
+    getEv(anEv) {
+        anEv.addMUT(6);
+    }
+}
+let EventualSensitive = () => {
+    let master = app.spawnActor(EventualSensistiveMaster);
+    let slave = app.spawnActor(EventualSensitiveSlave);
+    master.send(slave);
+    return master.test().then((v) => {
+        let ok1 = v[0] == 5;
+        let ok2 = v[1] == 6;
+        log("Sensitive Replication", true, ok1 && ok2);
+    });
+};
+scheduled.push(EventualSensitive);
+class Contained extends Eventual_1.Eventual {
+    constructor() {
+        super();
+        this.innerVal = 5;
+    }
+    incMUT() {
+        this.innerVal++;
+    }
+}
+class Container extends Eventual_1.Eventual {
+    constructor() {
+        super();
+    }
+    addInnersMUT(inner) {
+        this.inner = inner;
+    }
+}
+class Act1 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Container = Container;
+    }
+    sendTo(ref) {
+        this.cont = new this.Container();
+        ref.getContainer(this.cont);
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.cont.inner.innerVal);
+            }, 2000);
+        });
+    }
+}
+class Act2 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Contained = Contained;
+    }
+    getContainer(cont) {
+        let contained = new this.Contained();
+        cont.addInnersMUT(contained);
+        contained.incMUT();
+    }
+}
+let nestedReplication = () => {
+    let act1 = app.spawnActor(Act1);
+    let act2 = app.spawnActor(Act2);
+    act1.sendTo(act2);
+    return act1.test().then((v) => {
+        log("Nested Replication", v, 6);
+    });
+};
+scheduled.push(nestedReplication);
 class ConsistentContentSerialisationAct extends CAPActor_1.CAPActor {
     constructor() {
         super();
@@ -61824,8 +62068,9 @@ class ConsistentNOKConstraintAct extends CAPActor_1.CAPActor {
     }
     test() {
         let c = new this.TestConsistent();
-        c.incWithCon({ value: 5 });
-        return c.value;
+        return c.incWithCon({ value: 5 }).then(() => {
+            return c.value;
+        });
     }
 }
 let ConsistentNOKConstraint = () => {
@@ -61897,8 +62142,9 @@ class ConsistentConstraintPrimitiveAct extends spiders_js_1.Actor {
     }
     test() {
         let c = new this.TestConsistent();
-        c.incWithPrim(5);
-        return c.value;
+        return c.incWithPrim(5).then(() => {
+            return c.value;
+        });
     }
 }
 let ConsistentConstraintPrimitive = () => {

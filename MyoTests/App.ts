@@ -6,7 +6,7 @@ import {FarRef} from "spiders.js";
 let app = new CAPplication()
 class Server extends CAPActor{
     lists : Map<string,UserLists>
-    tempList
+    tempList : UserLists
     UserLists
     dir
 
@@ -18,6 +18,7 @@ class Server extends CAPActor{
     init(){
         this.lists = new Map()
         this.UserLists = require(this.dir+"/Defs").UserLists
+        console.log("Server id: " + this.gsp.thisActorId)
     }
 
     getLists(userName){
@@ -27,52 +28,19 @@ class Server extends CAPActor{
         }
         else{
             let newList = new this.UserLists(userName)
-            newList.onCommit((lists : UserLists)=>{
-                console.log("Lists on server: ")
-                lists.lists.forEach((lst : GroceryList)=>{
-                    console.log(lst.listName)
-                })
-                /*this.printLists(lists)
-                lists.lists.forEach((lst)=>{
-                    console.log(lst.items.length)
-                })
-                lists.lists.forEach((lst : GroceryList)=>{
-                    lst.onCommit((l : GroceryList)=>{
-                        this.printList(l)
-                        l.items.forEach((item : GroceryItem)=>{
-                            this.printItem(item)
-                        })
-                    })
-                })*/
-
-            })
             this.tempList = newList
             return newList
         }
     }
 
-    prefix = "[SERVER] "
-
-    printLists(lists : UserLists){
-        console.log(this.prefix + "State of all lists")
-        lists.lists.forEach((list : GroceryList)=>{
-            this.printList(list)
+    print(){
+        console.log("State on server")
+        this.tempList.lists.forEach((list : GroceryList)=>{
+            console.log(" - List : " + list.listName)
+            list.items.forEach((item : GroceryItem)=>{
+                console.log("     - " + item.groceryName + " : " + item.quantity)
+            })
         })
-        console.log(this.prefix + "[END]")
-    }
-
-    printList(list : GroceryList){
-        console.log(this.prefix + "State of : " + list.listName)
-        list.items.forEach((item : GroceryItem)=>{
-            this.printItem(item)
-        })
-        console.log(this.prefix + "[END]")
-    }
-
-    printItem(item : GroceryItem){
-        console.log(this.prefix + "State of : " + item.groceryName)
-        console.log("       -" + item.groceryName + " : " + item.quantity)
-        console.log(this.prefix + "[END]")
     }
 }
 
@@ -93,47 +61,29 @@ class Client extends CAPActor{
     init(){
         this.GroceryList = require(this.dir+"/Defs").GroceryList
         this.GroceryItem = require(this.dir+"/Defs").GroceryItem
+        console.log("Client id: " + this.gsp.thisActorId)
     }
 
     login(serverRef){
         this.server = serverRef
         return this.server.getLists(this.name).then((myLists)=>{
             this.myLists = myLists
-            this.myLists.onCommit((lists : UserLists)=>{
-                this.printLists(lists)
+        })
+    }
+
+    print(){
+        console.log("State on client")
+        this.myLists.lists.forEach((list : GroceryList)=>{
+            console.log(" - List : " + list.listName)
+            list.items.forEach((item : GroceryItem)=>{
+                console.log("     - " + item.groceryName + " : " + item.quantity)
             })
         })
     }
 
-    prefix = "[CLIENT] "
-
-    printLists(lists : UserLists){
-        console.log(this.prefix + "State of all lists")
-        lists.lists.forEach((list : GroceryList)=>{
-            this.printList(list)
-        })
-        console.log(this.prefix + "[END]")
-    }
-
-    printList(list : GroceryList){
-        console.log(this.prefix + "State of : " + list.listName)
-        list.items.forEach((item : GroceryItem)=>{
-            this.printItem(item)
-        })
-        console.log(this.prefix + "[END]")
-    }
-
-    printItem(item : GroceryItem){
-        console.log(this.prefix + "State of : " + item.groceryName)
-        console.log("       -" + item.groceryName + " : " + item.quantity)
-        console.log(this.prefix + "[END]")
-    }
 
     newList(listName){
         let newList = new this.GroceryList(listName)
-        newList.onCommit((lst : GroceryList)=>{
-            this.printList(lst)
-        })
         this.myLists.newListMUT(newList)
     }
 
@@ -148,18 +98,8 @@ let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
 
 (cli.login(ser) as any).then(()=>{
     cli.newList("test")
-    setTimeout(()=>{
-        cli.addItemToList("test","banana")
-        setTimeout(()=>{
-            //ser.printAll()
-        },1000)
-    },1000)
-    /*cli.newList("test2")
-    cli.newList("test3")
-    cli.newList("test4")*/
-    /*setTimeout(()=>{
-        cli.addItemToList("test","banana")
-    },0)*/
+    cli.addItemToList("test","banana")
+    cli.addItemToList("test","pear")
 })
 var stdin = process.openStdin();
 stdin.addListener("data", function(d) {

@@ -10,7 +10,7 @@ var assert                      = require('assert')
 var chai                        = require('chai')
 var expect                      = chai.expect
 
-/*describe("Availables",()=>{
+describe("Availables",()=>{
     class TestAvailable extends Available{
         value
         constructor(){
@@ -310,7 +310,7 @@ var expect                      = chai.expect
             }
         })
     })
-})*/
+})
 
 describe("Eventuals",()=>{
     class TestEventual extends Eventual{
@@ -341,7 +341,7 @@ describe("Eventuals",()=>{
         }
     }
 
-    /*it("Check OK Constraint (primitive)",(done)=>{
+    it("Check OK Constraint (primitive)",(done)=>{
         let app = new Application()
         class Act extends Actor{
             TestConsistent
@@ -680,7 +680,7 @@ describe("Eventuals",()=>{
                 done(e)
             }
         })
-    })*/
+    })
 
     it("Nested replication",function(done){
         this.timeout(5000)
@@ -864,7 +864,7 @@ describe("Eventuals",()=>{
     })
 })
 
-/*describe("Consistents",()=>{
+describe("Consistents",()=>{
     class TestConsistent extends Consistent{
         value
         constructor(){
@@ -873,12 +873,16 @@ describe("Eventuals",()=>{
         }
 
         incWithPrim(num){
-            this.value += num
+            return this.value.then((v)=>{
+                return this.value = v + num
+            })
         }
 
         incWithCon(con){
-            con.value.then((v)=>{
-                this.value += v
+            return con.value.then((v)=>{
+                return this.value.then((vv)=>{
+                    this.value = v + vv
+                })
             })
         }
     }
@@ -894,8 +898,9 @@ describe("Eventuals",()=>{
 
             test(){
                 let c = new this.TestConsistent()
-                c.incWithPrim(5)
-                return c.value
+                return c.incWithPrim(5).then(()=>{
+                    return c.value
+                })
             }
         }
         (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
@@ -1093,5 +1098,5 @@ describe("Eventuals",()=>{
             }
         })
     })
-})*/
+})
 

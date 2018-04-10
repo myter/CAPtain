@@ -95,20 +95,14 @@ export class Eventual extends SpiderIsolate{
 
     resetToCommit(){
         this.committedVals.forEach((committedVal,key)=>{
-            /*console.log("Inside: " + this.hostGsp.thisActorId)
-            console.log(key)
-            console.log("Resetting to commit from: " + committedVal + " to " + this.tentativeVals.get(key))*/
             this.tentativeVals.set(key,committedVal)
         })
     }
 
     commit(){
         this.tentativeVals.forEach((tentativeVal,key)=>{
-            this.committedVals.set(key,tentativeVal)
+            this.committedVals.set(key,this.clone(tentativeVal))
         })
-        /*console.log("Inside: " + this.hostGsp.thisActorId)
-        console.log("After commit for: " + this.id)
-        console.log(this.tentativeVals.get("innerVal"))*/
         this.triggerCommit()
     }
 
@@ -303,7 +297,7 @@ export class EventualMirror extends SpiderIsolateMirror{
             let oldGSP = (this.base as Eventual).hostGsp;
             (this.base as Eventual).setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
             if(!newGsp.knownEventual((this.base as Eventual).id)){
-                newGsp.registerHolderEventual(this.base as Eventual,oldGSP)
+                newGsp.registerHolderEventual(this.proxyBase as Eventual,oldGSP)
             }
         }
     }
@@ -318,7 +312,7 @@ export class EventualMirror extends SpiderIsolateMirror{
                     //This is the first invocation on this eventual, populate its committed map
                     eventual.populateCommitted()
                 }
-                gsp.registerMasterEventual(eventual)
+                gsp.registerMasterEventual(this.proxyBase as Eventual)
                 eventual.setHost(gsp,hostActorMirror.base.thisRef.ownerId,true)
             }
             return super.pass(hostActorMirror)

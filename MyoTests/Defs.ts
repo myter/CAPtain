@@ -13,6 +13,10 @@ export class UserLists extends Eventual{
     newListMUT(list : GroceryList){
         this.lists.set(list.listName,list)
     }
+
+    asString(){
+        return "<USER-LISTS> : " + this.owner
+    }
 }
 
 export class GroceryList extends Eventual{
@@ -27,6 +31,10 @@ export class GroceryList extends Eventual{
 
     addGroceryItemMUT(item : GroceryItem){
         this.items.push(item)
+    }
+
+    asString(){
+        return "<LIST> : "+ this.listName
     }
 }
 
@@ -50,5 +58,9 @@ export class GroceryItem extends Eventual{
 
     decQuantityMUT(){
         this.quantity--
+    }
+
+    asString(){
+        return "<ITEM> : " + this.groceryName
     }
 }

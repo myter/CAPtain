@@ -39,14 +39,9 @@ export class GSP{
         let filteredArgs    = []
         round.args.forEach((arg)=>{
             if(arg.isEventual){
-                if(this.knownEventual((arg as Eventual).id)){
-                    /*console.log("Filtering test 1")
-                    console.log(arg.innerVal)
-                    console.log("Filtering test 2")
-                    console.log(this.eventuals.get((arg as Eventual).id))
-                    console.log(this.eventuals.get((arg as Eventual).id).innerVal)
-                    console.log("END")*/
-                    filteredArgs.push(this.eventuals.get((arg as Eventual).id))
+                let argId = (arg as Eventual).id
+                if(this.knownEventual(argId)){
+                    filteredArgs.push(this.eventuals.get(argId))
                 }
                 else{
                     filteredArgs.push(arg)
@@ -58,7 +53,6 @@ export class GSP{
         })
         ev[round.methodName](...filteredArgs)
     }
-
 
     constructor(thisActorId : string,Round){
         this.Round                  = Round
@@ -126,7 +120,6 @@ export class GSP{
         }
         this.pending.get(round.objectId).push(round)
         this.eventualOwner.get(round.objectId).newRound(round)
-        //this.environment.commMedium.sendMessage(roundMasterOwnerId(round),new GSPRoundMessage(this.environment.thisRef,round))
     }
 
     confirmMasterRound(round : Round){

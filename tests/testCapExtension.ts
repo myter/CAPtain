@@ -2,7 +2,7 @@ import {CAPActor} from "../src/CAPActor";
 import {Available} from "../src/Available";
 import {Eventual} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
-import { Actor, FarRef} from "spiders.js"
+import {Actor, FarRef} from "spiders.js"
 import {CAPplication} from "../src/CAPplication";
 
 var scheduled           = []
@@ -44,7 +44,7 @@ class TestEventual extends Eventual{
         this.v1 = 5
     }
 
-    inc(){
+    incMUT(){
         this.v1++
     }
 
@@ -64,12 +64,16 @@ class TestConsistent extends Consistent{
     }
 
     incWithPrim(num){
-        this.value += num
+        return this.value.then((v)=>{
+            this.value = v + num
+        })
     }
 
     incWithCon(con){
-        con.value.then((v)=>{
-            this.value += v
+        return con.value.then((v)=>{
+            return this.value.then((vv)=>{
+                this.value = v + vv
+            })
         })
     }
 }
@@ -313,8 +317,7 @@ class MasterSlaveChangeAct extends CAPActor{
 }
 class SlaveSlaveChangeAct extends CAPActor{
     getEv(anEv){
-        anEv.inc()
-
+        anEv.incMUT()
     }
 }
 let EventualReplicationSlaveChange = ()=>{
@@ -336,7 +339,7 @@ class MasterMasterChange extends CAPActor{
 
     sendAndInc(toRef){
         toRef.getEv(this.ev)
-        this.ev.inc()
+        this.ev.incMUT()
     }
 }
 class SlaveMasterChange extends CAPActor{
@@ -540,7 +543,7 @@ class EventualTentativeSlave extends CAPActor{
         anEv.onTentative((ev)=>{
             this.val = ev.v1
         })
-        anEv.inc()
+        anEv.incMUT()
     }
 
     test(){
@@ -592,7 +595,7 @@ class EventualCommitSlave extends CAPActor{
         anEv.onTentative((ev)=>{
             this.val = ev.v1
         })
-        anEv.inc()
+        anEv.incMUT()
     }
 
 
@@ -606,6 +609,144 @@ let EventualCommit = () =>{
     })
 }
 scheduled.push(EventualCommit)
+
+class ExtendedEventual extends Eventual{
+    v1
+    sensitive
+
+    constructor(){
+        super()
+        this.v1 = 5
+        this.sensitive = [5]
+    }
+
+    incMUT(){
+        this.v1++
+        return 5
+    }
+
+    addMUT(val){
+        this.sensitive.push(val)
+    }
+
+    incWithPrimMUT(v){
+        this.v1 += v
+    }
+
+    incWithConMUT(c){
+        this.v1 += c.v1
+    }
+}
+
+class EventualSensistiveMaster extends CAPActor{
+    ev
+    constructor(){
+        super()
+        this.ev = new ExtendedEventual()
+    }
+
+    send(toRef){
+        toRef.getEv(this.ev)
+    }
+
+    test(){
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.ev.sensitive)
+            },2000)
+        })
+    }
+}
+
+class EventualSensitiveSlave extends CAPActor{
+    getEv(anEv){
+        anEv.addMUT(6)
+    }
+}
+
+let EventualSensitive = ()=>{
+    let master : FarRef<EventualSensistiveMaster> = app.spawnActor(EventualSensistiveMaster)
+    let slave : FarRef<EventualSensitiveSlave> = app.spawnActor(EventualSensitiveSlave)
+    master.send(slave)
+    return master.test().then((v)=>{
+        let ok1  = v[0] == 5
+        let ok2 = v[1] == 6
+        log("Sensitive Replication",true,ok1 && ok2)
+    })
+}
+scheduled.push(EventualSensitive)
+
+class Contained extends Eventual{
+    innerVal
+
+    constructor(){
+        super()
+        this.innerVal = 5
+    }
+
+    incMUT(){
+        this.innerVal++
+    }
+}
+
+class Container extends Eventual{
+    inner
+
+    constructor(){
+        super()
+    }
+
+    addInnersMUT(inner){
+        this.inner = inner
+    }
+}
+
+class Act1 extends CAPActor{
+    Container
+    cont
+
+    constructor(){
+        super()
+        this.Container = Container
+    }
+
+    sendTo(ref : FarRef<Act2>){
+        this.cont = new this.Container()
+        ref.getContainer(this.cont)
+    }
+
+    test(){
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.cont.inner.innerVal)
+            },2000)
+        })
+    }
+}
+
+class Act2 extends CAPActor{
+    Contained
+
+    constructor(){
+        super()
+        this.Contained = Contained
+    }
+
+    getContainer(cont : Container){
+        let contained = new this.Contained()
+        cont.addInnersMUT(contained)
+        contained.incMUT()
+    }
+}
+let nestedReplication = ()=>{
+    let act1 : FarRef<Act1> = app.spawnActor(Act1)
+    let act2 : FarRef<Act2> = app.spawnActor(Act2)
+    act1.sendTo(act2)
+    return act1.test().then((v)=>{
+        log("Nested Replication",v,6)
+    })
+}
+scheduled.push(nestedReplication)
 
 class ConsistentContentSerialisationAct extends CAPActor{
     c
@@ -672,8 +813,9 @@ class ConsistentNOKConstraintAct extends CAPActor{
 
     test(){
         let c   = new this.TestConsistent()
-        c.incWithCon({value:5})
-        return c.value
+        return c.incWithCon({value:5}).then(()=>{
+            return c.value
+        })
     }
 }
 let ConsistentNOKConstraint = ()=>{
@@ -757,8 +899,9 @@ class ConsistentConstraintPrimitiveAct extends Actor{
 
     test(){
         let c = new this.TestConsistent()
-        c.incWithPrim(5)
-        return c.value
+        return c.incWithPrim(5).then(()=>{
+            return c.value
+        })
     }
 }
 let ConsistentConstraintPrimitive = ()=>{
