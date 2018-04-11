@@ -298,12 +298,14 @@ scheduled.push(AvailableConstraintPrimitive)
 
 class MasterSlaveChangeAct extends CAPActor{
     ev
+    TestEventual
     constructor(){
         super()
-        this.ev = new TestEventual()
+        this.TestEventual = TestEventual
     }
 
     send(toRef){
+        this.ev = new this.TestEventual()
         toRef.getEv(this.ev)
     }
 
@@ -332,12 +334,14 @@ scheduled.push(EventualReplicationSlaveChange)
 
 class MasterMasterChange extends CAPActor{
     ev
+    TestEventual
     constructor(){
         super()
-        this.ev = new TestEventual()
+        this.TestEventual = TestEventual
     }
 
     sendAndInc(toRef){
+        this.ev = new this.TestEventual()
         toRef.getEv(this.ev)
         this.ev.incMUT()
     }
@@ -526,12 +530,14 @@ scheduled.push(EventualConstraintPrimitive)
 
 class EventualTentativeMaster extends CAPActor{
     ev
+    TestEventual
     constructor(){
         super()
-        this.ev = new TestEventual()
+        this.TestEventual = TestEventual
     }
 
     send(toRef){
+        this.ev = new this.TestEventual()
         toRef.getEv(this.ev)
     }
 
@@ -567,12 +573,14 @@ scheduled.push(EventualTentative)
 class EventualCommitMaster extends CAPActor{
     ev
     val
+    TestEventual
     constructor(){
         super()
-        this.ev = new TestEventual()
+        this.TestEventual = TestEventual
     }
 
     send(toRef){
+        this.ev = new this.TestEventual()
         this.ev.onCommit((ev)=>{
             this.val = ev.v1
         })
@@ -640,12 +648,14 @@ class ExtendedEventual extends Eventual{
 
 class EventualSensistiveMaster extends CAPActor{
     ev
+    ExtendedEventual
     constructor(){
         super()
-        this.ev = new ExtendedEventual()
+        this.ExtendedEventual = ExtendedEventual
     }
 
     send(toRef){
+        this.ev = new this.ExtendedEventual()
         toRef.getEv(this.ev)
     }
 
@@ -701,7 +711,7 @@ class Container extends Eventual{
     }
 }
 
-class Act1 extends CAPActor{
+class NestedRepAct1 extends CAPActor{
     Container
     cont
 
@@ -710,7 +720,7 @@ class Act1 extends CAPActor{
         this.Container = Container
     }
 
-    sendTo(ref : FarRef<Act2>){
+    sendTo(ref : FarRef<NestedRepAct2>){
         this.cont = new this.Container()
         ref.getContainer(this.cont)
     }
@@ -724,7 +734,7 @@ class Act1 extends CAPActor{
     }
 }
 
-class Act2 extends CAPActor{
+class NestedRepAct2 extends CAPActor{
     Contained
 
     constructor(){
@@ -739,14 +749,66 @@ class Act2 extends CAPActor{
     }
 }
 let nestedReplication = ()=>{
-    let act1 : FarRef<Act1> = app.spawnActor(Act1)
-    let act2 : FarRef<Act2> = app.spawnActor(Act2)
+    let act1 : FarRef<NestedRepAct1> = app.spawnActor(NestedRepAct1)
+    let act2 : FarRef<NestedRepAct2> = app.spawnActor(NestedRepAct2)
     act1.sendTo(act2)
     return act1.test().then((v)=>{
         log("Nested Replication",v,6)
     })
 }
 scheduled.push(nestedReplication)
+
+class DeepCommitAct1 extends CAPActor{
+    Container
+    cont
+    val
+
+    constructor(){
+        super()
+        this.Container = Container
+        this.val = 5
+    }
+
+    sendTo(ref : FarRef<DeppCommitAct2>){
+        this.cont = new this.Container()
+        this.cont.onCommit(()=>{
+            this.val++
+        })
+        ref.getContainer(this.cont)
+    }
+
+    test(){
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(this.val)
+            },2000)
+        })
+    }
+}
+
+class DeppCommitAct2 extends CAPActor{
+    Contained
+
+    constructor(){
+        super()
+        this.Contained = Contained
+    }
+
+    getContainer(cont : Container){
+        let contained = new this.Contained()
+        cont.addInnersMUT(contained)
+        contained.incMUT()
+    }
+}
+let deepCommit = ()=>{
+    let act1 : FarRef<DeepCommitAct1> = app.spawnActor(DeepCommitAct1)
+    let act2 : FarRef<DeppCommitAct2> = app.spawnActor(DeppCommitAct2)
+    act1.sendTo(act2)
+    return act1.test().then((v)=>{
+        log("Deep Commit",v,7)
+    })
+}
+scheduled.push(deepCommit)
 
 class ConsistentContentSerialisationAct extends CAPActor{
     c

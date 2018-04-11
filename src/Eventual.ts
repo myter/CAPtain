@@ -24,6 +24,7 @@ export class Eventual extends SpiderIsolate{
     tentListeners       : Array<(ev : Eventual)=>any>
     commListeners       : Array<(ev : Eventual)=>any>
     populated           : boolean = false
+    dependencies        : Map<string,Eventual>
     lastCommit          : number
     isEventual
 
@@ -131,6 +132,7 @@ export class Eventual extends SpiderIsolate{
         this.tentativeVals      = new Map()
         this.tentListeners      = []
         this.commListeners      = []
+        this.dependencies       = new Map()
         this.lastCommit         = 0
     }
 
@@ -187,10 +189,22 @@ export class Eventual extends SpiderIsolate{
             })
         }
     }
+
+    addDependency(ev : Eventual){
+        if(!this.dependencies.has(ev.id)){
+            this.dependencies.set(ev.id,ev)
+            ev.onCommit(()=>{
+                this.triggerCommit()
+            })
+            ev.onTentative(()=>{
+                this.triggerTentative()
+            })
+        }
+    }
 }
 export class EventualMirror extends SpiderIsolateMirror{
     private ignoreInvoc(methodName){
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone"
+        return methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone"
     }
 
     private checkArg(arg){
@@ -241,6 +255,11 @@ export class EventualMirror extends SpiderIsolateMirror{
                 return super.invoke(methodName,args)
             }
             else{
+                args.forEach((arg)=>{
+                    if(arg.isEventual){
+                        baseEV.addDependency(arg)
+                    }
+                })
                 if(this.canInvoke(methodName,args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])){
                     //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
                     //Safe to trigger both tentative and commit handlers
@@ -255,6 +274,11 @@ export class EventualMirror extends SpiderIsolateMirror{
             }
         }
         else if(!this.ignoreInvoc(methodName)){
+            args.forEach((arg)=>{
+                if(arg.isEventual){
+                    baseEV.addDependency(arg)
+                }
+            })
             if((baseEV.hostGsp.replay as any).includes(baseEV.id)){
                 if(this.canInvoke(methodName,args)){
                     return super.invoke(methodName,args)
@@ -280,14 +304,17 @@ export class EventualMirror extends SpiderIsolateMirror{
     }
 
     write(fieldName,value){
-        if(this.checkArg(value) && fieldName != "hostGsp" && fieldName != "masterGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_"){
+        if(this.checkArg(value) && fieldName != "hostGsp" && fieldName != "dependencies" && fieldName != "masterGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_"){
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName)
         }
-        else if(fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_'){
+        else if(fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "dependencies" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_'){
             return super.write(fieldName,value)
         }
         else{
             let base : Eventual = this.base as Eventual
+            if(value.isEventual){
+                base.addDependency(value)
+            }
             if(base.tentativeVals){
                 if(base.tentativeVals.has(fieldName)){
                     base.tentativeVals.set(fieldName,value)
@@ -316,6 +343,7 @@ export class EventualMirror extends SpiderIsolateMirror{
         if(hostActorMirror.base.behaviourObject){
             let baseEV = this.base as Eventual;
             let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp;
+            let oldGsp : GSP = baseEV.hostGsp
             baseEV.setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
             if(!newGsp.knownEventual(baseEV.id)){
                 newGsp.registerHolderEventual(this.proxyBase as Eventual,baseEV.masterGsp)

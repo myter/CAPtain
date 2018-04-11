@@ -60951,6 +60951,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         this.tentativeVals = new Map();
         this.tentListeners = [];
         this.commListeners = [];
+        this.dependencies = new Map();
         this.lastCommit = 0;
     }
     clone(value) {
@@ -61003,6 +61004,9 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp, hostId = undefined, isOwner) {
+        if (this.hostGsp == undefined) {
+            this.masterGsp = hostGsp;
+        }
         this.hostGsp = hostGsp;
         this.hostId = hostId;
         if (isOwner) {
@@ -61084,11 +61088,22 @@ class Eventual extends spiders_js_1.SpiderIsolate {
             });
         }
     }
+    addDependency(ev) {
+        if (!this.dependencies.has(ev.id)) {
+            this.dependencies.set(ev.id, ev);
+            ev.onCommit(() => {
+                this.triggerCommit();
+            });
+            ev.onTentative(() => {
+                this.triggerTentative();
+            });
+        }
+    }
 }
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
+        return methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -61136,6 +61151,11 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 return super.invoke(methodName, args);
             }
             else {
+                args.forEach((arg) => {
+                    if (arg.isEventual) {
+                        baseEV.addDependency(arg);
+                    }
+                });
                 if (this.canInvoke(methodName, args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])) {
                     //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
                     //Safe to trigger both tentative and commit handlers
@@ -61150,6 +61170,11 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             }
         }
         else if (!this.ignoreInvoc(methodName)) {
+            args.forEach((arg) => {
+                if (arg.isEventual) {
+                    baseEV.addDependency(arg);
+                }
+            });
             if (baseEV.hostGsp.replay.includes(baseEV.id)) {
                 if (this.canInvoke(methodName, args)) {
                     return super.invoke(methodName, args);
@@ -61174,14 +61199,17 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     write(fieldName, value) {
-        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
+        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "dependencies" && fieldName != "masterGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName);
         }
-        else if (fieldName == "hostGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
+        else if (fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "dependencies" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
         }
         else {
             let base = this.base;
+            if (value.isEventual) {
+                base.addDependency(value);
+            }
             if (base.tentativeVals) {
                 if (base.tentativeVals.has(fieldName)) {
                     base.tentativeVals.set(fieldName, value);
@@ -61206,11 +61234,12 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     resolve(hostActorMirror) {
         //Dirty trick, but it could be that this eventual is resolved to an actor which hasn't been initialised (i.e. as part of a scope serialisation)
         if (hostActorMirror.base.behaviourObject) {
+            let baseEV = this.base;
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
-            let oldGSP = this.base.hostGsp;
-            this.base.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
-            if (!newGsp.knownEventual(this.base.id)) {
-                newGsp.registerHolderEventual(this.proxyBase, oldGSP);
+            let oldGsp = baseEV.hostGsp;
+            baseEV.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
+            if (!newGsp.knownEventual(baseEV.id)) {
+                newGsp.registerHolderEventual(this.proxyBase, baseEV.masterGsp);
             }
         }
     }
@@ -61380,6 +61409,7 @@ class GSP {
         this.eventuals.set(ev.id, ev);
     }
     registerHolderEventual(ev, masterRef) {
+        //console.log("Registering as holder for " + ev.id + " in " + this.thisActorId)
         this.eventuals.set(ev.id, ev);
         this.roundNumbers.set(ev.id, ev.lastCommit);
         this.eventualOwner.set(ev.id, masterRef);
@@ -61682,9 +61712,10 @@ scheduled.push(AvailableConstraintPrimitive);
 class MasterSlaveChangeAct extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
     }
     test() {
@@ -61712,9 +61743,10 @@ scheduled.push(EventualReplicationSlaveChange);
 class MasterMasterChange extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     sendAndInc(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
         this.ev.incMUT();
     }
@@ -61878,9 +61910,10 @@ scheduled.push(EventualConstraintPrimitive);
 class EventualTentativeMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
     }
 }
@@ -61911,9 +61944,10 @@ scheduled.push(EventualTentative);
 class EventualCommitMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         this.ev.onCommit((ev) => {
             this.val = ev.v1;
         });
@@ -61967,9 +62001,10 @@ class ExtendedEventual extends Eventual_1.Eventual {
 class EventualSensistiveMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new ExtendedEventual();
+        this.ExtendedEventual = ExtendedEventual;
     }
     send(toRef) {
+        this.ev = new this.ExtendedEventual();
         toRef.getEv(this.ev);
     }
     test() {
@@ -62013,7 +62048,7 @@ class Container extends Eventual_1.Eventual {
         this.inner = inner;
     }
 }
-class Act1 extends CAPActor_1.CAPActor {
+class NestedRepAct1 extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.Container = Container;
@@ -62030,7 +62065,7 @@ class Act1 extends CAPActor_1.CAPActor {
         });
     }
 }
-class Act2 extends CAPActor_1.CAPActor {
+class NestedRepAct2 extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.Contained = Contained;
@@ -62042,14 +62077,55 @@ class Act2 extends CAPActor_1.CAPActor {
     }
 }
 let nestedReplication = () => {
-    let act1 = app.spawnActor(Act1);
-    let act2 = app.spawnActor(Act2);
+    let act1 = app.spawnActor(NestedRepAct1);
+    let act2 = app.spawnActor(NestedRepAct2);
     act1.sendTo(act2);
     return act1.test().then((v) => {
         log("Nested Replication", v, 6);
     });
 };
 scheduled.push(nestedReplication);
+class DeepCommitAct1 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Container = Container;
+        this.val = 5;
+    }
+    sendTo(ref) {
+        this.cont = new this.Container();
+        this.cont.onCommit(() => {
+            this.val++;
+        });
+        ref.getContainer(this.cont);
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.val);
+            }, 2000);
+        });
+    }
+}
+class DeppCommitAct2 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Contained = Contained;
+    }
+    getContainer(cont) {
+        let contained = new this.Contained();
+        cont.addInnersMUT(contained);
+        contained.incMUT();
+    }
+}
+let deepCommit = () => {
+    let act1 = app.spawnActor(DeepCommitAct1);
+    let act2 = app.spawnActor(DeppCommitAct2);
+    act1.sendTo(act2);
+    return act1.test().then((v) => {
+        log("Deep Commit", v, 7);
+    });
+};
+scheduled.push(deepCommit);
 class ConsistentContentSerialisationAct extends CAPActor_1.CAPActor {
     constructor() {
         super();

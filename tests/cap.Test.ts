@@ -10,7 +10,7 @@ var assert                      = require('assert')
 var chai                        = require('chai')
 var expect                      = chai.expect
 
-describe("Availables",()=>{
+/*describe("Availables",()=>{
     class TestAvailable extends Available{
         value
         constructor(){
@@ -310,7 +310,7 @@ describe("Availables",()=>{
             }
         })
     })
-})
+})*/
 
 describe("Eventuals",()=>{
     class TestEventual extends Eventual{
@@ -338,6 +338,31 @@ describe("Eventuals",()=>{
 
         incWithConMUT(c){
             this.v1 += c.v1
+        }
+    }
+
+    class Contained extends Eventual{
+        innerVal
+
+        constructor(){
+            super()
+            this.innerVal = 5
+        }
+
+        incMUT(){
+            this.innerVal++
+        }
+    }
+
+    class Container extends Eventual{
+        inner
+
+        constructor(){
+            super()
+        }
+
+        addInnersMUT(inner){
+            this.inner = inner
         }
     }
 
@@ -553,15 +578,16 @@ describe("Eventuals",()=>{
         this.timeout(4000)
         let app = new CAPplication()
         class Master extends CAPActor{
-            ev
+            TestEventual
             constructor(){
                 super()
-                this.ev = new TestEventual()
+                this.TestEventual = TestEventual
             }
 
             sendAndInc(toRef){
-                toRef.getEv(this.ev)
-                this.ev.incMUT()
+                let ev = new this.TestEventual()
+                toRef.getEv(ev)
+                ev.incMUT()
             }
         }
         class Slave extends CAPActor{
@@ -573,7 +599,7 @@ describe("Eventuals",()=>{
                 return new Promise((resolve)=>{
                     setTimeout(()=>{
                         resolve(this.ev.v1)
-                    },2000)
+                    },1000)
                 })
             }
         }
@@ -597,13 +623,15 @@ describe("Eventuals",()=>{
         this.timeout(4000)
         let app = new CAPplication()
         class Master extends CAPActor{
+            TestEventual
             ev
             constructor(){
                 super()
-                this.ev = new TestEventual()
+                this.TestEventual = TestEventual
             }
 
             send(toRef){
+                this.ev = new this.TestEventual()
                 toRef.getEv(this.ev)
             }
 
@@ -642,12 +670,14 @@ describe("Eventuals",()=>{
         let app = new CAPplication()
         class Master extends CAPActor{
             ev
+            TestEventual
             constructor(){
                 super()
-                this.ev = new TestEventual()
+                this.TestEventual = TestEventual
             }
 
             send(toRef){
+                this.ev = new this.TestEventual()
                 toRef.getEv(this.ev)
             }
 
@@ -684,30 +714,7 @@ describe("Eventuals",()=>{
 
     it("Nested replication",function(done){
         this.timeout(5000)
-        class Contained extends Eventual{
-            innerVal
 
-            constructor(){
-                super()
-                this.innerVal = 5
-            }
-
-            incMUT(){
-                this.innerVal++
-            }
-        }
-
-        class Container extends Eventual{
-            inner
-
-            constructor(){
-                super()
-            }
-
-            addInnersMUT(inner){
-                this.inner = inner
-            }
-        }
 
         class Act1 extends CAPActor{
             Container
@@ -766,12 +773,14 @@ describe("Eventuals",()=>{
         let app = new CAPplication()
         class Master extends CAPActor{
             ev
+            TestEventual
             constructor(){
                 super()
-                this.ev = new TestEventual()
+                this.TestEventual = TestEventual
             }
 
             send(toRef){
+                this.ev = new this.TestEventual()
                 toRef.getEv(this.ev)
             }
 
@@ -816,12 +825,14 @@ describe("Eventuals",()=>{
         class Master extends CAPActor{
             ev
             val
+            TestEventual
             constructor(){
                 super()
-                this.ev = new TestEventual()
+                this.TestEventual = TestEventual
             }
 
             send(toRef){
+                this.ev = new this.TestEventual()
                 this.ev.onCommit((ev)=>{
                     this.val = ev.v1
                 })
@@ -863,6 +874,67 @@ describe("Eventuals",()=>{
         })
     })
 
+    it("Deep commit listener",function(done){
+        this.timeout(5000)
+
+
+        class Act1 extends CAPActor{
+            Container
+            cont
+            val
+
+            constructor(){
+                super()
+                this.Container = Container
+                this.val = 5
+            }
+
+            sendTo(ref : FarRef<Act2>){
+                this.cont = new this.Container()
+                this.cont.onCommit(()=>{
+                    this.val++
+                })
+                ref.getContainer(this.cont)
+            }
+
+            test(){
+                return this.val
+            }
+        }
+
+        class Act2 extends CAPActor{
+            Contained
+
+            constructor(){
+                super()
+                this.Contained = Contained
+            }
+
+            getContainer(cont : Container){
+                let contained = new this.Contained()
+                cont.addInnersMUT(contained)
+                contained.incMUT()
+            }
+        }
+        let app = new CAPplication()
+        let act1 : FarRef<Act1> = app.spawnActor(Act1)
+        let act2 : FarRef<Act2> = app.spawnActor(Act2)
+        act1.sendTo(act2)
+        setTimeout(()=>{
+            act1.test().then((v)=>{
+                try{
+                    expect(v).to.equal(7)
+                    app.kill()
+                    done()
+                }
+                catch(e){
+                    app.kill()
+                    done(e)
+                }
+            })
+        },2000)
+    })
+
     it("Mutating Annotation",function(done){
         class MutAct extends CAPActor{
             thisDir
@@ -899,7 +971,7 @@ describe("Eventuals",()=>{
     })
 })
 
-describe("Consistents",()=>{
+/*describe("Consistents",()=>{
     class TestConsistent extends Consistent{
         value
         constructor(){
@@ -1133,5 +1205,5 @@ describe("Consistents",()=>{
             }
         })
     })
-})
+})*/
 

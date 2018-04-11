@@ -4,67 +4,86 @@ import {CAPActor} from "../src/CAPActor";
 import {FarRef, SpiderObject, SpiderObjectMirror} from "spiders.js";
 import set = Reflect.set;
 import {Consistent} from "../src/Consistent";
-class Test extends Eventual{
-    value
+
+class Container extends Eventual{
+    inners
 
     constructor(){
         super()
-        this.value = 0
+        this.inners = []
+    }
+
+    addInnerMUT(newInner  : Contained){
+        this.inners.push(newInner)
+    }
+}
+
+class Contained extends Eventual{
+    someVal
+
+    constructor(){
+        super()
+        this.someVal = 5
     }
 
     incMUT(){
-        this.value++
+        this.someVal++
     }
 }
 
 
 class App extends CAPplication{
-    ev
+    ev : Container
 
     constructor(){
         super()
-        this.ev = new Test()
+        this.ev = new Container()
+        this.ev.onCommit(()=>{
+            console.log("New commit in app")
+            this.print()
+        })
     }
 
     sendTo(ref){
         ref.getEV(this.ev)
     }
 
-    mutate(){
-        this.ev.incMUT()
-    }
-
     print(){
-        console.log("In app: " + this.ev.value)
+        console.log("In app: ")
+        this.ev.inners.forEach((inner : Contained)=>{
+            console.log(inner.someVal)
+        })
     }
 
 }
 
 class Act extends CAPActor{
-    ev
+    ev : Container
+    Contained
+
+    constructor(){
+        super()
+        this.Contained = Contained
+    }
 
     getEV(ev){
         this.ev = ev
+        let c : Contained = new this.Contained()
+        this.ev.addInnerMUT(c)
+        c.incMUT()
     }
 
     print(){
-        console.log("In act: " + this.ev.value)
+        console.log("In act: ")
     }
 }
 let app = new App()
 let a1 : FarRef<Act> = app.spawnActor(Act)
-app.mutate()
-app.mutate()
 app.sendTo(a1)
 setTimeout(()=>{
+    console.log("Forcing")
     app.print()
-    a1.print()
-    let a2 : FarRef<Act> = app.spawnActor(Act)
-    app.sendTo(a2)
-    setTimeout(()=>{
-        a2.print()
-    },1000)
-},1000)
+},1500)
 
 
 

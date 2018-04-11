@@ -1,278 +1,312 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
-const Available_1 = require("../src/Available");
 const Eventual_1 = require("../src/Eventual");
-const Consistent_1 = require("../src/Consistent");
 const CAPActor_1 = require("../src/CAPActor");
 const CAPplication_1 = require("../src/CAPplication");
 var assert = require('assert');
 var chai = require('chai');
 var expect = chai.expect;
-describe("Availables", () => {
-    class TestAvailable extends Available_1.Available {
-        constructor() {
-            super();
-            this.value = 5;
+/*describe("Availables",()=>{
+    class TestAvailable extends Available{
+        value
+        constructor(){
+            super()
+            this.value = 5
         }
-        incWithPrim(num) {
-            this.value += num;
+
+        incWithPrim(num){
+            this.value += num
         }
-        incWithCon(con) {
-            this.value += con.value;
+
+        incWithCon(con){
+            this.value += con.value
         }
     }
-    it("Check OK Constraint (primitive)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
+
+    it("Check OK Constraint (primitive)",(done)=>{
+        let app = new Application()
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
             }
-            test() {
-                let c = new this.TestConsistent();
-                c.incWithPrim(5);
-                return c.value;
-            }
-        }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(10);
-                app.kill();
-                done();
-            }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Check OK Constraint (Available)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestConsistent();
-                c.incWithCon(cc);
-                return c.value;
+
+            test(){
+                let c = new this.TestConsistent()
+                c.incWithPrim(5)
+                return c.value
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(10);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(10)
+                app.kill()
+                done()
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            catch(e){
+                app.kill()
+                done(e)
             }
-        });
-    });
-    it("Check OK Constraint (Eventual)", (done) => {
-        let app = new spiders_js_1.Application();
-        class TestEventual extends Eventual_1.Eventual {
-            constructor() {
-                super();
-                this.value = 5;
+        })
+    })
+
+    it("Check OK Constraint (Available)",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
             }
-        }
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-                this.TestEventual = TestEventual;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestEventual();
-                c.incWithCon(cc);
-                return c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestConsistent()
+                c.incWithCon(cc)
+                return c.value
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(10);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(10)
+                app.kill()
+                done()
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            catch(e){
+                app.kill()
+                done(e)
             }
-        });
-    });
-    it("Check OK Assignment (primitive)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                c.value = 6;
-                return c.value;
+        })
+    })
+
+    it("Check OK Constraint (Eventual)",(done)=>{
+        let app = new Application()
+        class TestEventual extends Eventual{
+            value
+            constructor(){
+                super()
+                this.value  = 5
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(6);
-                app.kill();
-                done();
+        class Act extends CAPActor{
+            TestConsistent
+            TestEventual
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
+                this.TestEventual   = TestEventual
             }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Check OK Assignment (Available)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestConsistent();
-                c.value = cc;
-                return c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestEventual()
+                c.incWithCon(cc)
+                return c.value
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v.value).to.equal(5);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(10)
+                app.kill()
+                done()
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            catch(e){
+                app.kill()
+                done(e)
             }
-        });
-    });
-    it("Check OK Assignment (Eventual)", (done) => {
-        let app = new CAPplication_1.CAPplication();
-        class TestEventual extends Eventual_1.Eventual {
-            constructor() {
-                super();
-                this.value = 5;
+        })
+    })
+
+    it("Check OK Assignment (primitive)",(done)=>{
+        let app = new Application()
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
             }
-        }
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-                this.TestEventual = TestEventual;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestEventual();
-                c.value = cc;
-                return c.value;
+
+            test(){
+                let c = new this.TestConsistent()
+                c.value = 6
+                return c.value
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v.value).to.equal(5);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(6)
+                app.kill()
+                done()
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            catch(e){
+                app.kill()
+                done(e)
             }
-        });
-    });
-    it("Check NOK Constraint", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
+        })
+    })
+
+    it("Check OK Assignment (Available)",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
             }
-            test() {
-                let c = new this.TestConsistent();
-                c.incWithCon({ value: 5 });
-                return c.value;
-            }
-        }
-        app.spawnActor(Act).test().catch(() => {
-            app.kill();
-            done();
-        });
-    });
-    it("Check NOK Assignment", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                c.value = { x: 5 };
-                return c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestConsistent()
+                c.value = cc
+                return c.value
             }
         }
-        app.spawnActor(Act).test().catch(() => {
-            app.kill();
-            done();
-        });
-    });
-    it("Class serialisation", (done) => {
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestAvailable;
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v.value).to.equal(5)
+                app.kill()
+                done()
             }
-            test() {
-                let c = new this.TestConsistent();
-                return c.value;
+            catch(e){
+                app.kill()
+                done(e)
             }
-        }
-        let app = new CAPplication_1.CAPplication();
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(5);
-                app.kill();
-                done();
-            }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Consistent Serialisation", (done) => {
-        class Act2 extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.c = new TestAvailable();
-            }
-            test() {
-                return this.c.value;
+        })
+    })
+
+    it("Check OK Assignment (Eventual)",(done)=>{
+        let app = new CAPplication()
+        class TestEventual extends Eventual{
+            value
+            constructor(){
+                super()
+                this.value  = 5
             }
         }
-        let app = new CAPplication_1.CAPplication();
-        app.spawnActor(Act2).test().then((v) => {
-            try {
-                expect(v).to.equal(5);
-                app.kill();
-                done();
+        class Act extends CAPActor{
+            TestConsistent
+            TestEventual
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
+                this.TestEventual   = TestEventual
             }
-            catch (e) {
-                app.kill();
-                done(e);
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestEventual()
+                c.value = cc
+                return c.value
             }
-        });
-    });
-});
+        }
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v.value).to.equal(5)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("Check NOK Constraint",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
+            }
+
+            test(){
+                let c   = new this.TestConsistent()
+                c.incWithCon({value:5})
+                return c.value
+            }
+        }
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
+            app.kill()
+            done()
+        })
+    })
+
+    it("Check NOK Assignment",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
+            }
+
+            test(){
+                let c   = new this.TestConsistent()
+                c.value = {x:5}
+                return c.value
+            }
+        }
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
+            app.kill()
+            done()
+        })
+    })
+
+    it("Class serialisation",(done)=>{
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestAvailable
+            }
+            test(){
+                let c = new this.TestConsistent()
+                return c.value
+            }
+        }
+        let app = new CAPplication();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(5)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("Consistent Serialisation",(done)=>{
+        class Act2 extends CAPActor{
+            c
+            constructor(){
+                super()
+                this.c = new TestAvailable()
+            }
+
+            test(){
+                return this.c.value
+            }
+        }
+        let app = new CAPplication();
+        (app.spawnActor(Act2) as FarRef<Act2>).test().then((v)=>{
+            try{
+                expect(v).to.equal(5)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+})*/
 describe("Eventuals", () => {
     class TestEventual extends Eventual_1.Eventual {
         constructor() {
@@ -292,6 +326,23 @@ describe("Eventuals", () => {
         }
         incWithConMUT(c) {
             this.v1 += c.v1;
+        }
+    }
+    class Contained extends Eventual_1.Eventual {
+        constructor() {
+            super();
+            this.innerVal = 5;
+        }
+        incMUT() {
+            this.innerVal++;
+        }
+    }
+    class Container extends Eventual_1.Eventual {
+        constructor() {
+            super();
+        }
+        addInnersMUT(inner) {
+            this.inner = inner;
         }
     }
     it("Check OK Constraint (primitive)", (done) => {
@@ -485,11 +536,12 @@ describe("Eventuals", () => {
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
-                this.ev = new TestEventual();
+                this.TestEventual = TestEventual;
             }
             sendAndInc(toRef) {
-                toRef.getEv(this.ev);
-                this.ev.incMUT();
+                let ev = new this.TestEventual();
+                toRef.getEv(ev);
+                ev.incMUT();
             }
         }
         class Slave extends CAPActor_1.CAPActor {
@@ -500,7 +552,7 @@ describe("Eventuals", () => {
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         resolve(this.ev.v1);
-                    }, 2000);
+                    }, 1000);
                 });
             }
         }
@@ -525,9 +577,10 @@ describe("Eventuals", () => {
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
-                this.ev = new TestEventual();
+                this.TestEventual = TestEventual;
             }
             send(toRef) {
+                this.ev = new this.TestEventual();
                 toRef.getEv(this.ev);
             }
             test() {
@@ -564,9 +617,10 @@ describe("Eventuals", () => {
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
-                this.ev = new TestEventual();
+                this.TestEventual = TestEventual;
             }
             send(toRef) {
+                this.ev = new this.TestEventual();
                 toRef.getEv(this.ev);
             }
             test() {
@@ -600,23 +654,6 @@ describe("Eventuals", () => {
     });
     it("Nested replication", function (done) {
         this.timeout(5000);
-        class Contained extends Eventual_1.Eventual {
-            constructor() {
-                super();
-                this.innerVal = 5;
-            }
-            incMUT() {
-                this.innerVal++;
-            }
-        }
-        class Container extends Eventual_1.Eventual {
-            constructor() {
-                super();
-            }
-            addInnersMUT(inner) {
-                this.inner = inner;
-            }
-        }
         class Act1 extends CAPActor_1.CAPActor {
             constructor() {
                 super();
@@ -665,9 +702,10 @@ describe("Eventuals", () => {
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
-                this.ev = new TestEventual();
+                this.TestEventual = TestEventual;
             }
             send(toRef) {
+                this.ev = new this.TestEventual();
                 toRef.getEv(this.ev);
             }
         }
@@ -707,9 +745,10 @@ describe("Eventuals", () => {
         class Master extends CAPActor_1.CAPActor {
             constructor() {
                 super();
-                this.ev = new TestEventual();
+                this.TestEventual = TestEventual;
             }
             send(toRef) {
+                this.ev = new this.TestEventual();
                 this.ev.onCommit((ev) => {
                     this.val = ev.v1;
                 });
@@ -746,6 +785,54 @@ describe("Eventuals", () => {
             }
         });
     });
+    it("Deep commit listener", function (done) {
+        this.timeout(5000);
+        class Act1 extends CAPActor_1.CAPActor {
+            constructor() {
+                super();
+                this.Container = Container;
+                this.val = 5;
+            }
+            sendTo(ref) {
+                this.cont = new this.Container();
+                this.cont.onCommit(() => {
+                    this.val++;
+                });
+                ref.getContainer(this.cont);
+            }
+            test() {
+                return this.val;
+            }
+        }
+        class Act2 extends CAPActor_1.CAPActor {
+            constructor() {
+                super();
+                this.Contained = Contained;
+            }
+            getContainer(cont) {
+                let contained = new this.Contained();
+                cont.addInnersMUT(contained);
+                contained.incMUT();
+            }
+        }
+        let app = new CAPplication_1.CAPplication();
+        let act1 = app.spawnActor(Act1);
+        let act2 = app.spawnActor(Act2);
+        act1.sendTo(act2);
+        setTimeout(() => {
+            act1.test().then((v) => {
+                try {
+                    expect(v).to.equal(7);
+                    app.kill();
+                    done();
+                }
+                catch (e) {
+                    app.kill();
+                    done(e);
+                }
+            });
+        }, 2000);
+    });
     it("Mutating Annotation", function (done) {
         class MutAct extends CAPActor_1.CAPActor {
             constructor() {
@@ -776,213 +863,239 @@ describe("Eventuals", () => {
         });
     });
 });
-describe("Consistents", () => {
-    class TestConsistent extends Consistent_1.Consistent {
-        constructor() {
-            super();
-            this.value = 5;
+/*describe("Consistents",()=>{
+    class TestConsistent extends Consistent{
+        value
+        constructor(){
+            super()
+            this.value = 5
         }
-        incWithPrim(num) {
-            return this.value.then((v) => {
-                return this.value = v + num;
-            });
+
+        incWithPrim(num){
+            return this.value.then((v)=>{
+                return this.value = v + num
+            })
         }
-        incWithCon(con) {
-            return con.value.then((v) => {
-                return this.value.then((vv) => {
-                    this.value = v + vv;
-                });
-            });
+
+        incWithCon(con){
+            return con.value.then((v)=>{
+                return this.value.then((vv)=>{
+                    this.value = v + vv
+                })
+            })
         }
     }
-    it("Check OK Constraint (primitive)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
+
+    it("Check OK Constraint (primitive)",(done)=>{
+        let app = new Application()
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
             }
-            test() {
-                let c = new this.TestConsistent();
-                return c.incWithPrim(5).then(() => {
-                    return c.value;
-                });
-            }
-        }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(10);
-                app.kill();
-                done();
-            }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Check OK Constraint (Consistent)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestConsistent();
-                return c.incWithCon(cc).then(() => {
-                    return c.value;
-                });
+
+            test(){
+                let c = new this.TestConsistent()
+                return c.incWithPrim(5).then(()=>{
+                    return c.value
+                })
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(10);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(10)
+                app.kill()
+                done()
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            catch(e){
+                app.kill()
+                done(e)
             }
-        });
-    });
-    it("Check OK Assignment (primitive)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
+        })
+    })
+
+    it("Check OK Constraint (Consistent)",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
             }
-            test() {
-                let c = new this.TestConsistent();
-                c.value = 6;
-                return c.value;
-            }
-        }
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(6);
-                app.kill();
-                done();
-            }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Check OK Assignment (Consistent)", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                let cc = new this.TestConsistent();
-                c.value = cc;
-                return c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestConsistent()
+                return c.incWithCon(cc).then(()=>{
+                    return c.value
+                })
             }
         }
-        app.spawnActor(Act).test().then((v) => {
-            v.value.then((vv) => {
-                try {
-                    expect(vv).to.equal(5);
-                    app.kill();
-                    done();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(10)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("Check OK Assignment (primitive)",(done)=>{
+        let app = new Application()
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
+            }
+
+            test(){
+                let c = new this.TestConsistent()
+                c.value = 6
+                return c.value
+            }
+        }
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(6)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("Check OK Assignment (Consistent)",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
+            }
+
+            test(){
+                let c   = new this.TestConsistent()
+                let cc  = new this.TestConsistent()
+                c.value = cc
+                return c.value
+            }
+        }
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            v.value.then((vv)=>{
+                try{
+                    expect(vv).to.equal(5)
+                    app.kill()
+                    done()
                 }
-                catch (e) {
-                    app.kill();
-                    done(e);
+                catch(e){
+                    app.kill()
+                    done(e)
                 }
-            });
-        });
-    });
-    it("Check NOK Constraint", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
+            })
+        })
+    })
+
+    it("Check NOK Constraint",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
             }
-            test() {
-                let c = new this.TestConsistent();
-                c.incWithCon({ value: 5 });
-                return c.value;
-            }
-        }
-        app.spawnActor(Act).test().catch(() => {
-            app.kill();
-            done();
-        });
-    });
-    it("Check NOK Assignment", (done) => {
-        let app = new spiders_js_1.Application();
-        class Act extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
-            }
-            test() {
-                let c = new this.TestConsistent();
-                c.value = { x: 5 };
-                return c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                c.incWithCon({value:5})
+                return c.value
             }
         }
-        app.spawnActor(Act).test().catch(() => {
-            app.kill();
-            done();
-        });
-    });
-    it("Class serialisation", (done) => {
-        class Act extends spiders_js_1.Actor {
-            constructor() {
-                super();
-                this.TestConsistent = TestConsistent;
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
+            app.kill()
+            done()
+        })
+    })
+
+    it("Check NOK Assignment",(done)=>{
+        let app = new Application()
+        class Act extends CAPActor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
             }
-            test() {
-                let c = new this.TestConsistent();
-                return c.value;
-            }
-        }
-        let app = new CAPplication_1.CAPplication();
-        app.spawnActor(Act).test().then((v) => {
-            try {
-                expect(v).to.equal(5);
-                app.kill();
-                done();
-            }
-            catch (e) {
-                app.kill();
-                done(e);
-            }
-        });
-    });
-    it("Consistent Serialisation", (done) => {
-        class Act2 extends CAPActor_1.CAPActor {
-            constructor() {
-                super();
-                this.c = new TestConsistent();
-            }
-            test() {
-                return this.c.value;
+
+            test(){
+                let c   = new this.TestConsistent()
+                c.value = {x:5}
+                return c.value
             }
         }
-        let app = new CAPplication_1.CAPplication();
-        app.spawnActor(Act2).test().then((v) => {
-            try {
-                expect(v).to.equal(5);
-                app.kill();
-                done();
+        (app.spawnActor(Act) as FarRef<Act>).test().catch(()=>{
+            app.kill()
+            done()
+        })
+    })
+
+    it("Class serialisation",(done)=>{
+        class Act extends Actor{
+            TestConsistent
+            constructor(){
+                super()
+                this.TestConsistent = TestConsistent
             }
-            catch (e) {
-                app.kill();
-                done(e);
+            test(){
+                let c = new this.TestConsistent()
+                return c.value
             }
-        });
-    });
-});
+        }
+        let app = new CAPplication();
+        (app.spawnActor(Act) as FarRef<Act>).test().then((v)=>{
+            try{
+                expect(v).to.equal(5)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+
+    it("Consistent Serialisation",(done)=>{
+        class Act2 extends CAPActor{
+            c
+            constructor(){
+                super()
+                this.c = new TestConsistent()
+            }
+
+            test(){
+                return this.c.value
+            }
+        }
+        let app = new CAPplication();
+        (app.spawnActor(Act2) as FarRef<Act2>).test().then((v)=>{
+            try{
+                expect(v).to.equal(5)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+    })
+})*/
 //# sourceMappingURL=cap.Test.js.map

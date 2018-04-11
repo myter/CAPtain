@@ -252,9 +252,10 @@ scheduled.push(AvailableConstraintPrimitive);
 class MasterSlaveChangeAct extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
     }
     test() {
@@ -282,9 +283,10 @@ scheduled.push(EventualReplicationSlaveChange);
 class MasterMasterChange extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     sendAndInc(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
         this.ev.incMUT();
     }
@@ -448,9 +450,10 @@ scheduled.push(EventualConstraintPrimitive);
 class EventualTentativeMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
     }
 }
@@ -481,9 +484,10 @@ scheduled.push(EventualTentative);
 class EventualCommitMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new TestEventual();
+        this.TestEventual = TestEventual;
     }
     send(toRef) {
+        this.ev = new this.TestEventual();
         this.ev.onCommit((ev) => {
             this.val = ev.v1;
         });
@@ -537,9 +541,10 @@ class ExtendedEventual extends Eventual_1.Eventual {
 class EventualSensistiveMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.ev = new ExtendedEventual();
+        this.ExtendedEventual = ExtendedEventual;
     }
     send(toRef) {
+        this.ev = new this.ExtendedEventual();
         toRef.getEv(this.ev);
     }
     test() {
@@ -583,7 +588,7 @@ class Container extends Eventual_1.Eventual {
         this.inner = inner;
     }
 }
-class Act1 extends CAPActor_1.CAPActor {
+class NestedRepAct1 extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.Container = Container;
@@ -600,7 +605,7 @@ class Act1 extends CAPActor_1.CAPActor {
         });
     }
 }
-class Act2 extends CAPActor_1.CAPActor {
+class NestedRepAct2 extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.Contained = Contained;
@@ -612,14 +617,55 @@ class Act2 extends CAPActor_1.CAPActor {
     }
 }
 let nestedReplication = () => {
-    let act1 = app.spawnActor(Act1);
-    let act2 = app.spawnActor(Act2);
+    let act1 = app.spawnActor(NestedRepAct1);
+    let act2 = app.spawnActor(NestedRepAct2);
     act1.sendTo(act2);
     return act1.test().then((v) => {
         log("Nested Replication", v, 6);
     });
 };
 scheduled.push(nestedReplication);
+class DeepCommitAct1 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Container = Container;
+        this.val = 5;
+    }
+    sendTo(ref) {
+        this.cont = new this.Container();
+        this.cont.onCommit(() => {
+            this.val++;
+        });
+        ref.getContainer(this.cont);
+    }
+    test() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.val);
+            }, 2000);
+        });
+    }
+}
+class DeppCommitAct2 extends CAPActor_1.CAPActor {
+    constructor() {
+        super();
+        this.Contained = Contained;
+    }
+    getContainer(cont) {
+        let contained = new this.Contained();
+        cont.addInnersMUT(contained);
+        contained.incMUT();
+    }
+}
+let deepCommit = () => {
+    let act1 = app.spawnActor(DeepCommitAct1);
+    let act2 = app.spawnActor(DeppCommitAct2);
+    act1.sendTo(act2);
+    return act1.test().then((v) => {
+        log("Deep Commit", v, 7);
+    });
+};
+scheduled.push(deepCommit);
 class ConsistentContentSerialisationAct extends CAPActor_1.CAPActor {
     constructor() {
         super();
