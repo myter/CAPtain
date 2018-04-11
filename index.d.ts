@@ -26,3 +26,5 @@ export class Eventual{
 export class Available{}
 
 export class Consistent{}
+
+export function mutating()

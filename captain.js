@@ -12,5 +12,7 @@ const Available_1 = require("./src/Available");
 exports.Available = Available_1.Available;
 const CAPplication_1 = require("./src/CAPplication");
 exports.CAPplication = CAPplication_1.CAPplication;
+const Eventual_2 = require("./src/Eventual");
+exports.mutating = Eventual_2.mutating;
 __export(require("spiders.js"));
 //# sourceMappingURL=captain.js.map
