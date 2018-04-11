@@ -4,47 +4,67 @@ import {CAPActor} from "../src/CAPActor";
 import {FarRef, SpiderObject, SpiderObjectMirror} from "spiders.js";
 import set = Reflect.set;
 import {Consistent} from "../src/Consistent";
-
-export class TestEV extends Eventual{
+class Test extends Eventual{
     value
 
     constructor(){
         super()
-        this.value = 5
+        this.value = 0
     }
 
-    @mutating
-    inc(){
-        console.log("Incrementing")
+    incMUT(){
         this.value++
     }
 }
 
-class MutAct extends CAPActor{
-    AnnotEV
-    thisDir
+
+class App extends CAPplication{
+    ev
+
     constructor(){
         super()
-        this.AnnotEV = TestEV
+        this.ev = new Test()
     }
 
-    test(){
-        let ev = new this.AnnotEV()
-        console.log(ev.value)
-        return new Promise((resolve)=>{
-            ev.onTentative(()=>(
-                resolve(ev.value)
-            ))
-            ev.inc()
-            console.log(ev.value)
-        })
+    sendTo(ref){
+        ref.getEV(this.ev)
+    }
+
+    mutate(){
+        this.ev.incMUT()
+    }
+
+    print(){
+        console.log("In app: " + this.ev.value)
+    }
+
+}
+
+class Act extends CAPActor{
+    ev
+
+    getEV(ev){
+        this.ev = ev
+    }
+
+    print(){
+        console.log("In act: " + this.ev.value)
     }
 }
-let app = new CAPplication()
-let act : FarRef<MutAct> = app.spawnActor(MutAct)
-act.test().then((v)=>{
-    console.log("Got back: " + v)
-})
+let app = new App()
+let a1 : FarRef<Act> = app.spawnActor(Act)
+app.mutate()
+app.mutate()
+app.sendTo(a1)
+setTimeout(()=>{
+    app.print()
+    a1.print()
+    let a2 : FarRef<Act> = app.spawnActor(Act)
+    app.sendTo(a2)
+    setTimeout(()=>{
+        a2.print()
+    },1000)
+},1000)
 
 
 

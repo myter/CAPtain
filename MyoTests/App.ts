@@ -2,6 +2,7 @@ import {CAPplication} from "../src/CAPplication";
 import {CAPActor} from "../src/CAPActor";
 import {GroceryItem, GroceryList, UserLists} from "./Defs";
 import {FarRef} from "spiders.js";
+import set = Reflect.set;
 
 let app = new CAPplication()
 class Server extends CAPActor{
@@ -29,6 +30,7 @@ class Server extends CAPActor{
         else{
             let newList = new this.UserLists(userName)
             this.tempList = newList
+            this.lists.set(userName,newList)
             return newList
         }
     }
@@ -66,13 +68,15 @@ class Client extends CAPActor{
 
     login(serverRef){
         this.server = serverRef
-        return this.server.getLists(this.name).then((myLists)=>{
+        return this.server.getLists("client").then((myLists)=>{
             this.myLists = myLists
+            console.log("JUST GOT LIST, PRINTING")
+            this.print()
         })
     }
 
     print(){
-        console.log("State on client")
+        console.log("State on client: " + this.name)
         this.myLists.lists.forEach((list : GroceryList)=>{
             console.log(" - List : " + list.listName)
             list.items.forEach((item : GroceryItem)=>{
@@ -87,7 +91,7 @@ class Client extends CAPActor{
         this.myLists.newListMUT(newList)
     }
 
-    addItemToList(listName,itemName){
+    add(listName,itemName){
         let item = new this.GroceryItem(itemName,1)
         this.myLists.lists.get(listName).addGroceryItemMUT(item)
     }
@@ -95,12 +99,19 @@ class Client extends CAPActor{
 }
 let ser : FarRef<Server> = app.spawnActor(Server)
 let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
-
+let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
 (cli.login(ser) as any).then(()=>{
     cli.newList("test")
-    cli.addItemToList("test","banana")
-    cli.addItemToList("test","pear")
+    cli.add("test","banana")
+    //cli.add("test","pear")
 })
+setTimeout(()=>{
+    cli2.login(ser).then(()=>{
+        setTimeout(()=>{
+            cli2.print()
+        },500)
+    })
+},1500)
 var stdin = process.openStdin();
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())

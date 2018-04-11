@@ -23,6 +23,7 @@ export class Eventual extends SpiderIsolate{
     tentListeners       : Array<(ev : Eventual)=>any>
     commListeners       : Array<(ev : Eventual)=>any>
     populated           : boolean = false
+    lastCommit          : number
     isEventual
 
     clone(value){
@@ -106,10 +107,11 @@ export class Eventual extends SpiderIsolate{
         })
     }
 
-    commit(){
+    commit(roundNumber){
         this.tentativeVals.forEach((tentativeVal,key)=>{
             this.committedVals.set(key,this.clone(tentativeVal))
         })
+        this.lastCommit = roundNumber
         this.triggerCommit()
     }
 
@@ -125,6 +127,7 @@ export class Eventual extends SpiderIsolate{
         this.tentativeVals      = new Map()
         this.tentListeners      = []
         this.commListeners      = []
+        this.lastCommit         = 0
     }
 
     //////////////////////////////////////

@@ -60951,6 +60951,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         this.tentativeVals = new Map();
         this.tentListeners = [];
         this.commListeners = [];
+        this.lastCommit = 0;
     }
     clone(value) {
         if (typeof value != 'object') {
@@ -61027,10 +61028,11 @@ class Eventual extends spiders_js_1.SpiderIsolate {
             this.tentativeVals.set(key, committedVal);
         });
     }
-    commit() {
+    commit(roundNumber) {
         this.tentativeVals.forEach((tentativeVal, key) => {
             this.committedVals.set(key, this.clone(tentativeVal));
         });
+        this.lastCommit = roundNumber;
         this.triggerCommit();
     }
     //////////////////////////////////////
@@ -61352,7 +61354,7 @@ class GSP {
         //2) Replay the round on the object. Depending on the field implementation this will commit tentative values
         this.playRound(round);
         //3) Commit all tentative values as a result fo the replay
-        ev.commit();
+        ev.commit(round.roundNumber);
         //4) Play pending rounds
         if (this.pending.has(round.objectId)) {
             this.pending.get(round.objectId).forEach((round) => {
@@ -61379,7 +61381,7 @@ class GSP {
     }
     registerHolderEventual(ev, masterRef) {
         this.eventuals.set(ev.id, ev);
-        this.roundNumbers.set(ev.id, 0);
+        this.roundNumbers.set(ev.id, ev.lastCommit);
         this.eventualOwner.set(ev.id, masterRef);
         masterRef.newHolder(ev.id, this.roundNumbers.get(ev.id), this.thisActorId, this);
     }

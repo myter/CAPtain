@@ -20,6 +20,7 @@ class Server extends CAPActor_1.CAPActor {
         else {
             let newList = new this.UserLists(userName);
             this.tempList = newList;
+            this.lists.set(userName, newList);
             return newList;
         }
     }
@@ -46,12 +47,14 @@ class Client extends CAPActor_1.CAPActor {
     }
     login(serverRef) {
         this.server = serverRef;
-        return this.server.getLists(this.name).then((myLists) => {
+        return this.server.getLists("client").then((myLists) => {
             this.myLists = myLists;
+            console.log("JUST GOT LIST, PRINTING");
+            this.print();
         });
     }
     print() {
-        console.log("State on client");
+        console.log("State on client: " + this.name);
         this.myLists.lists.forEach((list) => {
             console.log(" - List : " + list.listName);
             list.items.forEach((item) => {
@@ -63,18 +66,26 @@ class Client extends CAPActor_1.CAPActor {
         let newList = new this.GroceryList(listName);
         this.myLists.newListMUT(newList);
     }
-    addItemToList(listName, itemName) {
+    add(listName, itemName) {
         let item = new this.GroceryItem(itemName, 1);
         this.myLists.lists.get(listName).addGroceryItemMUT(item);
     }
 }
 let ser = app.spawnActor(Server);
 let cli = app.spawnActor(Client, ["client1"]);
+let cli2 = app.spawnActor(Client, ["client2"]);
 cli.login(ser).then(() => {
     cli.newList("test");
-    cli.addItemToList("test", "banana");
-    cli.addItemToList("test", "pear");
+    cli.add("test", "banana");
+    //cli.add("test","pear")
 });
+setTimeout(() => {
+    cli2.login(ser).then(() => {
+        setTimeout(() => {
+            cli2.print();
+        }, 500);
+    });
+}, 1500);
 var stdin = process.openStdin();
 stdin.addListener("data", function (d) {
     eval(d.toString().trim());

@@ -23,6 +23,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         this.tentativeVals = new Map();
         this.tentListeners = [];
         this.commListeners = [];
+        this.lastCommit = 0;
     }
     clone(value) {
         if (typeof value != 'object') {
@@ -99,10 +100,11 @@ class Eventual extends spiders_js_1.SpiderIsolate {
             this.tentativeVals.set(key, committedVal);
         });
     }
-    commit() {
+    commit(roundNumber) {
         this.tentativeVals.forEach((tentativeVal, key) => {
             this.committedVals.set(key, this.clone(tentativeVal));
         });
+        this.lastCommit = roundNumber;
         this.triggerCommit();
     }
     //////////////////////////////////////

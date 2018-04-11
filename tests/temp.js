@@ -1,45 +1,51 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Eventual_1 = require("../src/Eventual");
 const CAPplication_1 = require("../src/CAPplication");
 const CAPActor_1 = require("../src/CAPActor");
-class TestEV extends Eventual_1.Eventual {
+class Test extends Eventual_1.Eventual {
     constructor() {
         super();
-        this.value = 5;
+        this.value = 0;
     }
-    inc() {
-        console.log("Incrementing");
+    incMUT() {
         this.value++;
     }
 }
-__decorate([
-    Eventual_1.mutating
-], TestEV.prototype, "inc", null);
-exports.TestEV = TestEV;
-class MutAct extends CAPActor_1.CAPActor {
+class App extends CAPplication_1.CAPplication {
     constructor() {
         super();
-        this.AnnotEV = TestEV;
+        this.ev = new Test();
     }
-    test() {
-        let ev = new this.AnnotEV();
-        console.log(ev.value);
-        return new Promise((resolve) => {
-            ev.onTentative(() => (resolve(ev.value)));
-            ev.inc();
-            console.log(ev.value);
-        });
+    sendTo(ref) {
+        ref.getEV(this.ev);
+    }
+    mutate() {
+        this.ev.incMUT();
+    }
+    print() {
+        console.log("In app: " + this.ev.value);
     }
 }
-let app = new CAPplication_1.CAPplication();
-let act = app.spawnActor(MutAct);
-act.test().then((v) => {
-    console.log("Got back: " + v);
-});
+class Act extends CAPActor_1.CAPActor {
+    getEV(ev) {
+        this.ev = ev;
+    }
+    print() {
+        console.log("In act: " + this.ev.value);
+    }
+}
+let app = new App();
+let a1 = app.spawnActor(Act);
+app.mutate();
+app.mutate();
+app.sendTo(a1);
+setTimeout(() => {
+    app.print();
+    a1.print();
+    let a2 = app.spawnActor(Act);
+    app.sendTo(a2);
+    setTimeout(() => {
+        a2.print();
+    }, 1000);
+}, 1000);
 //# sourceMappingURL=temp.js.map

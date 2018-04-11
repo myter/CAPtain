@@ -154,7 +154,7 @@ export class GSP{
         //2) Replay the round on the object. Depending on the field implementation this will commit tentative values
         this.playRound(round)
         //3) Commit all tentative values as a result fo the replay
-        ev.commit()
+        ev.commit(round.roundNumber)
         //4) Play pending rounds
         if(this.pending.has(round.objectId)){
             this.pending.get(round.objectId).forEach((round : Round)=>{
@@ -185,7 +185,7 @@ export class GSP{
 
     registerHolderEventual(ev : Eventual,masterRef : FarRef<any>){
         this.eventuals.set(ev.id,ev)
-        this.roundNumbers.set(ev.id,0)
+        this.roundNumbers.set(ev.id,ev.lastCommit)
         this.eventualOwner.set(ev.id,masterRef)
         masterRef.newHolder(ev.id,this.roundNumbers.get(ev.id),this.thisActorId,this)
     }
