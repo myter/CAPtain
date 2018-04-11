@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="Eventual Linkage now happens through MOP:resolve call">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/captain.js" afterPath="$PROJECT_DIR$/captain.js" />
-      <change beforePath="$PROJECT_DIR$/captain.js.map" afterPath="$PROJECT_DIR$/captain.js.map" />
-      <change beforePath="$PROJECT_DIR$/captain.ts" afterPath="$PROJECT_DIR$/captain.ts" />
       <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -101,11 +97,12 @@
       <file leaf-file-name="Eventual.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="264" column="56" lean-forward="false" selection-start-line="264" selection-start-column="56" selection-end-line="264" selection-end-column="56" />
+            <state relative-caret-position="60">
+              <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="90" />
               <folding>
                 <element signature="n#!!block;n#mutating#0" expanded="true" />
                 <element signature="n#Eventual#0" expanded="false" />
+                <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -143,8 +140,8 @@
       <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.d.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="23" column="1" lean-forward="true" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+            <state relative-caret-position="363">
+              <caret line="29" column="90" lean-forward="false" selection-start-line="29" selection-start-column="90" selection-end-line="29" selection-end-column="90" />
               <folding />
             </state>
           </provider>
@@ -395,7 +392,7 @@
       <workItem from="1523284879291" duration="4401000" />
       <workItem from="1523291938491" duration="1558000" />
       <workItem from="1523293520238" duration="10664000" />
-      <workItem from="1523428140512" duration="4822000" />
+      <workItem from="1523428140512" duration="4940000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -496,7 +493,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95969000" />
+    <option name="totallyTimeSpent" value="96087000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="813" extended-state="6" />
@@ -612,7 +609,7 @@
             <element signature="e#3787#3851#0" expanded="false" />
             <element signature="e#3929#4005#0" expanded="false" />
             <element signature="n#!!block;n#canInvoke#0;n#EventualMirror#0" expanded="false" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
             <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
@@ -659,7 +656,7 @@
             <element signature="e#3787#3851#0" expanded="false" />
             <element signature="e#3929#4005#0" expanded="false" />
             <element signature="n#!!block;n#canInvoke#0;n#EventualMirror#0" expanded="false" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
             <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
@@ -714,7 +711,7 @@
             <element signature="e#3787#3851#0" expanded="false" />
             <element signature="e#3929#4005#0" expanded="false" />
             <element signature="n#!!block;n#canInvoke#0;n#EventualMirror#0" expanded="false" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
             <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
@@ -777,7 +774,7 @@
             <element signature="e#3787#3851#0" expanded="false" />
             <element signature="e#3929#4005#0" expanded="false" />
             <element signature="n#!!block;n#canInvoke#0;n#EventualMirror#0" expanded="false" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
             <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
@@ -982,17 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="264" column="56" lean-forward="false" selection-start-line="264" selection-start-column="56" selection-end-line="264" selection-end-column="56" />
-          <folding>
-            <element signature="n#!!block;n#mutating#0" expanded="true" />
-            <element signature="n#Eventual#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/testCapExtension.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="293">
@@ -1092,6 +1078,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="90" />
+          <folding>
+            <element signature="n#!!block;n#mutating#0" expanded="true" />
+            <element signature="n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/captain.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1104,8 +1102,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="23" column="1" lean-forward="true" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
+        <state relative-caret-position="363">
+          <caret line="29" column="90" lean-forward="false" selection-start-line="29" selection-start-column="90" selection-end-line="29" selection-end-column="90" />
           <folding />
         </state>
       </provider>

@@ -27,4 +27,4 @@ export class Available{}
 
 export class Consistent{}
 
-export function mutating()
+export function mutating(target : any,propertyKey : string,descriptor : PropertyDescriptor)
