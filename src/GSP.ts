@@ -184,6 +184,7 @@ export class GSP{
     }
 
     registerHolderEventual(ev : Eventual,masterRef : FarRef<any>){
+        //console.log("Registering as holder for " + ev.id + " in " + this.thisActorId)
         this.eventuals.set(ev.id,ev)
         this.roundNumbers.set(ev.id,ev.lastCommit)
         this.eventualOwner.set(ev.id,masterRef)

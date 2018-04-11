@@ -12,10 +12,6 @@
       <change beforePath="$PROJECT_DIR$/src/GSP.js" afterPath="$PROJECT_DIR$/src/GSP.js" />
       <change beforePath="$PROJECT_DIR$/src/GSP.js.map" afterPath="$PROJECT_DIR$/src/GSP.js.map" />
       <change beforePath="$PROJECT_DIR$/src/GSP.ts" afterPath="$PROJECT_DIR$/src/GSP.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" afterPath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js" afterPath="$PROJECT_DIR$/tests/temp.js" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js.map" afterPath="$PROJECT_DIR$/tests/temp.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.ts" afterPath="$PROJECT_DIR$/tests/temp.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -39,27 +35,36 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GSP.ts" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GSP.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GSP.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="422">
-              <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
+            <state relative-caret-position="127">
+              <caret line="185" column="46" lean-forward="false" selection-start-line="185" selection-start-column="46" selection-end-line="185" selection-end-column="46" />
               <folding>
+                <element signature="n#!!block;n#yieldMasterRound#0;n#GSP#0" expanded="true" />
+                <element signature="e#4220#4280#0" expanded="true" />
                 <element signature="n#!!block;n#commitRound#0;n#GSP#0" expanded="true" />
                 <element signature="n#!!block;n#registerMasterEventual#0;n#GSP#0" expanded="true" />
                 <element signature="n#!!block;n#registerHolderEventual#0;n#GSP#0" expanded="true" />
+                <element signature="n#!!block;n#newHolder#0;n#GSP#0" expanded="true" />
+                <element signature="e#8066#8123#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Eventual.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Eventual.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="113" column="37" lean-forward="false" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
+            <state relative-caret-position="862">
+              <caret line="282" column="85" lean-forward="false" selection-start-line="282" selection-start-column="85" selection-end-line="282" selection-end-column="85" />
               <folding>
+                <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+                <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
                 <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+                <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+                <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+                <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -68,17 +73,17 @@
       <file leaf-file-name="App.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="81" column="53" lean-forward="false" selection-start-line="81" selection-start-column="53" selection-end-line="81" selection-end-column="53" />
+            <state relative-caret-position="326">
+              <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
               <folding>
                 <element signature="n#!!block;n#getLists#0;n#Server#0" expanded="true" />
+                <element signature="n#!!block;n#constructor#0;n#Client#0" expanded="true" />
+                <element signature="n#!!block;n#init#0;n#Client#0" expanded="true" />
                 <element signature="n#!!block;n#login#0;n#Client#0" expanded="true" />
-                <element signature="e#1876#1998#0" expanded="true" />
-                <element signature="e#2239#2336#0" expanded="true" />
-                <element signature="e#2845#2930#0" expanded="true" />
-                <element signature="e#2947#3053#0" expanded="true" />
-                <element signature="e#2978#3050#0" expanded="true" />
-                <element signature="e#3003#3039#0" expanded="true" />
+                <element signature="e#1881#2007#0" expanded="true" />
+                <element signature="n#!!block;n#print#0;n#Client#0" expanded="true" />
+                <element signature="e#2139#2356#0" expanded="true" />
+                <element signature="e#2248#2345#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -121,6 +126,8 @@
       <find>this.eventuals.set</find>
       <find>=</find>
       <find>Master change</find>
+      <find>this.eventualHolders</find>
+      <find>this</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;_IS_EVENTUAL_&quot;</replace>
@@ -152,8 +159,8 @@
         <option value="$PROJECT_DIR$/index.d.ts" />
         <option value="$PROJECT_DIR$/tests/temp.ts" />
         <option value="$PROJECT_DIR$/MyoTests/App.ts" />
-        <option value="$PROJECT_DIR$/src/Eventual.ts" />
         <option value="$PROJECT_DIR$/src/GSP.ts" />
+        <option value="$PROJECT_DIR$/src/Eventual.ts" />
       </list>
     </option>
   </component>
@@ -247,7 +254,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.testClient">
+  <component name="RunManager" selected="Node.js.App.js">
     <configuration name="testClient" type="JavascriptDebugType" factoryName="JavaScript Debug" uri="http://localhost:63342/CAPtain/tests/testCapExtension.html">
       <method>
         <option name="NpmBeforeRunTask" enabled="true">
@@ -331,7 +338,7 @@
       <workItem from="1523293520238" duration="10664000" />
       <workItem from="1523428140512" duration="6728000" />
       <workItem from="1523451250993" duration="253000" />
-      <workItem from="1523451992846" duration="1106000" />
+      <workItem from="1523451992846" duration="3265000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -432,11 +439,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99234000" />
+    <option name="totallyTimeSpent" value="101393000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -545,7 +551,12 @@
         <state relative-caret-position="225">
           <caret line="22" column="17" lean-forward="false" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
           <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
             <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -584,7 +595,12 @@
         <state relative-caret-position="225">
           <caret line="22" column="17" lean-forward="false" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
           <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
             <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -631,7 +647,12 @@
         <state relative-caret-position="360">
           <caret line="54" column="36" lean-forward="false" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
           <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
             <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -686,7 +707,12 @@
         <state relative-caret-position="360">
           <caret line="54" column="36" lean-forward="false" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
           <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
             <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -920,39 +946,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="81" column="53" lean-forward="false" selection-start-line="81" selection-start-column="53" selection-end-line="81" selection-end-column="53" />
+        <state relative-caret-position="326">
+          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#getLists#0;n#Server#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#Client#0" expanded="true" />
+            <element signature="n#!!block;n#init#0;n#Client#0" expanded="true" />
             <element signature="n#!!block;n#login#0;n#Client#0" expanded="true" />
-            <element signature="e#1876#1998#0" expanded="true" />
-            <element signature="e#2239#2336#0" expanded="true" />
-            <element signature="e#2845#2930#0" expanded="true" />
-            <element signature="e#2947#3053#0" expanded="true" />
-            <element signature="e#2978#3050#0" expanded="true" />
-            <element signature="e#3003#3039#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="113" column="37" lean-forward="false" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
-          <folding>
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="e#1881#2007#0" expanded="true" />
+            <element signature="n#!!block;n#print#0;n#Client#0" expanded="true" />
+            <element signature="e#2139#2356#0" expanded="true" />
+            <element signature="e#2248#2345#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GSP.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="422">
-          <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
+        <state relative-caret-position="127">
+          <caret line="185" column="46" lean-forward="false" selection-start-line="185" selection-start-column="46" selection-end-line="185" selection-end-column="46" />
           <folding>
+            <element signature="n#!!block;n#yieldMasterRound#0;n#GSP#0" expanded="true" />
+            <element signature="e#4220#4280#0" expanded="true" />
             <element signature="n#!!block;n#commitRound#0;n#GSP#0" expanded="true" />
             <element signature="n#!!block;n#registerMasterEventual#0;n#GSP#0" expanded="true" />
             <element signature="n#!!block;n#registerHolderEventual#0;n#GSP#0" expanded="true" />
+            <element signature="n#!!block;n#newHolder#0;n#GSP#0" expanded="true" />
+            <element signature="e#8066#8123#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="862">
+          <caret line="282" column="85" lean-forward="false" selection-start-line="282" selection-start-column="85" selection-end-line="282" selection-end-column="85" />
+          <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -141,6 +141,7 @@ class GSP {
         this.eventuals.set(ev.id, ev);
     }
     registerHolderEventual(ev, masterRef) {
+        //console.log("Registering as holder for " + ev.id + " in " + this.thisActorId)
         this.eventuals.set(ev.id, ev);
         this.roundNumbers.set(ev.id, ev.lastCommit);
         this.eventualOwner.set(ev.id, masterRef);

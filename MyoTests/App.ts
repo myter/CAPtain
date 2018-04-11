@@ -63,15 +63,15 @@ class Client extends CAPActor{
     init(){
         this.GroceryList = require(this.dir+"/Defs").GroceryList
         this.GroceryItem = require(this.dir+"/Defs").GroceryItem
-        console.log("Client id: " + this.gsp.thisActorId)
+        console.log(this.name +" id :" + this.gsp.thisActorId)
     }
 
     login(serverRef){
         this.server = serverRef
         return this.server.getLists("client").then((myLists)=>{
             this.myLists = myLists
-            console.log("JUST GOT LIST, PRINTING")
-            this.print()
+            //console.log("JUST GOT LIST, PRINTING")
+            //this.print()
         })
     }
 
@@ -100,18 +100,11 @@ class Client extends CAPActor{
 let ser : FarRef<Server> = app.spawnActor(Server)
 let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
 let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
+cli2.login(ser);
 (cli.login(ser) as any).then(()=>{
     cli.newList("test")
     cli.add("test","banana")
-    //cli.add("test","pear")
 })
-setTimeout(()=>{
-    cli2.login(ser).then(()=>{
-        setTimeout(()=>{
-            cli2.print()
-        },500)
-    })
-},1500)
 var stdin = process.openStdin();
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())

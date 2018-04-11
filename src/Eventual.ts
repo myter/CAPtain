@@ -15,6 +15,7 @@ export function mutating(target : any,propertyKey : string,descriptor : Property
 }
 export class Eventual extends SpiderIsolate{
     hostGsp             : GSP
+    masterGsp           : GSP
     hostId              : string
     ownerId             : string
     id                  : string
@@ -80,6 +81,9 @@ export class Eventual extends SpiderIsolate{
 
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp : GSP,hostId : string = undefined,isOwner : boolean){
+        if(this.hostGsp == undefined){
+            this.masterGsp = hostGsp
+        }
         this.hostGsp    = hostGsp
         this.hostId     = hostId
         if(isOwner){
@@ -276,10 +280,10 @@ export class EventualMirror extends SpiderIsolateMirror{
     }
 
     write(fieldName,value){
-        if(this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_"){
+        if(this.checkArg(value) && fieldName != "hostGsp" && fieldName != "masterGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_"){
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName)
         }
-        else if(fieldName == "hostGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_'){
+        else if(fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_'){
             return super.write(fieldName,value)
         }
         else{
@@ -310,11 +314,11 @@ export class EventualMirror extends SpiderIsolateMirror{
     resolve(hostActorMirror : CAPMirror){
         //Dirty trick, but it could be that this eventual is resolved to an actor which hasn't been initialised (i.e. as part of a scope serialisation)
         if(hostActorMirror.base.behaviourObject){
-            let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp
-            let oldGSP = (this.base as Eventual).hostGsp;
-            (this.base as Eventual).setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
-            if(!newGsp.knownEventual((this.base as Eventual).id)){
-                newGsp.registerHolderEventual(this.proxyBase as Eventual,oldGSP)
+            let baseEV = this.base as Eventual;
+            let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp;
+            baseEV.setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
+            if(!newGsp.knownEventual(baseEV.id)){
+                newGsp.registerHolderEventual(this.proxyBase as Eventual,baseEV.masterGsp)
             }
         }
     }

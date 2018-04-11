@@ -75,6 +75,9 @@ class Eventual extends spiders_js_1.SpiderIsolate {
     }
     //Called by host actor when this eventual is first passed to other actor
     setHost(hostGsp, hostId = undefined, isOwner) {
+        if (this.hostGsp == undefined) {
+            this.masterGsp = hostGsp;
+        }
         this.hostGsp = hostGsp;
         this.hostId = hostId;
         if (isOwner) {
@@ -246,10 +249,10 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     write(fieldName, value) {
-        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
+        if (this.checkArg(value) && fieldName != "hostGsp" && fieldName != "masterGsp" && fieldName != "committedVals" && fieldName != "tentativeVals" && fieldName != "_SPIDER_OBJECT_MIRROR_") {
             throw new Error("Cannot assign non-eventual argument to eventual field: " + fieldName);
         }
-        else if (fieldName == "hostGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
+        else if (fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
         }
         else {
@@ -278,11 +281,11 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     resolve(hostActorMirror) {
         //Dirty trick, but it could be that this eventual is resolved to an actor which hasn't been initialised (i.e. as part of a scope serialisation)
         if (hostActorMirror.base.behaviourObject) {
+            let baseEV = this.base;
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
-            let oldGSP = this.base.hostGsp;
-            this.base.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
-            if (!newGsp.knownEventual(this.base.id)) {
-                newGsp.registerHolderEventual(this.proxyBase, oldGSP);
+            baseEV.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
+            if (!newGsp.knownEventual(baseEV.id)) {
+                newGsp.registerHolderEventual(this.proxyBase, baseEV.masterGsp);
             }
         }
     }
