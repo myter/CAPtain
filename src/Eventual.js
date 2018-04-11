@@ -1,6 +1,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
+function mutating(target, propertyKey, descriptor) {
+    let originalMethod = descriptor.value;
+    originalMethod["_IS_MUTATING_"] = true;
+    return {
+        value: originalMethod
+    };
+}
+exports.mutating = mutating;
 class Eventual extends spiders_js_1.SpiderIsolate {
     constructor() {
         super(new EventualMirror());
@@ -198,11 +206,15 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 return super.invoke(methodName, args);
             }
             else {
-                if (this.canInvoke(methodName, args)) {
+                if (this.canInvoke(methodName, args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])) {
                     //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
                     //Safe to trigger both tentative and commit handlers
+                    let ret = super.invoke(methodName, args);
                     baseEV.triggerTentative();
                     baseEV.triggerCommit();
+                    return ret;
+                }
+                else {
                     return super.invoke(methodName, args);
                 }
             }
@@ -214,12 +226,15 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 }
             }
             else {
-                if (this.canInvoke(methodName, args) && methodName.includes("MUT")) {
+                if (this.canInvoke(methodName, args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])) {
                     baseEV.hostGsp.createRound(baseEV.id, baseEV.ownerId, methodName, args);
                     let ret = super.invoke(methodName, args);
                     baseEV.hostGsp.yield(baseEV.id, baseEV.ownerId);
                     baseEV.triggerTentative();
                     return ret;
+                }
+                else {
+                    return super.invoke(methodName, args);
                 }
             }
         }

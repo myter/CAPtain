@@ -1,11 +1,11 @@
-import {Eventual} from "../src/Eventual";
+import {Eventual, mutating} from "../src/Eventual";
 import {CAPplication} from "../src/CAPplication";
 import {CAPActor} from "../src/CAPActor";
 import {FarRef, SpiderObject, SpiderObjectMirror} from "spiders.js";
 import set = Reflect.set;
 import {Consistent} from "../src/Consistent";
 
-class Test extends Consistent{
+export class TestEV extends Eventual{
     value
 
     constructor(){
@@ -13,19 +13,37 @@ class Test extends Consistent{
         this.value = 5
     }
 
+    @mutating
     inc(){
-        return this.value.then((v)=>{
-            console.log("Value read = " + v)
-            return this.value = v + 5
-        })
+        console.log("Incrementing")
+        this.value++
     }
 }
 
-let t = new Test()
-t.inc().then(()=>{
-    t.value.then((v)=>{
-        console.log("Updated: " + v)
-    })
+class MutAct extends CAPActor{
+    AnnotEV
+    thisDir
+    constructor(){
+        super()
+        this.AnnotEV = TestEV
+    }
+
+    test(){
+        let ev = new this.AnnotEV()
+        console.log(ev.value)
+        return new Promise((resolve)=>{
+            ev.onTentative(()=>(
+                resolve(ev.value)
+            ))
+            ev.inc()
+            console.log(ev.value)
+        })
+    }
+}
+let app = new CAPplication()
+let act : FarRef<MutAct> = app.spawnActor(MutAct)
+act.test().then((v)=>{
+    console.log("Got back: " + v)
 })
 
 

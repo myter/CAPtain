@@ -862,6 +862,41 @@ describe("Eventuals",()=>{
             }
         })
     })
+
+    it("Mutating Annotation",function(done){
+        class MutAct extends CAPActor{
+            thisDir
+            constructor(){
+                super()
+                this.thisDir = __dirname
+            }
+
+            test(){
+                let AnnotEV = require(this.thisDir + "/EVDefinition").TestEV
+                let ev = new AnnotEV()
+                return new Promise((resolve)=>{
+                    ev.onTentative(()=>(
+                        resolve(ev.value)
+                    ))
+                    ev.inc()
+                })
+            }
+        }
+        let app = new CAPplication()
+        let act : FarRef<MutAct> = app.spawnActor(MutAct)
+        act.test().then((v)=>{
+            try{
+                expect(v).to.equal(6)
+                app.kill()
+                done()
+            }
+            catch(e){
+                app.kill()
+                done(e)
+            }
+        })
+
+    })
 })
 
 describe("Consistents",()=>{

@@ -746,6 +746,35 @@ describe("Eventuals", () => {
             }
         });
     });
+    it("Mutating Annotation", function (done) {
+        class MutAct extends CAPActor_1.CAPActor {
+            constructor() {
+                super();
+                this.thisDir = __dirname;
+            }
+            test() {
+                let AnnotEV = require(this.thisDir + "/EVDefinition").TestEV;
+                let ev = new AnnotEV();
+                return new Promise((resolve) => {
+                    ev.onTentative(() => (resolve(ev.value)));
+                    ev.inc();
+                });
+            }
+        }
+        let app = new CAPplication_1.CAPplication();
+        let act = app.spawnActor(MutAct);
+        act.test().then((v) => {
+            try {
+                expect(v).to.equal(6);
+                app.kill();
+                done();
+            }
+            catch (e) {
+                app.kill();
+                done(e);
+            }
+        });
+    });
 });
 describe("Consistents", () => {
     class TestConsistent extends Consistent_1.Consistent {
