@@ -77,6 +77,24 @@ export class Eventual extends SpiderIsolate{
                 this.tentativeVals.set(key.toString(),this.clone(this[key]))
             }
         })*/
+        /*let layDependencies = (committed)=>{
+            if(committed instanceof Array){
+                (committed as Array<any>).forEach((v)=>{
+                    layDependencies(v)
+                })
+            }
+            else if(committed instanceof Map){
+
+            }
+            else if(committed.isEventual){
+                console.log("Adding dependency")
+                this.addDependency(committed)
+            }
+        }
+        this.committedVals.forEach((committed)=>{
+            console.log("checking")
+            layDependencies(committed)
+        })*/
         this.populated = true
     }
 
@@ -200,6 +218,17 @@ export class Eventual extends SpiderIsolate{
                 this.triggerTentative()
             })
         }
+    }
+
+    relayDependencies(){
+        this.dependencies.forEach((ev,evId)=>{
+            ev.onCommit(()=>{
+                this.triggerCommit()
+            })
+            ev.onTentative(()=>{
+                this.triggerTentative()
+            })
+        })
     }
 }
 export class EventualMirror extends SpiderIsolateMirror{
@@ -345,6 +374,7 @@ export class EventualMirror extends SpiderIsolateMirror{
             let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp;
             baseEV.setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
             if(!newGsp.knownEventual(baseEV.id)){
+                baseEV.relayDependencies()
                 newGsp.registerHolderEventual(this.proxyBase as Eventual,baseEV.masterGsp)
             }
             return newGsp.eventuals.get(baseEV.id)

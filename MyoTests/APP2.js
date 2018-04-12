@@ -67,6 +67,9 @@ class Client extends CAPActor_1.CAPActor {
     }
     login() {
         this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists) => {
+            myLists.onCommit(() => {
+                console.log("Commit triggered on " + this.name);
+            });
             this.myLists = myLists;
         });
         this.psClient.publish("client", new this.libs.PubSubTag("GetListReq"));
@@ -100,7 +103,10 @@ let ser = app.spawnActor(Server);
 let cli = app.spawnActor(Client, ["client1"]);
 let cli2 = app.spawnActor(Client, ["client2"]);
 cli.login();
-cli2.login();
+setTimeout(() => {
+    cli.newList("test");
+    cli.add("test", "banana");
+}, 2000);
 var stdin = process.openStdin();
 function printAll() {
     ser.print().then(() => {
@@ -108,6 +114,9 @@ function printAll() {
             cli2.print();
         });
     });
+}
+function log2() {
+    cli2.login();
 }
 stdin.addListener("data", function (d) {
     eval(d.toString().trim());

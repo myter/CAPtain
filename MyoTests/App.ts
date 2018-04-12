@@ -108,9 +108,7 @@ let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
 let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
 
 (cli.login(ser) as any).then(()=>{
-    cli2.login(ser)
-    cli.newList("test")
-    cli.add("test","banana")
+
     //cli.inc("test","banana")
     /*cli2.login(ser).then(()=>{
         cli.newList("test")
@@ -119,17 +117,21 @@ let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
     })*/
 
 })
+
 /*setTimeout(()=>{
     cli2.login(ser)
 },2000)*/
 var stdin = process.openStdin();
 
 function printAll(){
-    ser.print().then(()=>{
-        cli.print().then(()=>{
-            //cli2.print()
+    (ser.print() as any).then(()=>{
+        (cli.print() as any).then(()=>{
+            cli2.print()
         })
     })
+}
+function log2(){
+    cli2.login(ser)
 }
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())
