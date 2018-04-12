@@ -1,8 +1,12 @@
 // Type definitions for spiders.captain
 // Definitions by: Florian Myter
-import {ActorSTDLib, FarRef} from "spiders.js";
+import {ActorSTDLib, FarRef, PSClient, PSServer, PubSubTag} from "spiders.js";
 
 export * from "spiders.js"
+export type FarRef<T> = T
+export type  PSServer = PSServer
+export type  PSClient = PSClient
+export type PubSubTag = PubSubTag
 export class CAPActor{
     parent  : FarRef<any>
     libs    : ActorSTDLib

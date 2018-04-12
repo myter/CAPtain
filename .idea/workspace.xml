@@ -3,19 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="Eventual Linkage now happens through MOP:resolve call">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js" afterPath="$PROJECT_DIR$/src/Eventual.js" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js.map" afterPath="$PROJECT_DIR$/src/Eventual.js.map" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.ts" afterPath="$PROJECT_DIR$/src/Eventual.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" afterPath="$PROJECT_DIR$/tests/CAPExtensionBundle.js" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.js" afterPath="$PROJECT_DIR$/tests/cap.Test.js" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.js.map" afterPath="$PROJECT_DIR$/tests/cap.Test.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.ts" afterPath="$PROJECT_DIR$/tests/cap.Test.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js" afterPath="$PROJECT_DIR$/tests/temp.js" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.js.map" afterPath="$PROJECT_DIR$/tests/temp.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/temp.ts" afterPath="$PROJECT_DIR$/tests/temp.ts" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.js" afterPath="$PROJECT_DIR$/tests/testCapExtension.js" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.js.map" afterPath="$PROJECT_DIR$/tests/testCapExtension.js.map" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.ts" afterPath="$PROJECT_DIR$/tests/testCapExtension.ts" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/App.js" afterPath="$PROJECT_DIR$/MyoTests/App.js" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/App.js.map" afterPath="$PROJECT_DIR$/MyoTests/App.js.map" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/App.ts" afterPath="$PROJECT_DIR$/MyoTests/App.ts" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.js" afterPath="$PROJECT_DIR$/MyoTests/Defs.js" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.js.map" afterPath="$PROJECT_DIR$/MyoTests/Defs.js.map" />
+      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.ts" afterPath="$PROJECT_DIR$/MyoTests/Defs.ts" />
+      <change beforePath="$PROJECT_DIR$/index.d.ts" afterPath="$PROJECT_DIR$/index.d.ts" />
+      <change beforePath="$PROJECT_DIR$/src/GSP.js" afterPath="$PROJECT_DIR$/src/GSP.js" />
+      <change beforePath="$PROJECT_DIR$/src/GSP.js.map" afterPath="$PROJECT_DIR$/src/GSP.js.map" />
+      <change beforePath="$PROJECT_DIR$/src/GSP.ts" afterPath="$PROJECT_DIR$/src/GSP.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,206 +26,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Defs.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MyoTests/Defs.ts">
+      <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index.d.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="41">
-              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GSP.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/GSP.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="143" column="76" lean-forward="false" selection-start-line="143" selection-start-column="76" selection-end-line="143" selection-end-column="76" />
-              <folding>
-                <element signature="n#!!block;n#yieldMasterRound#0;n#GSP#0" expanded="true" />
-                <element signature="e#4220#4280#0" expanded="true" />
-                <element signature="n#!!block;n#commitRound#0;n#GSP#0" expanded="true" />
-                <element signature="n#!!block;n#registerMasterEventual#0;n#GSP#0" expanded="true" />
-                <element signature="n#!!block;n#registerHolderEventual#0;n#GSP#0" expanded="true" />
-                <element signature="n#!!block;n#newHolder#0;n#GSP#0" expanded="true" />
-                <element signature="e#8066#8123#0" expanded="true" />
-                <element signature="n#!!block;n#newRound#0;n#GSP#0" expanded="true" />
-                <element signature="n#!!block;n#sync#0;n#GSP#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Eventual.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2653">
-              <caret line="342" column="8" lean-forward="false" selection-start-line="342" selection-start-column="8" selection-end-line="342" selection-end-column="8" />
-              <folding>
-                <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-                <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-                <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-                <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-                <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-                <element signature="e#6539#6591#0" expanded="true" />
-                <element signature="e#6624#6679#0" expanded="true" />
-                <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-                <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-                <element signature="e#8598#8729#0" expanded="true" />
-                <element signature="e#9460#9575#0" expanded="true" />
-                <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-                <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="testCapExtension.ts" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/testCapExtension.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="786" column="1" lean-forward="true" selection-start-line="786" selection-start-column="1" selection-end-line="786" selection-end-column="1" />
-              <folding>
-                <element signature="e#618#660#0" expanded="false" />
-                <element signature="e#669#708#0" expanded="false" />
-                <element signature="n#TestAvailable#0" expanded="false" />
-                <element signature="n#TestEventual#0" expanded="false" />
-                <element signature="n#TestConsistent#0" expanded="false" />
-                <element signature="n#AvailableContentSerActor#0" expanded="false" />
-                <element signature="n#AvailableClassSerActor#0" expanded="false" />
-                <element signature="n#AvailableNOKAssignmentAct#0" expanded="false" />
-                <element signature="n#AvailableNOKConstraintAct#0" expanded="false" />
-                <element signature="n#TestEventualAvailableAssignment#0" expanded="false" />
-                <element signature="n#AvailableAssignmentEventualAct#0" expanded="false" />
-                <element signature="n#AvailableAssignmentAvailableAct#0" expanded="false" />
-                <element signature="n#AvailableAssignmentPrimitiveAct#0" expanded="false" />
-                <element signature="n#TestEventualAvailableConstraint#0" expanded="false" />
-                <element signature="n#AvailableConstraintEventualAct#0" expanded="false" />
-                <element signature="n#AvailableConstraintAvailableAct#0" expanded="false" />
-                <element signature="n#AvailableConstraintPrimitiveAct#0" expanded="false" />
-                <element signature="n#MasterSlaveChangeAct#0" expanded="false" />
-                <element signature="n#SlaveSlaveChangeAct#0" expanded="false" />
-                <element signature="n#MasterMasterChange#0" expanded="false" />
-                <element signature="n#SlaveMasterChange#0" expanded="false" />
-                <element signature="n#EventualContentSerialisationAct#0" expanded="false" />
-                <element signature="n#EventualClassSerialisationAct#0" expanded="false" />
-                <element signature="n#EventualNOKAssignmentAct#0" expanded="false" />
-                <element signature="n#EventualNOKConstraintAct#0" expanded="false" />
-                <element signature="n#EventualAssignmentEventualAct#0" expanded="false" />
-                <element signature="n#EventualAssignmentPrimitiveAct#0" expanded="false" />
-                <element signature="n#EventualConstraintEventualAct#0" expanded="false" />
-                <element signature="n#EventualConstraintPrimitiveAct#0" expanded="false" />
-                <element signature="n#EventualTentativeMaster#0" expanded="false" />
-                <element signature="n#EventualTentativeSlave#0" expanded="false" />
-                <element signature="n#EventualCommitMaster#0" expanded="false" />
-                <element signature="n#EventualCommitSlave#0" expanded="false" />
-                <element signature="n#ExtendedEventual#0" expanded="false" />
-                <element signature="n#EventualSensistiveMaster#0" expanded="false" />
-                <element signature="n#EventualSensitiveSlave#0" expanded="false" />
-                <element signature="n#Contained#0" expanded="false" />
-                <element signature="n#Container#0" expanded="false" />
-                <element signature="n#NestedRepAct2#0" expanded="false" />
-                <element signature="e#17101#17344#0" expanded="true" />
-                <element signature="n#!!block;n#constructor#0;n#DeepCommitAct1#0" expanded="true" />
-                <element signature="n#!!block;n#sendTo#0;n#DeepCommitAct1#0" expanded="true" />
-                <element signature="e#17663#17697#0" expanded="true" />
-                <element signature="n#!!block;n#test#0;n#DeepCommitAct1#0" expanded="true" />
-                <element signature="e#17792#17886#0" expanded="true" />
-                <element signature="e#17821#17870#0" expanded="true" />
-                <element signature="n#!!block;n#getContainer#0;n#DeppCommitAct2#0" expanded="true" />
-                <element signature="e#18202#18442#0" expanded="true" />
-                <element signature="e#18401#18439#0" expanded="true" />
-                <element signature="n#ConsistentContentSerialisationAct#0" expanded="false" />
-                <element signature="n#ConsistentClassSerialisationAct#0" expanded="false" />
-                <element signature="n#ConsistentNOKAssignmentAct#0" expanded="false" />
-                <element signature="n#ConsistentNOKConstraintAct#0" expanded="false" />
-                <element signature="n#ConsistentAssignmentConsistentAct#0" expanded="false" />
-                <element signature="n#ConsistentAssignmentPrimitiveAct#0" expanded="false" />
-                <element signature="n#ConsistentConstraintConsistentAct#0" expanded="false" />
-                <element signature="n#ConsistentConstraintPrimitiveAct#0" expanded="false" />
-                <element signature="e#22751#22802#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="temp.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/temp.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-589">
-              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!block;n#constructor#0;n#Contained#0" expanded="true" />
-                <element signature="n#!!block;n#incMUT#0;n#Contained#0" expanded="true" />
-                <element signature="n#!!block;n#constructor#0;n#App#0" expanded="true" />
-                <element signature="e#794#875#0" expanded="true" />
-                <element signature="n#!!block;n#sendTo#0;n#App#0" expanded="true" />
-                <element signature="n#!!block;n#print#0;n#App#0" expanded="true" />
-                <element signature="e#1032#1082#0" expanded="true" />
-                <element signature="n#!!block;n#constructor#0;n#Act#0" expanded="true" />
-                <element signature="n#!!block;n#getEV#0;n#Act#0" expanded="true" />
-                <element signature="n#!!block;n#print#0;n#Act#0" expanded="true" />
-                <element signature="e#1521#1567#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cap.Test.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1417">
-              <caret line="925" column="41" lean-forward="false" selection-start-line="925" selection-start-column="41" selection-end-line="925" selection-end-column="41" />
-              <folding>
-                <element signature="e#8360#8414#0" expanded="true" />
-                <element signature="e#14516#14604#0" expanded="true" />
-                <element signature="e#14635#14759#0" expanded="true" />
-                <element signature="e#14909#15100#0" expanded="true" />
-                <element signature="e#14957#15085#0" expanded="true" />
-                <element signature="e#14994#15061#0" expanded="true" />
-                <element signature="e#15294#15511#0" expanded="true" />
-                <element signature="e#15747#15835#0" expanded="true" />
-                <element signature="e#15860#15962#0" expanded="true" />
-                <element signature="e#15982#16173#0" expanded="true" />
-                <element signature="e#16030#16158#0" expanded="true" />
-                <element signature="e#16928#17016#0" expanded="true" />
-                <element signature="e#17041#17143#0" expanded="true" />
-                <element signature="e#17982#19322#0" expanded="true" />
-                <element signature="e#19537#19625#0" expanded="true" />
-                <element signature="e#19650#19752#0" expanded="true" />
-                <element signature="e#20398#20501#0" expanded="false" />
-                <element signature="e#20522#20588#0" expanded="false" />
-                <element signature="e#20834#20922#0" expanded="true" />
-                <element signature="e#20947#21146#0" expanded="true" />
-                <element signature="e#21375#21597#0" expanded="false" />
-                <element signature="e#21793#21896#0" expanded="false" />
-                <element signature="e#21917#21983#0" expanded="false" />
-                <element signature="e#22196#22307#0" expanded="true" />
-                <element signature="e#22347#22546#0" expanded="true" />
-                <element signature="e#22437#22487#0" expanded="true" />
-                <element signature="e#22566#22613#0" expanded="true" />
-                <element signature="e#22710#22792#0" expanded="true" />
-                <element signature="e#22836#22984#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="705">
-              <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!block;n#getLists#0;n#Server#0" expanded="true" />
-                <element signature="n#!!block;n#constructor#0;n#Client#0" expanded="true" />
-                <element signature="n#!!block;n#init#0;n#Client#0" expanded="true" />
-                <element signature="n#!!block;n#login#0;n#Client#0" expanded="true" />
-                <element signature="e#1881#2007#0" expanded="true" />
-                <element signature="n#!!block;n#print#0;n#Client#0" expanded="true" />
-                <element signature="e#2139#2356#0" expanded="true" />
-                <element signature="e#2248#2345#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -294,18 +97,18 @@
         <option value="$PROJECT_DIR$/src/CAPMirror.ts" />
         <option value="$PROJECT_DIR$/MyoTests/clone.ts" />
         <option value="$PROJECT_DIR$/node_modules/spiders.js/src/serialisation.js" />
-        <option value="$PROJECT_DIR$/MyoTests/Defs.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/tests/EVDefinition.ts" />
         <option value="$PROJECT_DIR$/node_modules/spiders.js/src/MOP.js" />
         <option value="$PROJECT_DIR$/captain.ts" />
-        <option value="$PROJECT_DIR$/index.d.ts" />
-        <option value="$PROJECT_DIR$/MyoTests/App.ts" />
-        <option value="$PROJECT_DIR$/src/Eventual.ts" />
-        <option value="$PROJECT_DIR$/src/GSP.ts" />
         <option value="$PROJECT_DIR$/tests/temp.ts" />
         <option value="$PROJECT_DIR$/tests/cap.Test.ts" />
         <option value="$PROJECT_DIR$/tests/testCapExtension.ts" />
+        <option value="$PROJECT_DIR$/src/Eventual.ts" />
+        <option value="$PROJECT_DIR$/MyoTests/Defs.ts" />
+        <option value="$PROJECT_DIR$/MyoTests/App.ts" />
+        <option value="$PROJECT_DIR$/src/GSP.ts" />
+        <option value="$PROJECT_DIR$/index.d.ts" />
       </list>
     </option>
   </component>
@@ -343,7 +146,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -371,6 +173,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -399,7 +202,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.testClient">
+  <component name="RunManager" selected="Node.js.temp.js">
     <configuration name="testClient" type="JavascriptDebugType" factoryName="JavaScript Debug" uri="http://localhost:63342/CAPtain/tests/testCapExtension.html">
       <method>
         <option name="NpmBeforeRunTask" enabled="true">
@@ -484,7 +287,8 @@
       <workItem from="1523428140512" duration="6728000" />
       <workItem from="1523451250993" duration="253000" />
       <workItem from="1523451992846" duration="3632000" />
-      <workItem from="1523456866443" duration="3413000" />
+      <workItem from="1523456866443" duration="5825000" />
+      <workItem from="1523532923051" duration="280000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -585,19 +389,20 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="105173000" />
+    <option name="totallyTimeSpent" value="107865000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33285302" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33285302" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15715292" sideWeight="0.5074946" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32805756" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1564482" sideWeight="0.49250534" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1564482" sideWeight="0.49250534" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Statistic" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -697,19 +502,20 @@
         <state relative-caret-position="225">
           <caret line="22" column="17" lean-forward="false" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
           <folding>
-            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-            <element signature="e#6539#6591#0" expanded="true" />
-            <element signature="e#6624#6679#0" expanded="true" />
-            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-            <element signature="e#8598#8729#0" expanded="true" />
-            <element signature="e#9460#9575#0" expanded="true" />
-            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="false" />
+            <element signature="e#4136#4212#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="false" />
+            <element signature="e#6539#6591#0" expanded="false" />
+            <element signature="e#6624#6679#0" expanded="false" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="e#8598#8729#0" expanded="false" />
+            <element signature="e#9460#9575#0" expanded="false" />
+            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -748,19 +554,20 @@
         <state relative-caret-position="225">
           <caret line="22" column="17" lean-forward="false" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
           <folding>
-            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-            <element signature="e#6539#6591#0" expanded="true" />
-            <element signature="e#6624#6679#0" expanded="true" />
-            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-            <element signature="e#8598#8729#0" expanded="true" />
-            <element signature="e#9460#9575#0" expanded="true" />
-            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="false" />
+            <element signature="e#4136#4212#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="false" />
+            <element signature="e#6539#6591#0" expanded="false" />
+            <element signature="e#6624#6679#0" expanded="false" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="e#8598#8729#0" expanded="false" />
+            <element signature="e#9460#9575#0" expanded="false" />
+            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -807,19 +614,20 @@
         <state relative-caret-position="360">
           <caret line="54" column="36" lean-forward="false" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
           <folding>
-            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-            <element signature="e#6539#6591#0" expanded="true" />
-            <element signature="e#6624#6679#0" expanded="true" />
-            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-            <element signature="e#8598#8729#0" expanded="true" />
-            <element signature="e#9460#9575#0" expanded="true" />
-            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="false" />
+            <element signature="e#4136#4212#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="false" />
+            <element signature="e#6539#6591#0" expanded="false" />
+            <element signature="e#6624#6679#0" expanded="false" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="e#8598#8729#0" expanded="false" />
+            <element signature="e#9460#9575#0" expanded="false" />
+            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -874,19 +682,20 @@
         <state relative-caret-position="360">
           <caret line="54" column="36" lean-forward="false" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
           <folding>
-            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-            <element signature="e#6539#6591#0" expanded="true" />
-            <element signature="e#6624#6679#0" expanded="true" />
-            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-            <element signature="e#8598#8729#0" expanded="true" />
-            <element signature="e#9460#9575#0" expanded="true" />
-            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="false" />
+            <element signature="e#4136#4212#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="false" />
+            <element signature="e#6539#6591#0" expanded="false" />
+            <element signature="e#6624#6679#0" expanded="false" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="e#8598#8729#0" expanded="false" />
+            <element signature="e#9460#9575#0" expanded="false" />
+            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1049,13 +858,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="29" column="90" lean-forward="false" selection-start-line="29" selection-start-column="90" selection-end-line="29" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/captain.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1063,68 +865,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
+    <entry file="file://$PROJECT_DIR$/tests/testCapExtension.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#getLists#0;n#Server#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Client#0" expanded="true" />
-            <element signature="n#!!block;n#init#0;n#Client#0" expanded="true" />
-            <element signature="n#!!block;n#login#0;n#Client#0" expanded="true" />
-            <element signature="e#1881#2007#0" expanded="true" />
-            <element signature="n#!!block;n#print#0;n#Client#0" expanded="true" />
-            <element signature="e#2139#2356#0" expanded="true" />
-            <element signature="e#2248#2345#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/Defs.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GSP.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="143" column="76" lean-forward="false" selection-start-line="143" selection-start-column="76" selection-end-line="143" selection-end-column="76" />
-          <folding>
-            <element signature="n#!!block;n#yieldMasterRound#0;n#GSP#0" expanded="true" />
-            <element signature="e#4220#4280#0" expanded="true" />
-            <element signature="n#!!block;n#commitRound#0;n#GSP#0" expanded="true" />
-            <element signature="n#!!block;n#registerMasterEventual#0;n#GSP#0" expanded="true" />
-            <element signature="n#!!block;n#registerHolderEventual#0;n#GSP#0" expanded="true" />
-            <element signature="n#!!block;n#newHolder#0;n#GSP#0" expanded="true" />
-            <element signature="e#8066#8123#0" expanded="true" />
-            <element signature="n#!!block;n#newRound#0;n#GSP#0" expanded="true" />
-            <element signature="n#!!block;n#sync#0;n#GSP#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2653">
-          <caret line="342" column="8" lean-forward="false" selection-start-line="342" selection-start-column="8" selection-end-line="342" selection-end-column="8" />
-          <folding>
-            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#commit#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="true" />
-            <element signature="e#6539#6591#0" expanded="true" />
-            <element signature="e#6624#6679#0" expanded="true" />
-            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="true" />
-            <element signature="e#8598#8729#0" expanded="true" />
-            <element signature="e#9460#9575#0" expanded="true" />
-            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
-            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="72">
+          <caret line="786" column="1" lean-forward="false" selection-start-line="786" selection-start-column="1" selection-end-line="786" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1132,19 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-589">
           <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#constructor#0;n#Contained#0" expanded="true" />
-            <element signature="n#!!block;n#incMUT#0;n#Contained#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#App#0" expanded="true" />
-            <element signature="e#794#875#0" expanded="true" />
-            <element signature="n#!!block;n#sendTo#0;n#App#0" expanded="true" />
-            <element signature="n#!!block;n#print#0;n#App#0" expanded="true" />
-            <element signature="e#1032#1082#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#Act#0" expanded="true" />
-            <element signature="n#!!block;n#getEV#0;n#Act#0" expanded="true" />
-            <element signature="n#!!block;n#print#0;n#Act#0" expanded="true" />
-            <element signature="e#1521#1567#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1153,103 +884,117 @@
         <state relative-caret-position="1417">
           <caret line="925" column="41" lean-forward="false" selection-start-line="925" selection-start-column="41" selection-end-line="925" selection-end-column="41" />
           <folding>
-            <element signature="e#8360#8414#0" expanded="true" />
-            <element signature="e#14516#14604#0" expanded="true" />
-            <element signature="e#14635#14759#0" expanded="true" />
-            <element signature="e#14909#15100#0" expanded="true" />
-            <element signature="e#14957#15085#0" expanded="true" />
-            <element signature="e#14994#15061#0" expanded="true" />
-            <element signature="e#15294#15511#0" expanded="true" />
-            <element signature="e#15747#15835#0" expanded="true" />
-            <element signature="e#15860#15962#0" expanded="true" />
-            <element signature="e#15982#16173#0" expanded="true" />
-            <element signature="e#16030#16158#0" expanded="true" />
-            <element signature="e#16928#17016#0" expanded="true" />
-            <element signature="e#17041#17143#0" expanded="true" />
-            <element signature="e#17982#19322#0" expanded="true" />
-            <element signature="e#19537#19625#0" expanded="true" />
-            <element signature="e#19650#19752#0" expanded="true" />
+            <element signature="e#8360#8414#0" expanded="false" />
+            <element signature="e#14516#14604#0" expanded="false" />
+            <element signature="e#14635#14759#0" expanded="false" />
+            <element signature="e#14909#15100#0" expanded="false" />
+            <element signature="e#14957#15085#0" expanded="false" />
+            <element signature="e#14994#15061#0" expanded="false" />
+            <element signature="e#15294#15511#0" expanded="false" />
+            <element signature="e#15747#15835#0" expanded="false" />
+            <element signature="e#15860#15962#0" expanded="false" />
+            <element signature="e#15982#16173#0" expanded="false" />
+            <element signature="e#16030#16158#0" expanded="false" />
+            <element signature="e#16928#17016#0" expanded="false" />
+            <element signature="e#17041#17143#0" expanded="false" />
+            <element signature="e#17982#19322#0" expanded="false" />
+            <element signature="e#19537#19625#0" expanded="false" />
+            <element signature="e#19650#19752#0" expanded="false" />
             <element signature="e#20398#20501#0" expanded="false" />
             <element signature="e#20522#20588#0" expanded="false" />
-            <element signature="e#20834#20922#0" expanded="true" />
-            <element signature="e#20947#21146#0" expanded="true" />
+            <element signature="e#20834#20922#0" expanded="false" />
+            <element signature="e#20947#21146#0" expanded="false" />
             <element signature="e#21375#21597#0" expanded="false" />
             <element signature="e#21793#21896#0" expanded="false" />
             <element signature="e#21917#21983#0" expanded="false" />
-            <element signature="e#22196#22307#0" expanded="true" />
-            <element signature="e#22347#22546#0" expanded="true" />
-            <element signature="e#22437#22487#0" expanded="true" />
-            <element signature="e#22566#22613#0" expanded="true" />
-            <element signature="e#22710#22792#0" expanded="true" />
-            <element signature="e#22836#22984#0" expanded="true" />
+            <element signature="e#22196#22307#0" expanded="false" />
+            <element signature="e#22347#22546#0" expanded="false" />
+            <element signature="e#22437#22487#0" expanded="false" />
+            <element signature="e#22566#22613#0" expanded="false" />
+            <element signature="e#22710#22792#0" expanded="false" />
+            <element signature="e#22836#22984#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/testCapExtension.ts">
+    <entry file="file://$PROJECT_DIR$/src/GSP.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="786" column="1" lean-forward="true" selection-start-line="786" selection-start-column="1" selection-end-line="786" selection-end-column="1" />
+        <state relative-caret-position="26">
+          <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
           <folding>
-            <element signature="e#618#660#0" expanded="false" />
-            <element signature="e#669#708#0" expanded="false" />
-            <element signature="n#TestAvailable#0" expanded="false" />
-            <element signature="n#TestEventual#0" expanded="false" />
-            <element signature="n#TestConsistent#0" expanded="false" />
-            <element signature="n#AvailableContentSerActor#0" expanded="false" />
-            <element signature="n#AvailableClassSerActor#0" expanded="false" />
-            <element signature="n#AvailableNOKAssignmentAct#0" expanded="false" />
-            <element signature="n#AvailableNOKConstraintAct#0" expanded="false" />
-            <element signature="n#TestEventualAvailableAssignment#0" expanded="false" />
-            <element signature="n#AvailableAssignmentEventualAct#0" expanded="false" />
-            <element signature="n#AvailableAssignmentAvailableAct#0" expanded="false" />
-            <element signature="n#AvailableAssignmentPrimitiveAct#0" expanded="false" />
-            <element signature="n#TestEventualAvailableConstraint#0" expanded="false" />
-            <element signature="n#AvailableConstraintEventualAct#0" expanded="false" />
-            <element signature="n#AvailableConstraintAvailableAct#0" expanded="false" />
-            <element signature="n#AvailableConstraintPrimitiveAct#0" expanded="false" />
-            <element signature="n#MasterSlaveChangeAct#0" expanded="false" />
-            <element signature="n#SlaveSlaveChangeAct#0" expanded="false" />
-            <element signature="n#MasterMasterChange#0" expanded="false" />
-            <element signature="n#SlaveMasterChange#0" expanded="false" />
-            <element signature="n#EventualContentSerialisationAct#0" expanded="false" />
-            <element signature="n#EventualClassSerialisationAct#0" expanded="false" />
-            <element signature="n#EventualNOKAssignmentAct#0" expanded="false" />
-            <element signature="n#EventualNOKConstraintAct#0" expanded="false" />
-            <element signature="n#EventualAssignmentEventualAct#0" expanded="false" />
-            <element signature="n#EventualAssignmentPrimitiveAct#0" expanded="false" />
-            <element signature="n#EventualConstraintEventualAct#0" expanded="false" />
-            <element signature="n#EventualConstraintPrimitiveAct#0" expanded="false" />
-            <element signature="n#EventualTentativeMaster#0" expanded="false" />
-            <element signature="n#EventualTentativeSlave#0" expanded="false" />
-            <element signature="n#EventualCommitMaster#0" expanded="false" />
-            <element signature="n#EventualCommitSlave#0" expanded="false" />
-            <element signature="n#ExtendedEventual#0" expanded="false" />
-            <element signature="n#EventualSensistiveMaster#0" expanded="false" />
-            <element signature="n#EventualSensitiveSlave#0" expanded="false" />
-            <element signature="n#Contained#0" expanded="false" />
-            <element signature="n#Container#0" expanded="false" />
-            <element signature="n#NestedRepAct2#0" expanded="false" />
-            <element signature="e#17101#17344#0" expanded="true" />
-            <element signature="n#!!block;n#constructor#0;n#DeepCommitAct1#0" expanded="true" />
-            <element signature="n#!!block;n#sendTo#0;n#DeepCommitAct1#0" expanded="true" />
-            <element signature="e#17663#17697#0" expanded="true" />
-            <element signature="n#!!block;n#test#0;n#DeepCommitAct1#0" expanded="true" />
-            <element signature="e#17792#17886#0" expanded="true" />
-            <element signature="e#17821#17870#0" expanded="true" />
-            <element signature="n#!!block;n#getContainer#0;n#DeppCommitAct2#0" expanded="true" />
-            <element signature="e#18202#18442#0" expanded="true" />
-            <element signature="e#18401#18439#0" expanded="true" />
-            <element signature="n#ConsistentContentSerialisationAct#0" expanded="false" />
-            <element signature="n#ConsistentClassSerialisationAct#0" expanded="false" />
-            <element signature="n#ConsistentNOKAssignmentAct#0" expanded="false" />
-            <element signature="n#ConsistentNOKConstraintAct#0" expanded="false" />
-            <element signature="n#ConsistentAssignmentConsistentAct#0" expanded="false" />
-            <element signature="n#ConsistentAssignmentPrimitiveAct#0" expanded="false" />
-            <element signature="n#ConsistentConstraintConsistentAct#0" expanded="false" />
-            <element signature="n#ConsistentConstraintPrimitiveAct#0" expanded="false" />
-            <element signature="e#22751#22802#0" expanded="false" />
+            <element signature="n#!!block;n#confirmMasterRound#0;n#GSP#0" expanded="false" />
+            <element signature="n#!!block;n#commitRound#0;n#GSP#0" expanded="false" />
+            <element signature="n#!!block;n#registerMasterEventual#0;n#GSP#0" expanded="false" />
+            <element signature="n#!!block;n#registerHolderEventual#0;n#GSP#0" expanded="false" />
+            <element signature="n#!!block;n#newHolder#0;n#GSP#0" expanded="false" />
+            <element signature="e#8068#8125#0" expanded="false" />
+            <element signature="n#!!block;n#newRound#0;n#GSP#0" expanded="false" />
+            <element signature="n#!!block;n#sync#0;n#GSP#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="115" column="55" lean-forward="false" selection-start-line="115" selection-start-column="55" selection-end-line="115" selection-end-column="55" />
+          <folding>
+            <element signature="n#!!block;n#setHost#0;n#Eventual#0" expanded="false" />
+            <element signature="e#4136#4212#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#triggerTentative#0;n#Eventual#0" expanded="false" />
+            <element signature="n#!!block;n#addDependency#0;n#Eventual#0" expanded="false" />
+            <element signature="e#6539#6591#0" expanded="false" />
+            <element signature="e#6624#6679#0" expanded="false" />
+            <element signature="n#!!block;n#ignoreInvoc#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#invoke#0;n#EventualMirror#0" expanded="false" />
+            <element signature="e#8598#8729#0" expanded="false" />
+            <element signature="e#9460#9575#0" expanded="false" />
+            <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#resolve#0;n#EventualMirror#0" expanded="false" />
+            <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="112" column="6" lean-forward="false" selection-start-line="112" selection-start-column="6" selection-end-line="112" selection-end-column="6" />
+          <folding>
+            <element signature="n#!!block;n#getLists#0;n#Server#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Client#0" expanded="false" />
+            <element signature="n#!!block;n#init#0;n#Client#0" expanded="false" />
+            <element signature="n#!!block;n#login#0;n#Client#0" expanded="false" />
+            <element signature="e#1881#1927#0" expanded="false" />
+            <element signature="n#!!block;n#print#0;n#Client#0" expanded="false" />
+            <element signature="e#2059#2276#0" expanded="false" />
+            <element signature="e#2168#2265#0" expanded="false" />
+            <element signature="n#!!block;n#add#0;n#Client#0" expanded="false" />
+            <element signature="n#!!block;n#inc#0;n#Client#0" expanded="false" />
+            <element signature="e#2653#2762#0" expanded="false" />
+            <element signature="n#!!block;n#printAll#0" expanded="false" />
+            <element signature="e#3339#3415#0" expanded="false" />
+            <element signature="e#3370#3408#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MyoTests/Defs.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="55" column="36" lean-forward="false" selection-start-line="55" selection-start-column="36" selection-end-line="55" selection-end-column="36" />
+          <folding>
+            <element signature="n#!!block;n#addGroceryItemMUT#0;n#GroceryList#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -38,6 +38,7 @@ class GroceryItem extends Eventual_1.Eventual {
         this.groceryName = newName;
     }
     incQuantityMUT() {
+        console.log("Incing quantity");
         this.quantity++;
     }
     decQuantityMUT() {

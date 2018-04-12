@@ -49,8 +49,6 @@ class Client extends CAPActor_1.CAPActor {
         this.server = serverRef;
         return this.server.getLists("client").then((myLists) => {
             this.myLists = myLists;
-            //console.log("JUST GOT LIST, PRINTING")
-            //this.print()
         });
     }
     print() {
@@ -70,16 +68,38 @@ class Client extends CAPActor_1.CAPActor {
         let item = new this.GroceryItem(itemName, 1);
         this.myLists.lists.get(listName).addGroceryItemMUT(item);
     }
+    inc(listName, itemName) {
+        this.myLists.lists.get(listName).items.forEach((item) => {
+            if (item.groceryName == itemName) {
+                item.incQuantityMUT();
+            }
+        });
+    }
 }
 let ser = app.spawnActor(Server);
 let cli = app.spawnActor(Client, ["client1"]);
 let cli2 = app.spawnActor(Client, ["client2"]);
-cli2.login(ser);
 cli.login(ser).then(() => {
     cli.newList("test");
     cli.add("test", "banana");
+    //cli.inc("test","banana")
+    /*cli2.login(ser).then(()=>{
+        cli.newList("test")
+        cli.add("test","banana")
+        cli.inc("test","banana")
+    })*/
 });
+/*setTimeout(()=>{
+    cli2.login(ser)
+},2000)*/
 var stdin = process.openStdin();
+function printAll() {
+    ser.print().then(() => {
+        cli.print().then(() => {
+            //cli2.print()
+        });
+    });
+}
 stdin.addListener("data", function (d) {
     eval(d.toString().trim());
 });

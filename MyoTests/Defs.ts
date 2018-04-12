@@ -53,6 +53,7 @@ export class GroceryItem extends Eventual{
     }
 
     incQuantityMUT(){
+        console.log("Incing quantity")
         this.quantity++
     }
 

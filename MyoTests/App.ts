@@ -70,8 +70,6 @@ class Client extends CAPActor{
         this.server = serverRef
         return this.server.getLists("client").then((myLists)=>{
             this.myLists = myLists
-            //console.log("JUST GOT LIST, PRINTING")
-            //this.print()
         })
     }
 
@@ -96,16 +94,42 @@ class Client extends CAPActor{
         this.myLists.lists.get(listName).addGroceryItemMUT(item)
     }
 
+    inc(listName,itemName){
+        this.myLists.lists.get(listName).items.forEach((item)=>{
+            if(item.groceryName == itemName){
+                item.incQuantityMUT()
+            }
+        })
+    }
+
 }
 let ser : FarRef<Server> = app.spawnActor(Server)
 let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
 let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
-cli2.login(ser);
+
 (cli.login(ser) as any).then(()=>{
     cli.newList("test")
     cli.add("test","banana")
+    //cli.inc("test","banana")
+    /*cli2.login(ser).then(()=>{
+        cli.newList("test")
+        cli.add("test","banana")
+        cli.inc("test","banana")
+    })*/
+
 })
+/*setTimeout(()=>{
+    cli2.login(ser)
+},2000)*/
 var stdin = process.openStdin();
+
+function printAll(){
+    ser.print().then(()=>{
+        cli.print().then(()=>{
+            //cli2.print()
+        })
+    })
+}
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())
 });

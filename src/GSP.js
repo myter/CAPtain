@@ -70,8 +70,8 @@ class GSP {
         this.commitRound(round);
         //Broadcast round to all holders of replicaOwners
         if (this.eventualHolders.has(round.objectId)) {
-            this.eventualHolders.get(round.objectId).forEach((replicaOwner) => {
-                replicaOwner.newRound(round);
+            this.eventualHolders.get(round.objectId).forEach((replicaHolder) => {
+                replicaHolder.newRound(round);
             });
         }
     }
