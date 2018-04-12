@@ -1,29 +1,48 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const CAPplication_1 = require("../src/CAPplication");
 const CAPActor_1 = require("../src/CAPActor");
-let app = new CAPplication_1.CAPplication();
+class App extends CAPplication_1.CAPplication {
+    constructor() {
+        super();
+        this.libs.setupPSServer();
+    }
+}
+let app = new App();
 class Server extends CAPActor_1.CAPActor {
     constructor() {
         super();
         this.dir = __dirname;
     }
     init() {
+        this.psClient = this.libs.setupPSClient();
         this.lists = new Map();
         this.UserLists = require(this.dir + "/Defs").UserLists;
         console.log("Server id: " + this.gsp.thisActorId);
+        this.psClient.subscribe(new this.libs.PubSubTag("GetListReq")).each((userName) => {
+            console.log("Client " + userName + " logged in to server");
+            if (this.lists.has(userName)) {
+                this.psClient.publish(this.lists.get(userName), new this.libs.PubSubTag("GetListResp"));
+            }
+            else {
+                let newList = new this.UserLists(userName);
+                this.tempList = newList;
+                this.lists.set(userName, newList);
+                this.psClient.publish(newList, new this.libs.PubSubTag("GetListResp"));
+            }
+        });
     }
-    getLists(userName) {
-        console.log("Client " + userName + " logged in to server");
-        if (this.lists.has(userName)) {
-            return this.lists.get(userName);
+    /*getLists(userName){
+        console.log("Client " + userName + " logged in to server")
+        if(this.lists.has(userName)){
+            return this.lists.get(userName)
         }
-        else {
-            let newList = new this.UserLists(userName);
-            this.tempList = newList;
-            this.lists.set(userName, newList);
-            return newList;
+        else{
+            let newList = new this.UserLists(userName)
+            this.tempList = newList
+            this.lists.set(userName,newList)
+            return newList
         }
-    }
+    }*/
     print() {
         console.log("State on server");
         this.tempList.lists.forEach((list) => {
@@ -43,13 +62,14 @@ class Client extends CAPActor_1.CAPActor {
     init() {
         this.GroceryList = require(this.dir + "/Defs").GroceryList;
         this.GroceryItem = require(this.dir + "/Defs").GroceryItem;
+        this.psClient = this.libs.setupPSClient();
         console.log(this.name + " id :" + this.gsp.thisActorId);
     }
-    login(serverRef) {
-        this.server = serverRef;
-        return this.server.getLists("client").then((myLists) => {
+    login() {
+        this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists) => {
             this.myLists = myLists;
         });
+        this.psClient.publish("client", new this.libs.PubSubTag("GetListReq"));
     }
     print() {
         console.log("State on client: " + this.name);
@@ -79,29 +99,17 @@ class Client extends CAPActor_1.CAPActor {
 let ser = app.spawnActor(Server);
 let cli = app.spawnActor(Client, ["client1"]);
 let cli2 = app.spawnActor(Client, ["client2"]);
-cli.login(ser).then(() => {
-    cli2.login(ser);
-    cli.newList("test");
-    cli.add("test", "banana");
-    //cli.inc("test","banana")
-    /*cli2.login(ser).then(()=>{
-        cli.newList("test")
-        cli.add("test","banana")
-        cli.inc("test","banana")
-    })*/
-});
-/*setTimeout(()=>{
-    cli2.login(ser)
-},2000)*/
+cli.login();
+cli2.login();
 var stdin = process.openStdin();
 function printAll() {
     ser.print().then(() => {
         cli.print().then(() => {
-            //cli2.print()
+            cli2.print();
         });
     });
 }
 stdin.addListener("data", function (d) {
     eval(d.toString().trim());
 });
-//# sourceMappingURL=App.js.map
+//# sourceMappingURL=APP2.js.map

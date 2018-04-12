@@ -343,11 +343,14 @@ export class EventualMirror extends SpiderIsolateMirror{
         if(hostActorMirror.base.behaviourObject){
             let baseEV = this.base as Eventual;
             let newGsp : GSP = (hostActorMirror.base.behaviourObject as CAPActor).gsp;
-            let oldGsp : GSP = baseEV.hostGsp
             baseEV.setHost(newGsp,hostActorMirror.base.thisRef.ownerId,false)
             if(!newGsp.knownEventual(baseEV.id)){
                 newGsp.registerHolderEventual(this.proxyBase as Eventual,baseEV.masterGsp)
             }
+            return newGsp.eventuals.get(baseEV.id)
+        }
+        else{
+            return super.resolve(hostActorMirror)
         }
     }
 
@@ -364,6 +367,9 @@ export class EventualMirror extends SpiderIsolateMirror{
                 gsp.registerMasterEventual(this.proxyBase as Eventual)
                 eventual.setHost(gsp,hostActorMirror.base.thisRef.ownerId,true)
             }
+            return super.pass(hostActorMirror)
+        }
+        else{
             return super.pass(hostActorMirror)
         }
     }

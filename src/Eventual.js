@@ -308,11 +308,14 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         if (hostActorMirror.base.behaviourObject) {
             let baseEV = this.base;
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
-            let oldGsp = baseEV.hostGsp;
             baseEV.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
             if (!newGsp.knownEventual(baseEV.id)) {
                 newGsp.registerHolderEventual(this.proxyBase, baseEV.masterGsp);
             }
+            return newGsp.eventuals.get(baseEV.id);
+        }
+        else {
+            return super.resolve(hostActorMirror);
         }
     }
     pass(hostActorMirror) {
@@ -328,6 +331,9 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 gsp.registerMasterEventual(this.proxyBase);
                 eventual.setHost(gsp, hostActorMirror.base.thisRef.ownerId, true);
             }
+            return super.pass(hostActorMirror);
+        }
+        else {
             return super.pass(hostActorMirror);
         }
     }
