@@ -28,6 +28,15 @@ export class ConsistentMirror extends SpiderObjectMirror{
             })
             return wrongArgs.length > 0
         }
+        else if(arg instanceof  Map){
+            let foundWrongArg = false
+            arg.forEach((val)=>{
+                if(this.checkArg(val)){
+                    foundWrongArg = true
+                }
+            })
+            return foundWrongArg
+        }
         else if(typeof arg == 'object'){
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
             if(!arg[_IS_CONSISTENT_KEY_]){

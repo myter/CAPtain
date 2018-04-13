@@ -66,13 +66,15 @@ class Client extends CAPActor_1.CAPActor {
         console.log(this.name + " id :" + this.gsp.thisActorId);
     }
     login() {
-        this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists) => {
-            myLists.onCommit(() => {
-                console.log("Commit triggered on " + this.name);
+        return new Promise((resolve) => {
+            this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists) => {
+                this.myLists = myLists;
+                myLists.onCommit(this.print.bind(this));
+                myLists.onTentative(this.print.bind(this));
+                resolve();
             });
-            this.myLists = myLists;
+            this.psClient.publish("client", new this.libs.PubSubTag("GetListReq"));
         });
-        this.psClient.publish("client", new this.libs.PubSubTag("GetListReq"));
     }
     print() {
         console.log("State on client: " + this.name);
@@ -102,21 +104,51 @@ class Client extends CAPActor_1.CAPActor {
 let ser = app.spawnActor(Server);
 let cli = app.spawnActor(Client, ["client1"]);
 let cli2 = app.spawnActor(Client, ["client2"]);
+let cli3 = app.spawnActor(Client, ["client3"]);
+let cli4 = app.spawnActor(Client, ["client4"]);
 cli.login();
+cli2.login();
+cli3.login();
+cli4.login();
 setTimeout(() => {
     cli.newList("test");
     cli.add("test", "banana");
+    cli.add("test", "pear");
+    cli.add("test", "waffle");
 }, 2000);
 var stdin = process.openStdin();
+let increments = new Map();
+function loop() {
+    for (var i = 0; i < 10; i++) {
+        cli.inc("test", "waffle");
+    }
+    for (var i = 0; i < 10; i++) {
+        cli4.inc("test", "pear");
+    }
+    for (var i = 0; i < 10; i++) {
+        cli3.inc("test", "banana");
+    }
+}
 function printAll() {
     ser.print().then(() => {
         cli.print().then(() => {
-            cli2.print();
+            cli2.print().then(() => {
+                cli3.print().then(() => {
+                    cli4.print();
+                });
+            });
         });
     });
 }
-function log2() {
-    cli2.login();
+let newA;
+function logNew() {
+    newA = app.spawnActor(Client, ["runtime"]);
+    newA.login().then(() => {
+        newA.add("test", "beer");
+        for (var i = 0; i < 10; i++) {
+            newA.inc("test", "waffle");
+        }
+    });
 }
 stdin.addListener("data", function (d) {
     eval(d.toString().trim());

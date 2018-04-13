@@ -241,7 +241,7 @@ export class EventualMirror extends SpiderIsolateMirror{
             let wrongArgs = arg.filter(this.checkArg)
             return wrongArgs.length > 0
         }
-        if(arg instanceof  Map){
+        else if(arg instanceof  Map){
             let foundWrongArg = false
             arg.forEach((val)=>{
                 if(this.checkArg(val)){

@@ -16,6 +16,15 @@ export class AvailableMirror extends SpiderIsolateMirror{
             let wrongArgs = arg.filter(this.checkArg)
             return wrongArgs.length > 0
         }
+        else if(arg instanceof  Map){
+            let foundWrongArg = false
+            arg.forEach((val)=>{
+                if(this.checkArg(val)){
+                    foundWrongArg = true
+                }
+            })
+            return foundWrongArg
+        }
         else if(typeof arg == 'object'){
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
             if(!(arg[_IS_AVAILABLE_KEY_] || arg[_EV_KEY_])){

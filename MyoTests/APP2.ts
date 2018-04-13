@@ -87,13 +87,15 @@ class Client extends CAPActor{
     }
 
     login(){
-        this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists)=>{
-            myLists.onCommit(()=>{
-                console.log("Commit triggered on " + this.name)
+        return new Promise((resolve)=>{
+            this.psClient.subscribe(new this.libs.PubSubTag("GetListResp")).each((myLists)=>{
+                this.myLists = myLists
+                myLists.onCommit(this.print.bind(this))
+                myLists.onTentative(this.print.bind(this))
+                resolve()
             })
-            this.myLists = myLists
+            this.psClient.publish("client",new this.libs.PubSubTag("GetListReq"))
         })
-        this.psClient.publish("client",new this.libs.PubSubTag("GetListReq"))
     }
 
     print(){
@@ -129,24 +131,56 @@ class Client extends CAPActor{
 let ser : FarRef<Server> = app.spawnActor(Server)
 let cli : FarRef<Client> = app.spawnActor(Client,["client1"]);
 let cli2 : FarRef<Client> = app.spawnActor(Client,["client2"]);
+let cli3 : FarRef<Client> = app.spawnActor(Client,["client3"]);
+let cli4 : FarRef<Client> = app.spawnActor(Client,["client4"])
 cli.login()
+cli2.login()
+cli3.login()
+cli4.login()
 setTimeout(()=>{
     cli.newList("test")
     cli.add("test","banana")
+    cli.add("test","pear")
+    cli.add("test","waffle")
 },2000)
 var stdin = process.openStdin();
+
+let increments = new Map()
+
+function loop(){
+    for(var i = 0;i < 10;i++){
+        cli.inc("test","waffle")
+    }
+    for(var i = 0;i < 10;i++){
+        cli4.inc("test","pear")
+    }
+    for(var i = 0;i < 10;i++){
+        cli3.inc("test","banana")
+    }
+}
 
 function printAll(){
     (ser.print() as any).then(()=>{
         (cli.print() as any).then(()=>{
-            cli2.print()
+            (cli2.print() as any).then(()=>{
+                (cli3.print() as any).then(()=>{
+                    cli4.print()
+                })
+            })
         })
     })
 }
-
-function log2(){
-    cli2.login();
+let newA : FarRef<Client>
+function logNew(){
+    newA  = app.spawnActor(Client,["runtime"])
+    newA.login().then(()=>{
+        newA.add("test","beer")
+        for(var i = 0;i< 10;i++){
+            newA.inc("test","waffle")
+        }
+    })
 }
+
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())
 });
