@@ -396,7 +396,7 @@
       <workItem from="1523545863865" duration="2245000" />
       <workItem from="1523558176439" duration="3190000" />
       <workItem from="1523601706450" duration="3052000" />
-      <workItem from="1523692922170" duration="3369000" />
+      <workItem from="1523692922170" duration="3378000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -497,7 +497,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="122466000" />
+    <option name="totallyTimeSpent" value="122475000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="6" />
