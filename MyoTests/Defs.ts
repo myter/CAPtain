@@ -13,54 +13,32 @@ export class UserLists extends Eventual{
     newListMUT(list : GroceryList){
         this.lists.set(list.listName,list)
     }
-
-    asString(){
-        return "<USER-LISTS> : " + this.owner
-    }
 }
 
 export class GroceryList extends Eventual{
     listName    : string
-    items       : Array<GroceryItem>
+    items       : Map<string,number>
 
     constructor(name : string){
         super()
         this.listName   = name
-        this.items      = []
+        this.items      = new Map()
     }
 
-    addGroceryItemMUT(item : GroceryItem){
-        this.items.push(item)
+    addGroceryItemMUT(itemName : string){
+        this.items.set(itemName,0)
     }
 
-    asString(){
-        return "<LIST> : "+ this.listName
-    }
-}
-
-export class GroceryItem extends Eventual{
-    groceryName : string
-    quantity    : number
-
-    constructor(groceryName : string,quantity : number){
-        super()
-        this.groceryName    = groceryName
-        this.quantity       = quantity
+    remGroceryItemMut(itemName : string){
+        this.items.delete(itemName)
     }
 
-    changeNameMUT(newName : string){
-        this.groceryName = newName
+    incQuantityMUT(itemName : string){
+        this.items.set(itemName,this.items.get(itemName)+1)
     }
 
-    incQuantityMUT(){
-        this.quantity++
+    decQuantityMUT(itemName : string){
+        this.items.set(itemName,this.items.get(itemName)-1)
     }
 
-    decQuantityMUT(){
-        this.quantity--
-    }
-
-    asString(){
-        return "<ITEM> : " + this.groceryName
-    }
 }

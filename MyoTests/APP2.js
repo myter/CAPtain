@@ -31,24 +31,12 @@ class Server extends CAPActor_1.CAPActor {
             }
         });
     }
-    /*getLists(userName){
-        console.log("Client " + userName + " logged in to server")
-        if(this.lists.has(userName)){
-            return this.lists.get(userName)
-        }
-        else{
-            let newList = new this.UserLists(userName)
-            this.tempList = newList
-            this.lists.set(userName,newList)
-            return newList
-        }
-    }*/
     print() {
         console.log("State on server");
         this.tempList.lists.forEach((list) => {
             console.log(" - List : " + list.listName);
-            list.items.forEach((item) => {
-                console.log("     - " + item.groceryName + " : " + item.quantity);
+            list.items.forEach((itemName, itemQuant) => {
+                console.log("     - " + itemQuant + " : " + itemName);
             });
         });
     }
@@ -80,8 +68,8 @@ class Client extends CAPActor_1.CAPActor {
         console.log("State on client: " + this.name);
         this.myLists.lists.forEach((list) => {
             console.log(" - List : " + list.listName);
-            list.items.forEach((item) => {
-                console.log("     - " + item.groceryName + " : " + item.quantity);
+            list.items.forEach((itemName, itemQuant) => {
+                console.log("     - " + itemQuant + " : " + itemName);
             });
         });
     }
@@ -90,15 +78,10 @@ class Client extends CAPActor_1.CAPActor {
         this.myLists.newListMUT(newList);
     }
     add(listName, itemName) {
-        let item = new this.GroceryItem(itemName, 1);
-        this.myLists.lists.get(listName).addGroceryItemMUT(item);
+        this.myLists.lists.get(listName).addGroceryItemMUT(itemName);
     }
     inc(listName, itemName) {
-        this.myLists.lists.get(listName).items.forEach((item) => {
-            if (item.groceryName == itemName) {
-                item.incQuantityMUT();
-            }
-        });
+        this.myLists.lists.get(listName).incQuantityMUT(itemName);
     }
 }
 let ser = app.spawnActor(Server);
@@ -112,6 +95,7 @@ cli3.login();
 cli4.login();
 setTimeout(() => {
     cli.newList("test");
+    cli.add("test", "banana");
     cli.add("test", "banana");
     cli.add("test", "pear");
     cli.add("test", "waffle");

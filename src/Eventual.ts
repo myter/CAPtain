@@ -46,20 +46,6 @@ export class Eventual extends SpiderIsolate{
             })
             return res
         }
-        else if(value.isEventual){
-            /*console.log("Cloning inner eventual")
-            let c = new (this.constructor as any)()
-            Reflect.ownKeys(value).forEach((key)=>{
-                //console.log("Deep cloning: " + key.toString())
-                //console.log("Is eventual? " + value[key].isEventual)
-                c[key] = this.clone(value[key])
-            })
-            return c*/
-            /*Reflect.ownKeys(value).forEach((key)=>{
-                value[key] = this.clone(value[key])
-            })*/
-            return value
-        }
         else{
             return value
         }
@@ -125,14 +111,42 @@ export class Eventual extends SpiderIsolate{
     }
 
     resetToCommit(){
+        let reset = (val,key)=>{
+            if(val instanceof Array || val instanceof Map){
+                (val as any).forEach((v)=>{
+                    if(v.isEventual){
+                        v.resetToCommit()
+                    }
+                })
+            }
+            else if(val.isEventual){
+                val.resetToCommit()
+            }
+            this.tentativeVals.set(key,val)
+        }
         this.committedVals.forEach((committedVal,key)=>{
+            //reset(committedVal,key)
             this.tentativeVals.set(key,committedVal)
         })
     }
 
     commit(roundNumber){
+        let comm = (val,key)=>{
+            if(val instanceof Array || val instanceof Map){
+                (val as any).forEach((v)=>{
+                    if(v.isEventual){
+                        v.commit(roundNumber)
+                    }
+                })
+            }
+            else if(val.isEventual){
+                val.commit(roundNumber)
+            }
+            this.committedVals.set(key,this.clone(val))
+        }
         this.tentativeVals.forEach((tentativeVal,key)=>{
             this.committedVals.set(key,this.clone(tentativeVal))
+            //comm(tentativeVal,key)
         })
         this.lastCommit = roundNumber
         this.triggerCommit()

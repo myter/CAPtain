@@ -9,43 +9,26 @@ class UserLists extends Eventual_1.Eventual {
     newListMUT(list) {
         this.lists.set(list.listName, list);
     }
-    asString() {
-        return "<USER-LISTS> : " + this.owner;
-    }
 }
 exports.UserLists = UserLists;
 class GroceryList extends Eventual_1.Eventual {
     constructor(name) {
         super();
         this.listName = name;
-        this.items = [];
+        this.items = new Map();
     }
-    addGroceryItemMUT(item) {
-        this.items.push(item);
+    addGroceryItemMUT(itemName) {
+        this.items.set(itemName, 0);
     }
-    asString() {
-        return "<LIST> : " + this.listName;
+    remGroceryItemMut(itemName) {
+        this.items.delete(itemName);
+    }
+    incQuantityMUT(itemName) {
+        this.items.set(itemName, this.items.get(itemName) + 1);
+    }
+    decQuantityMUT(itemName) {
+        this.items.set(itemName, this.items.get(itemName) - 1);
     }
 }
 exports.GroceryList = GroceryList;
-class GroceryItem extends Eventual_1.Eventual {
-    constructor(groceryName, quantity) {
-        super();
-        this.groceryName = groceryName;
-        this.quantity = quantity;
-    }
-    changeNameMUT(newName) {
-        this.groceryName = newName;
-    }
-    incQuantityMUT() {
-        this.quantity++;
-    }
-    decQuantityMUT() {
-        this.quantity--;
-    }
-    asString() {
-        return "<ITEM> : " + this.groceryName;
-    }
-}
-exports.GroceryItem = GroceryItem;
 //# sourceMappingURL=Defs.js.map

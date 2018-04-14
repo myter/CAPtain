@@ -1,6 +1,6 @@
 import {CAPplication} from "../src/CAPplication";
 import {CAPActor} from "../src/CAPActor";
-import {GroceryItem, GroceryList, UserLists} from "./Defs";
+import {GroceryList, UserLists} from "./Defs";
 import {FarRef, PSClient} from "spiders.js";
 class App extends CAPplication{
     constructor(){
@@ -40,25 +40,12 @@ class Server extends CAPActor{
         })
     }
 
-    /*getLists(userName){
-        console.log("Client " + userName + " logged in to server")
-        if(this.lists.has(userName)){
-            return this.lists.get(userName)
-        }
-        else{
-            let newList = new this.UserLists(userName)
-            this.tempList = newList
-            this.lists.set(userName,newList)
-            return newList
-        }
-    }*/
-
     print(){
         console.log("State on server")
         this.tempList.lists.forEach((list : GroceryList)=>{
             console.log(" - List : " + list.listName)
-            list.items.forEach((item : GroceryItem)=>{
-                console.log("     - " + item.groceryName + " : " + item.quantity)
+            list.items.forEach((itemName,itemQuant)=>{
+                console.log("     - " + itemQuant + " : " + itemName)
             })
         })
     }
@@ -102,8 +89,8 @@ class Client extends CAPActor{
         console.log("State on client: " + this.name)
         this.myLists.lists.forEach((list : GroceryList)=>{
             console.log(" - List : " + list.listName)
-            list.items.forEach((item : GroceryItem)=>{
-                console.log("     - " + item.groceryName + " : " + item.quantity)
+            list.items.forEach((itemName,itemQuant)=>{
+                console.log("     - " + itemQuant + " : " + itemName)
             })
         })
     }
@@ -115,16 +102,11 @@ class Client extends CAPActor{
     }
 
     add(listName,itemName){
-        let item = new this.GroceryItem(itemName,1)
-        this.myLists.lists.get(listName).addGroceryItemMUT(item)
+        this.myLists.lists.get(listName).addGroceryItemMUT(itemName)
     }
 
     inc(listName,itemName){
-        this.myLists.lists.get(listName).items.forEach((item)=>{
-            if(item.groceryName == itemName){
-                item.incQuantityMUT()
-            }
-        })
+        this.myLists.lists.get(listName).incQuantityMUT(itemName)
     }
 
 }
@@ -139,6 +121,7 @@ cli3.login()
 cli4.login()
 setTimeout(()=>{
     cli.newList("test")
+    cli.add("test","banana")
     cli.add("test","banana")
     cli.add("test","pear")
     cli.add("test","waffle")
