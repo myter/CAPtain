@@ -1,6 +1,7 @@
 // Type definitions for spiders.captain
 // Definitions by: Florian Myter
 import {ActorSTDLib, FarRef, PSClient, PSServer, PubSubTag} from "spiders.js";
+import {CAPLib} from "./src/CAPLib";
 
 export * from "spiders.js"
 export type FarRef<T> = T
@@ -9,11 +10,11 @@ export type  PSClient = PSClient
 export type PubSubTag = PubSubTag
 export class CAPActor{
     parent  : FarRef<any>
-    libs    : ActorSTDLib
+    libs    : CAPLib
 }
 
 export class CAPplication{
-    libs    : ActorSTDLib
+    libs    : CAPLib
     constructor(address? : string,port? : number)
     spawnActor(actorClass : Function,constructionArgs? : Array<any>,port? : number)
     spawnActorFromFile(path : string,className : string,constructorArgs? : Array<any>,port? : number)
