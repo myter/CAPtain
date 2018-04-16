@@ -5,21 +5,10 @@ class Consistent extends spiders_js_1.SpiderObject {
     constructor() {
         super(new ConsistentMirror());
         this[_IS_CONSISTENT_KEY_] = true;
+        this.isConsistent = true;
     }
 }
 exports.Consistent = Consistent;
-class AsyncObjectMirror extends spiders_js_1.SpiderObjectMirror {
-    invoke(methodName, args) {
-        return new Promise((resolve) => {
-            resolve(super.invoke(methodName, args));
-        });
-    }
-    access(fieldName) {
-        return new Promise((resolve) => {
-            resolve(super.access(fieldName));
-        });
-    }
-}
 class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -58,7 +47,11 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
         }
         else {
             return new Promise((resolve) => {
-                resolve(super.invoke(methodName, args));
+                //Pretty ugly, but all methods in mirror object are bound to the mirror
+                //In this case we don't want this.x to return a promise if it's "internal"
+                //Need to get the regular function back and bind it to the unproxied object
+                let f = this.base[methodName].unBind().bind(this.base);
+                resolve(f(...args));
             });
         }
     }
@@ -73,9 +66,30 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
         }
     }
     access(fieldName) {
-        return new Promise((resolve) => {
-            resolve(super.access(fieldName));
-        });
+        if (fieldName == "_GET_THAW_DATA_") {
+            return new Promise((resolve) => {
+                let fields = [];
+                let methods = [];
+                Reflect.ownKeys(this.base).filter((key) => {
+                    return key != "_IS_CONSISTENT_" && key != "isConsistent" && key != "constructor";
+                }).forEach((key) => {
+                    if (typeof this.base[key] == 'function') {
+                        let meth = this.base[key].toString();
+                        methods.push([key, meth]);
+                    }
+                    else {
+                        fields.push([key, this.base[key]]);
+                    }
+                });
+                let res = [fields, methods];
+                resolve(res);
+            });
+        }
+        else {
+            return new Promise((resolve) => {
+                resolve(super.access(fieldName));
+            });
+        }
     }
 }
 exports.ConsistentMirror = ConsistentMirror;

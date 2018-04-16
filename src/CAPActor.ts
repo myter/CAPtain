@@ -1,12 +1,14 @@
 import {GSP} from "./GSP";
 import {Actor} from "spiders.js";
 import {CAPMirror} from "./CAPMirror";
+import {CAPLib} from "./CAPLib";
 
 
 export class CAPActor extends Actor{
     gsp : GSP
     GSP
     Round
+    libs : CAPLib
 
     constructor(){
         super(new CAPMirror())

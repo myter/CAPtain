@@ -164,6 +164,24 @@ function logNew(){
     })
 }
 
+
+let continuation
+function loop2(){
+    console.log("Looping")
+    continuation = loop2
+    setTimeout(()=>{
+        continuation()
+    },3000)
+}
+
+function killLoop(){
+    continuation = ()=>{}
+}
+
+function test(){
+    console.log("test called")
+}
+
 stdin.addListener("data", function(d) {
     eval(d.toString().trim())
 });

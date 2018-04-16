@@ -217,7 +217,7 @@ class Eventual extends spiders_js_1.SpiderIsolate {
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
+        return methodName == "relayDependencies" || methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -319,6 +319,9 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         else if (fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "dependencies" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
         }
+        else if (typeof value == 'function') {
+            return super.write(fieldName, value);
+        }
         else {
             let base = this.base;
             if (value.isEventual) {
@@ -337,12 +340,30 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     access(fieldName) {
-        let base = this.base;
-        if (base.tentativeVals.has(fieldName)) {
-            return base.tentativeVals.get(fieldName);
+        if (fieldName == "_GET_FREEZE_DATA_") {
+            let fields = [];
+            let methods = [];
+            Reflect.ownKeys(this.base).filter((key) => {
+                return key != "constructor" && key != "relayDependencies" && key != "instantiate" && key != "setHost" && key != "addDependency" && key != "resetToCommit" && key != "commit" && key != "populateCommitted" && key != "onCommit" && key != "onTentative" && key != "triggerCommit" && key != "triggerTentative" && key != "clone" && key != "hostGsp" && key != "masterGsp" && key != "dependencies" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentativeVals" && key != "tentListeners" && key != "commListeners" && key != "populated" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_';
+            }).forEach((key) => {
+                if (typeof this.base[key] == 'function') {
+                    let meth = this.base[key].toString();
+                    methods.push([key, meth]);
+                }
+                else {
+                    fields.push([key, this.base[key]]);
+                }
+            });
+            return [fields, methods];
         }
         else {
-            return super.access(fieldName);
+            let base = this.base;
+            if (base.tentativeVals.has(fieldName)) {
+                return base.tentativeVals.get(fieldName);
+            }
+            else {
+                return super.access(fieldName);
+            }
         }
     }
     resolve(hostActorMirror) {

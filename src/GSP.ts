@@ -141,8 +141,7 @@ export class GSP{
         }
         else{
             //We missed a number of rounds, request owner of master object to sync with us
-            this.eventualOwner.get(round.objectId).sync(round.objectId,this)
-            //this.environment.commMedium.sendMessage(roundMasterOwnerId(round),new GSPSyncMessage(this.environment.thisRef,this.thisActorId,roundMasterObjectId(round)))
+            //this.eventualOwner.get(round.objectId).sync(round.objectId,this)
         }
     }
 

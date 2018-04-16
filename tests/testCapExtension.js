@@ -53,15 +53,11 @@ class TestConsistent extends Consistent_1.Consistent {
         this.value = 5;
     }
     incWithPrim(num) {
-        return this.value.then((v) => {
-            this.value = v + num;
-        });
+        this.value += num;
     }
     incWithCon(con) {
         return con.value.then((v) => {
-            return this.value.then((vv) => {
-                this.value = v + vv;
-            });
+            this.value += v;
         });
     }
 }
@@ -806,6 +802,84 @@ let ConsistentConstraintPrimitive = () => {
     });
 };
 scheduled.push(ConsistentConstraintPrimitive);
+class TestConsistentThaw extends Consistent_1.Consistent {
+    constructor() {
+        super();
+        this.value = 5;
+    }
+    incMUT() {
+        this.value += 1;
+    }
+}
+class TestEventualFreeze extends Eventual_1.Eventual {
+    constructor() {
+        super();
+        this.value = 5;
+    }
+    incMUT() {
+        this.value += 1;
+    }
+}
+class SimpleThawAct extends CAPActor_1.CAPActor {
+    getEv(ev) {
+        ev.incMUT();
+    }
+}
+let simpleThaw = () => {
+    let con = new TestConsistentThaw();
+    return app.libs.thaw(con).then((ev) => {
+        ev.onCommit(() => {
+            log("Simple thaw", ev.value, 6);
+        });
+        let act = app.spawnActor(SimpleThawAct);
+        act.getEv(ev);
+    });
+};
+scheduled.push(simpleThaw);
+class RemThawAct extends CAPActor_1.CAPActor {
+    getCon(con) {
+        return this.libs.thaw(con).then((ev) => {
+            setTimeout(() => {
+                ev.incMUT();
+            }, 2000);
+            return ev;
+        });
+    }
+}
+let remThaw = () => {
+    let act = app.spawnActor(RemThawAct);
+    let con = new TestConsistentThaw();
+    return new Promise((resolve) => {
+        act.getCon(con).then((ev) => {
+            ev.onCommit(() => {
+                resolve(log("Remote Thaw", ev.value, 6));
+            });
+        });
+    });
+};
+scheduled.push(remThaw);
+class FreezeAct extends CAPActor_1.CAPActor {
+    getCon(con) {
+        con.incMUT();
+    }
+}
+let freeze = () => {
+    let ev = new TestEventualFreeze();
+    let con = app.libs.freeze(ev);
+    let act = app.spawnActor(FreezeAct);
+    act.getCon(con);
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            con.value.then((v) => {
+                let v1 = v == 6;
+                let v2 = ev.value == 5;
+                let ok = v1 && v2;
+                resolve(log("Freeze", ok, true));
+            });
+        }, 2000);
+    });
+};
+scheduled.push(freeze);
 function performAll(nextTest) {
     nextTest().then(() => {
         if (scheduled.length > 0) {

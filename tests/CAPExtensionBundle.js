@@ -49998,7 +49998,12 @@ class SpiderObjectMirror {
         return this.base[fieldName];
     }
     write(fieldName, value) {
-        this.base[fieldName] = value;
+        if (typeof value == 'function') {
+            Reflect.getPrototypeOf(this.base)[fieldName] = value;
+        }
+        else {
+            this.base[fieldName] = value;
+        }
         return true;
     }
     pass(hostActorMirror) {
@@ -50028,7 +50033,12 @@ class SpiderIsolateMirror {
         return this.base[fieldName];
     }
     write(fieldName, value) {
-        this.base[fieldName] = value;
+        if (typeof value == 'function') {
+            Reflect.getPrototypeOf(this.base)[fieldName] = value;
+        }
+        else {
+            this.base[fieldName] = value;
+        }
         return true;
     }
     pass(hostActorMirror) {
@@ -50043,6 +50053,23 @@ exports.SpiderIsolateMirror = SpiderIsolateMirror;
 function isInternal(property) {
     return property == "_FAR_REF_" || property == "_PROXY_WRAPPER_" || property == "SPIDER_SERVER_TYPE" || property == "SPIDER_CLIENT_TYPE" || property == "_SERVER_" || property == "_CLIENT_" || property == "_INSTANCEOF_Signal_" || property == "_INSTANCEOF_ISOLATE_" || property == "_INSTANCEOF_ARRAY_ISOLATE_" || property == "_INSTANCEOF_REPLIQ_" || property == "_INSTANCEOF_Signal_" || property == "setEnv" || property == "_SPIDER_OBJECT_" || property == "hasOwnProperty";
 }
+//Taken from the following thread:
+//https://stackoverflow.com/questions/34255580/bind-that-does-not-return-native-code-in-javascript
+//Binding using Javascript's bind messes up the function's toString() method (returns [native code])
+//Might need the function's source for serialisation etc
+function simpleBind(fun, ctx) {
+    var newFun = function () {
+        return fun.apply(ctx, arguments);
+    };
+    newFun.toString = function () {
+        return fun.toString();
+    };
+    newFun.unBind = function () {
+        return fun;
+    };
+    return newFun;
+}
+exports.simpleBind = simpleBind;
 function makeSpiderObjectProxy(baseObject, mirror, considerAsObject = true) {
     return new Proxy(baseObject, {
         get: function (target, property) {
@@ -50107,7 +50134,8 @@ class SpiderObject {
         let proxied = makeSpiderObjectProxy(thisClone, this.mirror);
         for (var i in thisClone) {
             if (typeof thisClone[i] == 'function' && i != "constructor") {
-                thisClone[i] = thisClone[i].bind(proxied);
+                thisClone[i] = simpleBind(thisClone[i], proxied);
+                //thisClone[i] = thisClone[i].bind(proxied)
             }
         }
         objectMirror.bindProxy(proxied);
@@ -50140,7 +50168,8 @@ class SpiderIsolate {
                         toCopy.push([key, original[key]]);
                     }
                 });
-                thisClone[i] = thisClone[i].bind(proxied);
+                thisClone[i] = simpleBind(thisClone[i], proxied);
+                //thisClone[i] = thisClone[i].bind(proxied);
                 toCopy.forEach(([key, val]) => {
                     thisClone[i][key] = val;
                 });
@@ -50150,7 +50179,7 @@ class SpiderIsolate {
         return proxied;
     }
     //Called by serialise on an already constructed isolate which has just been passed
-    instantiate(objectMirror, isolClone, wrapPrototypes, makeSpiderObjectProxy) {
+    instantiate(objectMirror, isolClone, wrapPrototypes, makeSpiderObjectProxy, simpleBind) {
         objectMirror.bindBase(isolClone);
         this.mirror = objectMirror;
         isolClone["_SPIDER_OBJECT_MIRROR_"] = objectMirror;
@@ -50166,7 +50195,8 @@ class SpiderIsolate {
                         toCopy.push([key, original[key]]);
                     }
                 });
-                isolClone[i] = isolClone[i].bind(proxied);
+                isolClone[i] = simpleBind(isolClone[i], proxied);
+                //isolClone[i] = isolClone[i].bind(proxied);
                 toCopy.forEach(([key, val]) => {
                     isolClone[i][key] = val;
                 });
@@ -53398,7 +53428,7 @@ function deserialise(value, environment) {
         var isolate = reconstructBehaviour({}, JSON.parse(isolateContainer.vars), JSON.parse(isolateContainer.methods), environment);
         var isolClone = reconstructBehaviour({}, JSON.parse(isolateContainer.vars), JSON.parse(isolateContainer.methods), environment);
         var mirror = reconstructBehaviour({}, JSON.parse(isolateContainer.mirrorVars), JSON.parse(isolateContainer.mirrorMethods), environment);
-        isolate.instantiate(mirror, isolClone, MOP_1.wrapPrototypes, MOP_1.makeSpiderObjectProxy);
+        isolate.instantiate(mirror, isolClone, MOP_1.wrapPrototypes, MOP_1.makeSpiderObjectProxy, MOP_1.simpleBind);
         return mirror.resolve(environment.actorMirror);
     }
     function deSerialiseSpiderObjectMirrorDefintion(def) {
@@ -60538,6 +60568,15 @@ class AvailableMirror extends spiders_js_1.SpiderIsolateMirror {
             let wrongArgs = arg.filter(this.checkArg);
             return wrongArgs.length > 0;
         }
+        else if (arg instanceof Map) {
+            let foundWrongArg = false;
+            arg.forEach((val) => {
+                if (this.checkArg(val)) {
+                    foundWrongArg = true;
+                }
+            });
+            return foundWrongArg;
+        }
         else if (typeof arg == 'object') {
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
             if (!(arg[_IS_AVAILABLE_KEY_] || arg[_EV_KEY_])) {
@@ -60599,21 +60638,101 @@ exports.CAPActor = CAPActor;
 },{"./CAPMirror":306,"./GSP":310,"./Round":311,"spiders.js":268}],306:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
+const Eventual_1 = require("./Eventual");
+const Consistent_1 = require("./Consistent");
+let EV = Eventual_1.Eventual;
+let CO = Consistent_1.Consistent;
 class CAPMirror extends spiders_js_1.SpiderActorMirror {
+    constructor() {
+        super();
+        this.EV = EV;
+        this.CO = CO;
+    }
+    simpleBind(fun, ctx) {
+        var newFun = function () {
+            return fun.apply(ctx, arguments);
+        };
+        newFun.toString = function () {
+            return fun.toString();
+        };
+        newFun.unBind = function () {
+            return fun;
+        };
+        return newFun;
+    }
+    freezeCheck(value) {
+        if (value.isEventual != true) {
+            throw new Error("Cannot freeze non-eventual value");
+        }
+        else {
+            return this.freeze(value);
+        }
+    }
+    thawCheck(value) {
+        let check = value.isConsistent;
+        if (check instanceof Promise) {
+            return check.then((ok) => {
+                if (ok) {
+                    return this.thaw(value);
+                }
+                else {
+                    throw new Error("Cannot thaw non-consistent value");
+                }
+            });
+        }
+        else {
+            throw new Error("Cannot thaw non-consistent value");
+        }
+    }
+    freeze(value) {
+        let con = new this.CO();
+        let [fields, methods] = value["_GET_FREEZE_DATA_"];
+        fields.forEach(([fieldName, fieldvalue]) => {
+            con[fieldName] = fieldvalue;
+        });
+        methods.forEach(([methodName, methodString]) => {
+            con[methodName] = this.simpleBind(eval("(function " + methodString + ")"), con);
+        });
+        return con;
+    }
+    thaw(value) {
+        let ev = new this.EV();
+        if (ev.committedVals.size == 0) {
+            //This is the first invocation on this eventual, populate its committed map
+            ev.populateCommitted();
+        }
+        let behaviour = this.base.behaviourObject;
+        let gsp = behaviour.gsp;
+        gsp.registerMasterEventual(ev);
+        ev.setHost(gsp, this.base.thisRef.ownerId, true);
+        return value["_GET_THAW_DATA_"].then(([fields, methods]) => {
+            fields.forEach(([fieldName, fieldvalue]) => {
+                ev[fieldName] = fieldvalue;
+            });
+            methods.forEach(([methodName, methodString]) => {
+                ev[methodName] = this.simpleBind(eval("(function " + methodString + ")"), ev);
+            });
+            return ev;
+        });
+    }
     initialise(stdLib, appActor, parentRef) {
+        stdLib.freeze = this.freezeCheck.bind(this);
+        stdLib.thaw = this.thawCheck.bind(this);
         super.initialise(stdLib, appActor, parentRef);
         let behaviour = this.base.behaviourObject;
         let gsp = behaviour.gsp;
         Reflect.ownKeys(behaviour).forEach((key) => {
             let val = behaviour[key];
-            if (val.isEventual == true) {
-                if (!gsp.knownEventual(val.id)) {
-                    if (val.committedVals.size == 0) {
-                        //This is the first invocation on this eventual, populate its committed map
-                        val.populateCommitted();
+            if (val) {
+                if (val.isEventual == true) {
+                    if (!gsp.knownEventual(val.id)) {
+                        if (val.committedVals.size == 0) {
+                            //This is the first invocation on this eventual, populate its committed map
+                            val.populateCommitted();
+                        }
+                        gsp.registerMasterEventual(val);
+                        val.setHost(gsp, this.base.thisRef.ownerId, true);
                     }
-                    gsp.registerMasterEventual(val);
-                    val.setHost(gsp, this.base.thisRef.ownerId, true);
                 }
             }
         });
@@ -60621,7 +60740,7 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
 }
 exports.CAPMirror = CAPMirror;
 
-},{"spiders.js":268}],307:[function(require,module,exports){
+},{"./Consistent":308,"./Eventual":309,"spiders.js":268}],307:[function(require,module,exports){
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 const GSP_1 = require("./GSP");
@@ -60643,21 +60762,10 @@ class Consistent extends spiders_js_1.SpiderObject {
     constructor() {
         super(new ConsistentMirror());
         this[_IS_CONSISTENT_KEY_] = true;
+        this.isConsistent = true;
     }
 }
 exports.Consistent = Consistent;
-class AsyncObjectMirror extends spiders_js_1.SpiderObjectMirror {
-    invoke(methodName, args) {
-        return new Promise((resolve) => {
-            resolve(super.invoke(methodName, args));
-        });
-    }
-    access(fieldName) {
-        return new Promise((resolve) => {
-            resolve(super.access(fieldName));
-        });
-    }
-}
 class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
     checkArg(arg) {
         if (arg instanceof Array) {
@@ -60665,6 +60773,15 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
                 return this.checkArg(a);
             });
             return wrongArgs.length > 0;
+        }
+        else if (arg instanceof Map) {
+            let foundWrongArg = false;
+            arg.forEach((val) => {
+                if (this.checkArg(val)) {
+                    foundWrongArg = true;
+                }
+            });
+            return foundWrongArg;
         }
         else if (typeof arg == 'object') {
             //Does this look like I'm stupid ? Yes ! However undefined is not seen as a falsy value for filter while it is in the condition of an if ... go figure
@@ -60687,7 +60804,11 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
         }
         else {
             return new Promise((resolve) => {
-                resolve(super.invoke(methodName, args));
+                //Pretty ugly, but all methods in mirror object are bound to the mirror
+                //In this case we don't want this.x to return a promise if it's "internal"
+                //Need to get the regular function back and bind it to the unproxied object
+                let f = this.base[methodName].unBind().bind(this.base);
+                resolve(f(...args));
             });
         }
     }
@@ -60702,9 +60823,30 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
         }
     }
     access(fieldName) {
-        return new Promise((resolve) => {
-            resolve(super.access(fieldName));
-        });
+        if (fieldName == "_GET_THAW_DATA_") {
+            return new Promise((resolve) => {
+                let fields = [];
+                let methods = [];
+                Reflect.ownKeys(this.base).filter((key) => {
+                    return key != "_IS_CONSISTENT_" && key != "isConsistent" && key != "constructor";
+                }).forEach((key) => {
+                    if (typeof this.base[key] == 'function') {
+                        let meth = this.base[key].toString();
+                        methods.push([key, meth]);
+                    }
+                    else {
+                        fields.push([key, this.base[key]]);
+                    }
+                });
+                let res = [fields, methods];
+                resolve(res);
+            });
+        }
+        else {
+            return new Promise((resolve) => {
+                resolve(super.access(fieldName));
+            });
+        }
     }
 }
 exports.ConsistentMirror = ConsistentMirror;
@@ -60763,20 +60905,6 @@ class Eventual extends spiders_js_1.SpiderIsolate {
             });
             return res;
         }
-        else if (value.isEventual) {
-            /*console.log("Cloning inner eventual")
-            let c = new (this.constructor as any)()
-            Reflect.ownKeys(value).forEach((key)=>{
-                //console.log("Deep cloning: " + key.toString())
-                //console.log("Is eventual? " + value[key].isEventual)
-                c[key] = this.clone(value[key])
-            })
-            return c*/
-            /*Reflect.ownKeys(value).forEach((key)=>{
-                value[key] = this.clone(value[key])
-            })*/
-            return value;
-        }
         else {
             return value;
         }
@@ -60790,6 +60918,24 @@ class Eventual extends spiders_js_1.SpiderIsolate {
                 this.committedVals.set(key.toString(),this.clone(this[key]))
                 this.tentativeVals.set(key.toString(),this.clone(this[key]))
             }
+        })*/
+        /*let layDependencies = (committed)=>{
+            if(committed instanceof Array){
+                (committed as Array<any>).forEach((v)=>{
+                    layDependencies(v)
+                })
+            }
+            else if(committed instanceof Map){
+
+            }
+            else if(committed.isEventual){
+                console.log("Adding dependency")
+                this.addDependency(committed)
+            }
+        }
+        this.committedVals.forEach((committed)=>{
+            console.log("checking")
+            layDependencies(committed)
         })*/
         this.populated = true;
     }
@@ -60819,13 +60965,41 @@ class Eventual extends spiders_js_1.SpiderIsolate {
         this.commListeners = [];
     }
     resetToCommit() {
+        let reset = (val, key) => {
+            if (val instanceof Array || val instanceof Map) {
+                val.forEach((v) => {
+                    if (v.isEventual) {
+                        v.resetToCommit();
+                    }
+                });
+            }
+            else if (val.isEventual) {
+                val.resetToCommit();
+            }
+            this.tentativeVals.set(key, val);
+        };
         this.committedVals.forEach((committedVal, key) => {
+            //reset(committedVal,key)
             this.tentativeVals.set(key, committedVal);
         });
     }
     commit(roundNumber) {
+        let comm = (val, key) => {
+            if (val instanceof Array || val instanceof Map) {
+                val.forEach((v) => {
+                    if (v.isEventual) {
+                        v.commit(roundNumber);
+                    }
+                });
+            }
+            else if (val.isEventual) {
+                val.commit(roundNumber);
+            }
+            this.committedVals.set(key, this.clone(val));
+        };
         this.tentativeVals.forEach((tentativeVal, key) => {
             this.committedVals.set(key, this.clone(tentativeVal));
+            //comm(tentativeVal,key)
         });
         this.lastCommit = roundNumber;
         this.triggerCommit();
@@ -60890,18 +61064,28 @@ class Eventual extends spiders_js_1.SpiderIsolate {
             });
         }
     }
+    relayDependencies() {
+        this.dependencies.forEach((ev, evId) => {
+            ev.onCommit(() => {
+                this.triggerCommit();
+            });
+            ev.onTentative(() => {
+                this.triggerTentative();
+            });
+        });
+    }
 }
 exports.Eventual = Eventual;
 class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
     ignoreInvoc(methodName) {
-        return methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
+        return methodName == "relayDependencies" || methodName == "setHost" || methodName == "addDependency" || methodName == "resetToCommit" || methodName == "commit" || methodName == "populateCommitted" || methodName == "onCommit" || methodName == "onTentative" || methodName == "triggerCommit" || methodName == "triggerTentative" || methodName == "clone";
     }
     checkArg(arg) {
         if (arg instanceof Array) {
             let wrongArgs = arg.filter(this.checkArg);
             return wrongArgs.length > 0;
         }
-        if (arg instanceof Map) {
+        else if (arg instanceof Map) {
             let foundWrongArg = false;
             arg.forEach((val) => {
                 if (this.checkArg(val)) {
@@ -60996,6 +61180,9 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         else if (fieldName == "hostGsp" || fieldName == "masterGsp" || fieldName == "dependencies" || fieldName == "hostId" || fieldName == "ownerId" || fieldName == "id" || fieldName == "committedVals" || fieldName == "tentativeVals" || fieldName == "tentListeners" || fieldName == "commListeners" || fieldName == "populated" || fieldName == "isEventual" || fieldName == "_INSTANCEOF_ISOLATE_" || fieldName == '_SPIDER_OBJECT_MIRROR_' || fieldName == '_IS_EVENTUAL_') {
             return super.write(fieldName, value);
         }
+        else if (typeof value == 'function') {
+            return super.write(fieldName, value);
+        }
         else {
             let base = this.base;
             if (value.isEventual) {
@@ -61014,12 +61201,30 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         }
     }
     access(fieldName) {
-        let base = this.base;
-        if (base.tentativeVals.has(fieldName)) {
-            return base.tentativeVals.get(fieldName);
+        if (fieldName == "_GET_FREEZE_DATA_") {
+            let fields = [];
+            let methods = [];
+            Reflect.ownKeys(this.base).filter((key) => {
+                return key != "constructor" && key != "relayDependencies" && key != "instantiate" && key != "setHost" && key != "addDependency" && key != "resetToCommit" && key != "commit" && key != "populateCommitted" && key != "onCommit" && key != "onTentative" && key != "triggerCommit" && key != "triggerTentative" && key != "clone" && key != "hostGsp" && key != "masterGsp" && key != "dependencies" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentativeVals" && key != "tentListeners" && key != "commListeners" && key != "populated" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_';
+            }).forEach((key) => {
+                if (typeof this.base[key] == 'function') {
+                    let meth = this.base[key].toString();
+                    methods.push([key, meth]);
+                }
+                else {
+                    fields.push([key, this.base[key]]);
+                }
+            });
+            return [fields, methods];
         }
         else {
-            return super.access(fieldName);
+            let base = this.base;
+            if (base.tentativeVals.has(fieldName)) {
+                return base.tentativeVals.get(fieldName);
+            }
+            else {
+                return super.access(fieldName);
+            }
         }
     }
     resolve(hostActorMirror) {
@@ -61029,6 +61234,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             let newGsp = hostActorMirror.base.behaviourObject.gsp;
             baseEV.setHost(newGsp, hostActorMirror.base.thisRef.ownerId, false);
             if (!newGsp.knownEventual(baseEV.id)) {
+                baseEV.relayDependencies();
                 newGsp.registerHolderEventual(this.proxyBase, baseEV.masterGsp);
             }
             return newGsp.eventuals.get(baseEV.id);
@@ -61168,8 +61374,7 @@ class GSP {
         }
         else {
             //We missed a number of rounds, request owner of master object to sync with us
-            this.eventualOwner.get(round.objectId).sync(round.objectId, this);
-            //this.environment.commMedium.sendMessage(roundMasterOwnerId(round),new GSPSyncMessage(this.environment.thisRef,this.thisActorId,roundMasterObjectId(round)))
+            //this.eventualOwner.get(round.objectId).sync(round.objectId,this)
         }
     }
     commitRound(round) {
@@ -61310,15 +61515,11 @@ class TestConsistent extends Consistent_1.Consistent {
         this.value = 5;
     }
     incWithPrim(num) {
-        return this.value.then((v) => {
-            this.value = v + num;
-        });
+        this.value += num;
     }
     incWithCon(con) {
         return con.value.then((v) => {
-            return this.value.then((vv) => {
-                this.value = v + vv;
-            });
+            this.value += v;
         });
     }
 }
@@ -62063,6 +62264,84 @@ let ConsistentConstraintPrimitive = () => {
     });
 };
 scheduled.push(ConsistentConstraintPrimitive);
+class TestConsistentThaw extends Consistent_1.Consistent {
+    constructor() {
+        super();
+        this.value = 5;
+    }
+    incMUT() {
+        this.value += 1;
+    }
+}
+class TestEventualFreeze extends Eventual_1.Eventual {
+    constructor() {
+        super();
+        this.value = 5;
+    }
+    incMUT() {
+        this.value += 1;
+    }
+}
+class SimpleThawAct extends CAPActor_1.CAPActor {
+    getEv(ev) {
+        ev.incMUT();
+    }
+}
+let simpleThaw = () => {
+    let con = new TestConsistentThaw();
+    return app.libs.thaw(con).then((ev) => {
+        ev.onCommit(() => {
+            log("Simple thaw", ev.value, 6);
+        });
+        let act = app.spawnActor(SimpleThawAct);
+        act.getEv(ev);
+    });
+};
+scheduled.push(simpleThaw);
+class RemThawAct extends CAPActor_1.CAPActor {
+    getCon(con) {
+        return this.libs.thaw(con).then((ev) => {
+            setTimeout(() => {
+                ev.incMUT();
+            }, 2000);
+            return ev;
+        });
+    }
+}
+let remThaw = () => {
+    let act = app.spawnActor(RemThawAct);
+    let con = new TestConsistentThaw();
+    return new Promise((resolve) => {
+        act.getCon(con).then((ev) => {
+            ev.onCommit(() => {
+                resolve(log("Remote Thaw", ev.value, 6));
+            });
+        });
+    });
+};
+scheduled.push(remThaw);
+class FreezeAct extends CAPActor_1.CAPActor {
+    getCon(con) {
+        con.incMUT();
+    }
+}
+let freeze = () => {
+    let ev = new TestEventualFreeze();
+    let con = app.libs.freeze(ev);
+    let act = app.spawnActor(FreezeAct);
+    act.getCon(con);
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            con.value.then((v) => {
+                let v1 = v == 6;
+                let v2 = ev.value == 5;
+                let ok = v1 && v2;
+                resolve(log("Freeze", ok, true));
+            });
+        }, 2000);
+    });
+};
+scheduled.push(freeze);
 function performAll(nextTest) {
     nextTest().then(() => {
         if (scheduled.length > 0) {

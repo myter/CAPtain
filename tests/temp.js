@@ -1,64 +1,38 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Eventual_1 = require("../src/Eventual");
-const CAPplication_1 = require("../src/CAPplication");
 const CAPActor_1 = require("../src/CAPActor");
-class Container extends Eventual_1.Eventual {
+const CAPplication_1 = require("../src/CAPplication");
+class TestEv extends Eventual_1.Eventual {
     constructor() {
         super();
-        this.inners = [];
-    }
-    addInnerMUT(newInner) {
-        this.inners.push(newInner);
-    }
-}
-class Contained extends Eventual_1.Eventual {
-    constructor() {
-        super();
-        this.someVal = 5;
+        this.value = 5;
     }
     incMUT() {
-        this.someVal++;
-    }
-}
-class App extends CAPplication_1.CAPplication {
-    constructor() {
-        super();
-        this.ev = new Container();
-        this.ev.onCommit(() => {
-            console.log("New commit in app");
-            this.print();
-        });
-    }
-    sendTo(ref) {
-        ref.getEV(this.ev);
-    }
-    print() {
-        console.log("In app: ");
-        this.ev.inners.forEach((inner) => {
-            console.log(inner.someVal);
-        });
+        this.value += 1;
     }
 }
 class Act extends CAPActor_1.CAPActor {
     constructor() {
         super();
-        this.Contained = Contained;
+        this.TestEv = TestEv;
     }
-    getEV(ev) {
-        this.ev = ev;
-        let c = new this.Contained();
-        this.ev.addInnerMUT(c);
-        c.incMUT();
+    getCon() {
+        this.ev = new this.TestEv();
+        this.c = this.libs.freeze(this.ev);
+        return this.c;
     }
-    print() {
-        console.log("In act: ");
+    test() {
+        console.log("EV value: " + this.ev.value);
+        this.c.value.then((v) => {
+            console.log("Consistent value: " + v);
+        });
     }
 }
-let app = new App();
-let a1 = app.spawnActor(Act);
-app.sendTo(a1);
-setTimeout(() => {
-    console.log("Forcing");
-    app.print();
-}, 1500);
+let app = new CAPplication_1.CAPplication();
+let act = app.spawnActor(Act);
+act.getCon().then((c) => {
+    c.incMUT().then(() => {
+        act.test();
+    });
+});
 //# sourceMappingURL=temp.js.map

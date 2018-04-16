@@ -1,89 +1,53 @@
-import {Eventual, mutating} from "../src/Eventual";
-import {CAPplication} from "../src/CAPplication";
+import {Eventual} from "../src/Eventual";
 import {CAPActor} from "../src/CAPActor";
-import {FarRef, SpiderObject, SpiderObjectMirror} from "spiders.js";
-import set = Reflect.set;
-import {Consistent} from "../src/Consistent";
+import {CAPplication} from "../src/CAPplication";
+import {FarRef} from "spiders.js";
 
-class Container extends Eventual{
-    inners
-
-    constructor(){
-        super()
-        this.inners = []
-    }
-
-    addInnerMUT(newInner  : Contained){
-        this.inners.push(newInner)
-    }
-}
-
-class Contained extends Eventual{
-    someVal
+class TestEv extends Eventual{
+    value
 
     constructor(){
         super()
-        this.someVal = 5
+        this.value = 5
     }
 
     incMUT(){
-        this.someVal++
+        this.value += 1
     }
 }
 
-
-class App extends CAPplication{
-    ev : Container
-
-    constructor(){
-        super()
-        this.ev = new Container()
-        this.ev.onCommit(()=>{
-            console.log("New commit in app")
-            this.print()
-        })
-    }
-
-    sendTo(ref){
-        ref.getEV(this.ev)
-    }
-
-    print(){
-        console.log("In app: ")
-        this.ev.inners.forEach((inner : Contained)=>{
-            console.log(inner.someVal)
-        })
-    }
-
-}
 
 class Act extends CAPActor{
-    ev : Container
-    Contained
+    TestEv
+    ev
+    c
 
     constructor(){
         super()
-        this.Contained = Contained
+        this.TestEv = TestEv
     }
 
-    getEV(ev){
-        this.ev = ev
-        let c : Contained = new this.Contained()
-        this.ev.addInnerMUT(c)
-        c.incMUT()
+    getCon(){
+        this.ev = new this.TestEv()
+        this.c = this.libs.freeze(this.ev)
+        return this.c
     }
 
-    print(){
-        console.log("In act: ")
+    test(){
+        console.log("EV value: " + this.ev.value)
+        this.c.value.then((v)=>{
+            console.log("Consistent value: " + v)
+        })
     }
 }
-let app = new App()
-let a1 : FarRef<Act> = app.spawnActor(Act)
-app.sendTo(a1)
-setTimeout(()=>{
-    console.log("Forcing")
-    app.print()
-},1500)
+
+let app = new CAPplication()
+let act : FarRef<Act> = app.spawnActor(Act)
+act.getCon().then((c)=>{
+    c.incMUT().then(()=>{
+        act.test()
+    })
+})
 
 
 

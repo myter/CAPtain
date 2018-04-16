@@ -10,7 +10,7 @@ var assert                      = require('assert')
 var chai                        = require('chai')
 var expect                      = chai.expect
 
-/*describe("Availables",()=>{
+describe("Availables",()=>{
     class TestAvailable extends Available{
         value
         constructor(){
@@ -310,7 +310,7 @@ var expect                      = chai.expect
             }
         })
     })
-})*/
+})
 
 describe("Eventuals",()=>{
     class TestEventual extends Eventual{
@@ -971,7 +971,7 @@ describe("Eventuals",()=>{
     })
 })
 
-/*describe("Consistents",()=>{
+describe("Consistents",()=>{
     class TestConsistent extends Consistent{
         value
         constructor(){
@@ -980,16 +980,12 @@ describe("Eventuals",()=>{
         }
 
         incWithPrim(num){
-            return this.value.then((v)=>{
-                return this.value = v + num
-            })
+            this.value += num
         }
 
         incWithCon(con){
             return con.value.then((v)=>{
-                return this.value.then((vv)=>{
-                    this.value = v + vv
-                })
+                this.value += v
             })
         }
     }
@@ -1205,5 +1201,117 @@ describe("Eventuals",()=>{
             }
         })
     })
-})*/
+})
+
+describe("Libs extension",()=>{
+    class TestConsistent extends Consistent{
+        value
+        constructor(){
+            super()
+            this.value = 5
+        }
+
+        incMUT(){
+            this.value +=1
+        }
+    }
+
+    class TestEventual extends Eventual{
+        value
+        constructor(){
+            super()
+            this.value  = 5
+        }
+
+        incMUT(){
+            this.value += 1
+        }
+    }
+
+    it("thaw",function(done){
+        this.timeout(4000)
+        class Act extends CAPActor{
+            getEv(ev){
+                ev.incMUT()
+            }
+        }
+        let app = new CAPplication()
+        let con = new TestConsistent()
+        let ev  = app.libs.thaw(con).then((ev)=>{
+            ev.onCommit(()=>{
+                try{
+                    expect(ev.value).to.equal(6)
+                    app.kill()
+                    done()
+                }
+                catch(e){
+                    app.kill()
+                    done(e)
+                }
+            })
+            let act : FarRef<Act> = app.spawnActor(Act)
+            act.getEv(ev)
+        })
+    })
+
+    it("thaw remote",function(done){
+        this.timeout(4000)
+        class Act extends CAPActor{
+            getCon(con){
+                return this.libs.thaw(con).then((ev)=>{
+                    setTimeout(()=>{
+                        ev.incMUT()
+                    },2000)
+                    return ev
+                })
+            }
+        }
+        let app = new CAPplication()
+        let act : FarRef<Act> = app.spawnActor(Act)
+        let con = new TestConsistent();
+        (act.getCon(con) as any).then((ev)=>{
+            ev.onCommit(()=>{
+                try{
+                    expect(ev.value).to.equal(6)
+                    app.kill()
+                    done()
+                }
+                catch(e){
+                    app.kill()
+                    done(e)
+                }
+            })
+        })
+    })
+
+    it("freeze",function(done){
+        this.timeout(4000)
+        class Act extends CAPActor{
+            con
+            getCon(con){
+                con.incMUT()
+            }
+        }
+        let app = new CAPplication()
+        let ev = new TestEventual()
+        let con  = app.libs.freeze(ev)
+        let act : FarRef<Act> = app.spawnActor(Act)
+        act.getCon(con)
+        setTimeout(()=>{
+            con.value.then((v)=>{
+                try{
+                    expect(v).to.equal(6)
+                    expect(ev.value).to.equal(5)
+                    app.kill()
+                    done()
+                }
+                catch(e){
+                    app.kill()
+                    done(e)
+                }
+            })
+        },2000)
+
+    })
+})
 
