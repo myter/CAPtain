@@ -390,7 +390,13 @@ export class EventualMirror extends SpiderIsolateMirror{
                     methods.push([key,meth])
                 }
                 else{
-                    fields.push([key,this.base[key]])
+                    let base : Eventual = this.base as Eventual
+                    if(base.tentativeVals.has(key.toString())){
+                        fields.push([key,base.tentativeVals.get(key.toString())])
+                    }
+                    else{
+                        fields.push([key, this.base[key]]);
+                    }
                 }
             })
             return [fields,methods]

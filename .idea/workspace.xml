@@ -217,8 +217,8 @@
       <file leaf-file-name="Eventual.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="384" column="30" lean-forward="false" selection-start-line="384" selection-start-column="30" selection-end-line="384" selection-end-column="30" />
+            <state relative-caret-position="683">
+              <caret line="394" column="78" lean-forward="false" selection-start-line="394" selection-start-column="78" selection-end-line="394" selection-end-column="78" />
               <folding>
                 <element signature="n#!!block;n#populateCommitted#0;n#Eventual#0" expanded="true" />
                 <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
@@ -227,7 +227,7 @@
                 <element signature="e#9831#9962#0" expanded="true" />
                 <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
                 <element signature="e#13527#14243#0" expanded="true" />
-                <element signature="e#14453#14739#0" expanded="true" />
+                <element signature="e#14338#14397#0" expanded="true" />
                 <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
               </folding>
             </state>
@@ -527,7 +527,7 @@
       <workItem from="1523558176439" duration="3190000" />
       <workItem from="1523601706450" duration="3052000" />
       <workItem from="1523692922170" duration="10913000" />
-      <workItem from="1523870021184" duration="13018000" />
+      <workItem from="1523870021184" duration="13672000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -628,7 +628,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="143028000" />
+    <option name="totallyTimeSpent" value="143682000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1336" extended-state="6" />
@@ -775,7 +775,7 @@
             <element signature="e#9831#9962#0" expanded="true" />
             <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
             <element signature="e#13527#14243#0" expanded="true" />
-            <element signature="e#14453#14739#0" expanded="true" />
+            <element signature="e#14338#14397#0" expanded="true" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
@@ -830,7 +830,7 @@
             <element signature="e#9831#9962#0" expanded="true" />
             <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
             <element signature="e#13527#14243#0" expanded="true" />
-            <element signature="e#14453#14739#0" expanded="true" />
+            <element signature="e#14338#14397#0" expanded="true" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
@@ -893,7 +893,7 @@
             <element signature="e#9831#9962#0" expanded="true" />
             <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
             <element signature="e#13527#14243#0" expanded="true" />
-            <element signature="e#14453#14739#0" expanded="true" />
+            <element signature="e#14338#14397#0" expanded="true" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>
@@ -1424,8 +1424,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Eventual.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="384" column="30" lean-forward="false" selection-start-line="384" selection-start-column="30" selection-end-line="384" selection-end-column="30" />
+        <state relative-caret-position="683">
+          <caret line="394" column="78" lean-forward="false" selection-start-line="394" selection-start-column="78" selection-end-line="394" selection-end-column="78" />
           <folding>
             <element signature="n#!!block;n#populateCommitted#0;n#Eventual#0" expanded="true" />
             <element signature="n#!!block;n#constructor#0;n#Eventual#0" expanded="true" />
@@ -1434,7 +1434,7 @@
             <element signature="e#9831#9962#0" expanded="true" />
             <element signature="n#!!block;n#write#0;n#EventualMirror#0" expanded="true" />
             <element signature="e#13527#14243#0" expanded="true" />
-            <element signature="e#14453#14739#0" expanded="true" />
+            <element signature="e#14338#14397#0" expanded="true" />
             <element signature="n#!!block;n#pass#0;n#EventualMirror#0" expanded="true" />
           </folding>
         </state>

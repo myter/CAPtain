@@ -355,7 +355,13 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                     methods.push([key, meth]);
                 }
                 else {
-                    fields.push([key, this.base[key]]);
+                    let base = this.base;
+                    if (base.tentativeVals.has(key.toString())) {
+                        fields.push([key, base.tentativeVals.get(key.toString())]);
+                    }
+                    else {
+                        fields.push([key, this.base[key]]);
+                    }
                 }
             });
             return [fields, methods];
