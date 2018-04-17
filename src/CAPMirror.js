@@ -46,6 +46,14 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
             throw new Error("Cannot thaw non-consistent value");
         }
     }
+    constructMethod(functionSource) {
+        if (functionSource.startsWith("function")) {
+            return eval("(" + functionSource + ")");
+        }
+        else {
+            return eval("(function " + functionSource + ")");
+        }
+    }
     freeze(value) {
         let con = new this.CO();
         let [fields, methods] = value["_GET_FREEZE_DATA_"];
@@ -53,7 +61,7 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
             con[fieldName] = fieldvalue;
         });
         methods.forEach(([methodName, methodString]) => {
-            con[methodName] = this.simpleBind(eval("(function " + methodString + ")"), con);
+            con[methodName] = this.simpleBind(this.constructMethod(methodString), con);
         });
         return con;
     }
@@ -72,7 +80,7 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
                 ev[fieldName] = fieldvalue;
             });
             methods.forEach(([methodName, methodString]) => {
-                ev[methodName] = this.simpleBind(eval("(function " + methodString + ")"), ev);
+                ev[methodName] = this.simpleBind(this.constructMethod(methodString), ev);
             });
             return ev;
         });

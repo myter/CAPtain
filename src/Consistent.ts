@@ -75,9 +75,13 @@ export class ConsistentMirror extends SpiderObjectMirror{
             return new Promise((resolve)=>{
                 let fields  = []
                 let methods = []
-                Reflect.ownKeys(this.base).filter((key)=>{
+                let baseKeys =  Reflect.ownKeys(this.base).filter((key)=>{
                     return key != "_IS_CONSISTENT_" && key != "isConsistent" && key != "constructor"
-                }).forEach((key)=>{
+                })
+                let protoKeys = Reflect.ownKeys(Reflect.getPrototypeOf(this.base)).filter((key)=>{
+                    return key != "constructor"
+                })
+                baseKeys.concat(protoKeys).forEach((key)=>{
                     if(typeof this.base[key] == 'function'){
                         let meth = this.base[key].toString()
                         methods.push([key,meth])

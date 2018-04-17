@@ -53,6 +53,15 @@ export class CAPMirror extends SpiderActorMirror{
         }
     }
 
+    constructMethod(functionSource){
+        if(functionSource.startsWith("function")){
+            return eval( "(" +  functionSource +")" )
+        }
+        else{
+            return eval("(function " + functionSource + ")" )
+        }
+    }
+
     freeze(value : Eventual){
         let con                 = new this.CO()
         let [fields,methods]    = value["_GET_FREEZE_DATA_"]
@@ -60,7 +69,7 @@ export class CAPMirror extends SpiderActorMirror{
             con[fieldName] = fieldvalue
         })
         methods.forEach(([methodName,methodString])=>{
-            con[methodName] = this.simpleBind(eval("(function " +methodString + ")"),con)
+            con[methodName] = this.simpleBind(this.constructMethod(methodString),con)
         })
         return con
     }
@@ -80,7 +89,7 @@ export class CAPMirror extends SpiderActorMirror{
                 ev[fieldName] = fieldvalue
             })
             methods.forEach(([methodName,methodString])=>{
-                ev[methodName] = this.simpleBind(eval("(function " +methodString + ")"),ev)
+                ev[methodName] = this.simpleBind(this.constructMethod(methodString),ev)
             })
             return ev
         })

@@ -1,8 +1,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Eventual_1 = require("../src/Eventual");
-const CAPActor_1 = require("../src/CAPActor");
 const CAPplication_1 = require("../src/CAPplication");
-class TestEv extends Eventual_1.Eventual {
+const Consistent_1 = require("../src/Consistent");
+class TestEV extends Eventual_1.Eventual {
     constructor() {
         super();
         this.value = 5;
@@ -11,28 +11,27 @@ class TestEv extends Eventual_1.Eventual {
         this.value += 1;
     }
 }
-class Act extends CAPActor_1.CAPActor {
+class TestCon extends Consistent_1.Consistent {
     constructor() {
         super();
-        this.TestEv = TestEv;
+        this.value = 5;
     }
-    getCon() {
-        this.ev = new this.TestEv();
-        this.c = this.libs.freeze(this.ev);
-        return this.c;
-    }
-    test() {
-        console.log("EV value: " + this.ev.value);
-        this.c.value.then((v) => {
-            console.log("Consistent value: " + v);
-        });
+    incMUT() {
+        this.value += 1;
     }
 }
+let ev = new TestEV();
 let app = new CAPplication_1.CAPplication();
-let act = app.spawnActor(Act);
-act.getCon().then((c) => {
-    c.incMUT().then(() => {
-        act.test();
-    });
+let con = app.libs.freeze(ev);
+con.incMUT();
+app.libs.thaw(con).then((ev2) => {
+    ev2.incMUT();
 });
+/*let con = new TestCon()
+let app = new CAPplication()
+app.libs.thaw(con).then((ev)=>{
+    ev.incMUT()
+    let con2 = app.libs.freeze(ev)
+    con2.incMUT()
+})*/
 //# sourceMappingURL=temp.js.map
