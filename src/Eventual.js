@@ -343,9 +343,13 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
         if (fieldName == "_GET_FREEZE_DATA_") {
             let fields = [];
             let methods = [];
-            Reflect.ownKeys(this.base).filter((key) => {
+            let baseKeys = Reflect.ownKeys(this.base).filter((key) => {
                 return key != "constructor" && key != "relayDependencies" && key != "instantiate" && key != "setHost" && key != "addDependency" && key != "resetToCommit" && key != "commit" && key != "populateCommitted" && key != "onCommit" && key != "onTentative" && key != "triggerCommit" && key != "triggerTentative" && key != "clone" && key != "hostGsp" && key != "masterGsp" && key != "dependencies" && key != "hostId" && key != "ownerId" && key != "id" && key != "committedVals" && key != "tentativeVals" && key != "tentListeners" && key != "commListeners" && key != "populated" && key != "isEventual" && key != "_INSTANCEOF_ISOLATE_" && key != '_SPIDER_OBJECT_MIRROR_' && key != '_IS_EVENTUAL_';
-            }).forEach((key) => {
+            });
+            let protoKeys = Reflect.ownKeys(Reflect.getPrototypeOf(this.base)).filter((key) => {
+                return key != "constructor";
+            });
+            baseKeys.concat(protoKeys).forEach((key) => {
                 if (typeof this.base[key] == 'function') {
                     let meth = this.base[key].toString();
                     methods.push([key, meth]);
