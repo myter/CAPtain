@@ -1,6 +1,6 @@
 import {CAPActor} from "../src/CAPActor";
 import {Available} from "../src/Available";
-import {Eventual} from "../src/Eventual";
+import {Eventual, mutating} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
 import {Actor, FarRef} from "spiders.js"
 import {CAPplication} from "../src/CAPplication";
@@ -44,14 +44,17 @@ class TestEventual extends Eventual{
         this.v1 = 5
     }
 
-    incMUT(){
+    @mutating
+    inc(){
         this.v1++
     }
 
+    @mutating
     incWithPrim(v){
         this.v1 += v
     }
 
+    @mutating
     incWithCon(c){
         this.v1 += c.v1
     }
@@ -315,7 +318,7 @@ class MasterSlaveChangeAct extends CAPActor{
 }
 class SlaveSlaveChangeAct extends CAPActor{
     getEv(anEv){
-        anEv.incMUT()
+        anEv.inc()
     }
 }
 let EventualReplicationSlaveChange = ()=>{
@@ -339,7 +342,7 @@ class MasterMasterChange extends CAPActor{
     sendAndInc(toRef){
         this.ev = new this.TestEventual()
         toRef.getEv(this.ev)
-        this.ev.incMUT()
+        this.ev.inc()
     }
 }
 class SlaveMasterChange extends CAPActor{
@@ -545,7 +548,7 @@ class EventualTentativeSlave extends CAPActor{
         anEv.onTentative((ev)=>{
             this.val = ev.v1
         })
-        anEv.incMUT()
+        anEv.inc()
     }
 
     test(){
@@ -599,7 +602,7 @@ class EventualCommitSlave extends CAPActor{
         anEv.onTentative((ev)=>{
             this.val = ev.v1
         })
-        anEv.incMUT()
+        anEv.inc()
     }
 
 
@@ -624,20 +627,24 @@ class ExtendedEventual extends Eventual{
         this.sensitive = [5]
     }
 
-    incMUT(){
+    @mutating
+    inc(){
         this.v1++
         return 5
     }
 
-    addMUT(val){
+    @mutating
+    add(val){
         this.sensitive.push(val)
     }
 
-    incWithPrimMUT(v){
+    @mutating
+    incWithPrim(v){
         this.v1 += v
     }
 
-    incWithConMUT(c){
+    @mutating
+    incWithCon(c){
         this.v1 += c.v1
     }
 }
@@ -666,7 +673,7 @@ class EventualSensistiveMaster extends CAPActor{
 
 class EventualSensitiveSlave extends CAPActor{
     getEv(anEv){
-        anEv.addMUT(6)
+        anEv.add(6)
     }
 }
 
@@ -690,7 +697,8 @@ class Contained extends Eventual{
         this.innerVal = 5
     }
 
-    incMUT(){
+    @mutating
+    inc(){
         this.innerVal++
     }
 }
@@ -702,7 +710,8 @@ class Container extends Eventual{
         super()
     }
 
-    addInnersMUT(inner){
+    @mutating
+    addInners(inner){
         this.inner = inner
     }
 }
@@ -740,8 +749,8 @@ class NestedRepAct2 extends CAPActor{
 
     getContainer(cont : Container){
         let contained = new this.Contained()
-        cont.addInnersMUT(contained)
-        contained.incMUT()
+        cont.addInners(contained)
+        contained.inc()
     }
 }
 let nestedReplication = ()=>{
@@ -792,8 +801,8 @@ class DeppCommitAct2 extends CAPActor{
 
     getContainer(cont : Container){
         let contained = new this.Contained()
-        cont.addInnersMUT(contained)
-        contained.incMUT()
+        cont.addInners(contained)
+        contained.inc()
     }
 }
 let deepCommit = ()=>{
@@ -976,7 +985,8 @@ class TestConsistentThaw extends Consistent{
         this.value = 5
     }
 
-    incMUT(){
+    @mutating
+    inc(){
         this.value +=1
     }
 }
@@ -987,14 +997,15 @@ class TestEventualFreeze extends Eventual{
         this.value  = 5
     }
 
-    incMUT(){
+    @mutating
+    inc(){
         this.value += 1
     }
 }
 
 class SimpleThawAct extends CAPActor{
     getEv(ev){
-        ev.incMUT()
+        ev.inc()
     }
 }
 let simpleThaw = ()=>{
@@ -1013,7 +1024,7 @@ class RemThawAct extends CAPActor{
     getCon(con){
         return this.libs.thaw(con).then((ev)=>{
             setTimeout(()=>{
-                ev.incMUT()
+                ev.inc()
             },2000)
             return ev
         })
@@ -1035,7 +1046,7 @@ scheduled.push(remThaw)
 class FreezeAct extends CAPActor{
     con
     getCon(con){
-        con.incMUT()
+        con.inc()
     }
 }
 let freeze = ()=>{

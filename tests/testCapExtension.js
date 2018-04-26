@@ -1,3 +1,9 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const CAPActor_1 = require("../src/CAPActor");
 const Available_1 = require("../src/Available");
@@ -37,7 +43,7 @@ class TestEventual extends Eventual_1.Eventual {
         super();
         this.v1 = 5;
     }
-    incMUT() {
+    inc() {
         this.v1++;
     }
     incWithPrim(v) {
@@ -47,6 +53,15 @@ class TestEventual extends Eventual_1.Eventual {
         this.v1 += c.v1;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], TestEventual.prototype, "inc", null);
+__decorate([
+    Eventual_1.mutating
+], TestEventual.prototype, "incWithPrim", null);
+__decorate([
+    Eventual_1.mutating
+], TestEventual.prototype, "incWithCon", null);
 class TestConsistent extends Consistent_1.Consistent {
     constructor() {
         super();
@@ -264,7 +279,7 @@ class MasterSlaveChangeAct extends CAPActor_1.CAPActor {
 }
 class SlaveSlaveChangeAct extends CAPActor_1.CAPActor {
     getEv(anEv) {
-        anEv.incMUT();
+        anEv.inc();
     }
 }
 let EventualReplicationSlaveChange = () => {
@@ -284,7 +299,7 @@ class MasterMasterChange extends CAPActor_1.CAPActor {
     sendAndInc(toRef) {
         this.ev = new this.TestEventual();
         toRef.getEv(this.ev);
-        this.ev.incMUT();
+        this.ev.inc();
     }
 }
 class SlaveMasterChange extends CAPActor_1.CAPActor {
@@ -458,7 +473,7 @@ class EventualTentativeSlave extends CAPActor_1.CAPActor {
         anEv.onTentative((ev) => {
             this.val = ev.v1;
         });
-        anEv.incMUT();
+        anEv.inc();
     }
     test() {
         return new Promise((resolve) => {
@@ -502,7 +517,7 @@ class EventualCommitSlave extends CAPActor_1.CAPActor {
         anEv.onTentative((ev) => {
             this.val = ev.v1;
         });
-        anEv.incMUT();
+        anEv.inc();
     }
 }
 let EventualCommit = () => {
@@ -520,20 +535,32 @@ class ExtendedEventual extends Eventual_1.Eventual {
         this.v1 = 5;
         this.sensitive = [5];
     }
-    incMUT() {
+    inc() {
         this.v1++;
         return 5;
     }
-    addMUT(val) {
+    add(val) {
         this.sensitive.push(val);
     }
-    incWithPrimMUT(v) {
+    incWithPrim(v) {
         this.v1 += v;
     }
-    incWithConMUT(c) {
+    incWithCon(c) {
         this.v1 += c.v1;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], ExtendedEventual.prototype, "inc", null);
+__decorate([
+    Eventual_1.mutating
+], ExtendedEventual.prototype, "add", null);
+__decorate([
+    Eventual_1.mutating
+], ExtendedEventual.prototype, "incWithPrim", null);
+__decorate([
+    Eventual_1.mutating
+], ExtendedEventual.prototype, "incWithCon", null);
 class EventualSensistiveMaster extends CAPActor_1.CAPActor {
     constructor() {
         super();
@@ -553,7 +580,7 @@ class EventualSensistiveMaster extends CAPActor_1.CAPActor {
 }
 class EventualSensitiveSlave extends CAPActor_1.CAPActor {
     getEv(anEv) {
-        anEv.addMUT(6);
+        anEv.add(6);
     }
 }
 let EventualSensitive = () => {
@@ -572,18 +599,24 @@ class Contained extends Eventual_1.Eventual {
         super();
         this.innerVal = 5;
     }
-    incMUT() {
+    inc() {
         this.innerVal++;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], Contained.prototype, "inc", null);
 class Container extends Eventual_1.Eventual {
     constructor() {
         super();
     }
-    addInnersMUT(inner) {
+    addInners(inner) {
         this.inner = inner;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], Container.prototype, "addInners", null);
 class NestedRepAct1 extends CAPActor_1.CAPActor {
     constructor() {
         super();
@@ -608,8 +641,8 @@ class NestedRepAct2 extends CAPActor_1.CAPActor {
     }
     getContainer(cont) {
         let contained = new this.Contained();
-        cont.addInnersMUT(contained);
-        contained.incMUT();
+        cont.addInners(contained);
+        contained.inc();
     }
 }
 let nestedReplication = () => {
@@ -649,8 +682,8 @@ class DeppCommitAct2 extends CAPActor_1.CAPActor {
     }
     getContainer(cont) {
         let contained = new this.Contained();
-        cont.addInnersMUT(contained);
-        contained.incMUT();
+        cont.addInners(contained);
+        contained.inc();
     }
 }
 let deepCommit = () => {
@@ -807,22 +840,28 @@ class TestConsistentThaw extends Consistent_1.Consistent {
         super();
         this.value = 5;
     }
-    incMUT() {
+    inc() {
         this.value += 1;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], TestConsistentThaw.prototype, "inc", null);
 class TestEventualFreeze extends Eventual_1.Eventual {
     constructor() {
         super();
         this.value = 5;
     }
-    incMUT() {
+    inc() {
         this.value += 1;
     }
 }
+__decorate([
+    Eventual_1.mutating
+], TestEventualFreeze.prototype, "inc", null);
 class SimpleThawAct extends CAPActor_1.CAPActor {
     getEv(ev) {
-        ev.incMUT();
+        ev.inc();
     }
 }
 let simpleThaw = () => {
@@ -840,7 +879,7 @@ class RemThawAct extends CAPActor_1.CAPActor {
     getCon(con) {
         return this.libs.thaw(con).then((ev) => {
             setTimeout(() => {
-                ev.incMUT();
+                ev.inc();
             }, 2000);
             return ev;
         });
@@ -860,7 +899,7 @@ let remThaw = () => {
 scheduled.push(remThaw);
 class FreezeAct extends CAPActor_1.CAPActor {
     getCon(con) {
-        con.incMUT();
+        con.inc();
     }
 }
 let freeze = () => {

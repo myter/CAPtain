@@ -1,3 +1,9 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 const Available_1 = require("../src/Available");
@@ -280,37 +286,55 @@ describe("Eventuals", () => {
             this.v1 = 5;
             this.sensitive = [5];
         }
-        incMUT() {
+        inc() {
             this.v1++;
             return 5;
         }
-        addMUT(val) {
+        add(val) {
             this.sensitive.push(val);
         }
-        incWithPrimMUT(v) {
+        incWithPrim(v) {
             this.v1 += v;
         }
-        incWithConMUT(c) {
+        incWithCon(c) {
             this.v1 += c.v1;
         }
     }
+    __decorate([
+        Eventual_1.mutating
+    ], TestEventual.prototype, "inc", null);
+    __decorate([
+        Eventual_1.mutating
+    ], TestEventual.prototype, "add", null);
+    __decorate([
+        Eventual_1.mutating
+    ], TestEventual.prototype, "incWithPrim", null);
+    __decorate([
+        Eventual_1.mutating
+    ], TestEventual.prototype, "incWithCon", null);
     class Contained extends Eventual_1.Eventual {
         constructor() {
             super();
             this.innerVal = 5;
         }
-        incMUT() {
+        inc() {
             this.innerVal++;
         }
     }
+    __decorate([
+        Eventual_1.mutating
+    ], Contained.prototype, "inc", null);
     class Container extends Eventual_1.Eventual {
         constructor() {
             super();
         }
-        addInnersMUT(inner) {
+        addInners(inner) {
             this.inner = inner;
         }
     }
+    __decorate([
+        Eventual_1.mutating
+    ], Container.prototype, "addInners", null);
     it("Check OK Constraint (primitive)", (done) => {
         let app = new spiders_js_1.Application();
         class Act extends spiders_js_1.Actor {
@@ -320,7 +344,7 @@ describe("Eventuals", () => {
             }
             test() {
                 let c = new this.TestConsistent();
-                c.incWithPrimMUT(5);
+                c.incWithPrim(5);
                 return c.v1;
             }
         }
@@ -346,7 +370,7 @@ describe("Eventuals", () => {
             test() {
                 let c = new this.TestConsistent();
                 let cc = new this.TestConsistent();
-                c.incWithConMUT(cc);
+                c.incWithCon(cc);
                 return c.v1;
             }
         }
@@ -422,7 +446,7 @@ describe("Eventuals", () => {
             }
             test() {
                 let c = new this.TestConsistent();
-                c.incWithConMUT({ value: 5 });
+                c.incWithCon({ value: 5 });
                 return c.value;
             }
         }
@@ -507,7 +531,7 @@ describe("Eventuals", () => {
             sendAndInc(toRef) {
                 let ev = new this.TestEventual();
                 toRef.getEv(ev);
-                ev.incMUT();
+                ev.inc();
             }
         }
         class Slave extends CAPActor_1.CAPActor {
@@ -559,7 +583,7 @@ describe("Eventuals", () => {
         }
         class Slave extends CAPActor_1.CAPActor {
             getEv(anEv) {
-                anEv.incMUT();
+                anEv.inc();
             }
         }
         let slave = app.spawnActor(Slave);
@@ -599,7 +623,7 @@ describe("Eventuals", () => {
         }
         class Slave extends CAPActor_1.CAPActor {
             getEv(anEv) {
-                anEv.addMUT(6);
+                anEv.add(6);
             }
         }
         let slave = app.spawnActor(Slave);
@@ -640,8 +664,8 @@ describe("Eventuals", () => {
             }
             getContainer(cont) {
                 let contained = new this.Contained();
-                cont.addInnersMUT(contained);
-                contained.incMUT();
+                cont.addInners(contained);
+                contained.inc();
             }
         }
         let app = new CAPplication_1.CAPplication();
@@ -680,7 +704,7 @@ describe("Eventuals", () => {
                 anEv.onTentative((ev) => {
                     this.val = ev.v1;
                 });
-                anEv.incMUT();
+                anEv.inc();
             }
             test() {
                 return new Promise((resolve) => {
@@ -733,7 +757,7 @@ describe("Eventuals", () => {
                 anEv.onTentative((ev) => {
                     this.val = ev.v1;
                 });
-                anEv.incMUT();
+                anEv.inc();
             }
         }
         let slave = app.spawnActor(Slave);
@@ -777,8 +801,8 @@ describe("Eventuals", () => {
             }
             getContainer(cont) {
                 let contained = new this.Contained();
-                cont.addInnersMUT(contained);
-                contained.incMUT();
+                cont.addInners(contained);
+                contained.inc();
             }
         }
         let app = new CAPplication_1.CAPplication();
@@ -1040,24 +1064,30 @@ describe("Libs extension", () => {
             super();
             this.value = 5;
         }
-        incMUT() {
+        inc() {
             this.value += 1;
         }
     }
+    __decorate([
+        Eventual_1.mutating
+    ], TestConsistent.prototype, "inc", null);
     class TestEventual extends Eventual_1.Eventual {
         constructor() {
             super();
             this.value = 5;
         }
-        incMUT() {
+        inc() {
             this.value += 1;
         }
     }
+    __decorate([
+        Eventual_1.mutating
+    ], TestEventual.prototype, "inc", null);
     it("thaw", function (done) {
         this.timeout(4000);
         class Act extends CAPActor_1.CAPActor {
             getEv(ev) {
-                ev.incMUT();
+                ev.inc();
             }
         }
         let app = new CAPplication_1.CAPplication();
@@ -1084,7 +1114,7 @@ describe("Libs extension", () => {
             getCon(con) {
                 return this.libs.thaw(con).then((ev) => {
                     setTimeout(() => {
-                        ev.incMUT();
+                        ev.inc();
                     }, 2000);
                     return ev;
                 });
@@ -1111,7 +1141,7 @@ describe("Libs extension", () => {
         this.timeout(4000);
         class Act extends CAPActor_1.CAPActor {
             getCon(con) {
-                con.incMUT();
+                con.inc();
             }
         }
         let app = new CAPplication_1.CAPplication();

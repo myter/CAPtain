@@ -1,44 +1,39 @@
-import {Eventual} from "../src/Eventual";
+import {Eventual, mutating} from "../src/Eventual";
 import {CAPActor} from "../src/CAPActor";
 import {CAPplication} from "../src/CAPplication";
 import {FarRef} from "spiders.js";
 import {Consistent} from "../src/Consistent";
 
-class TestEV extends Eventual{
+class TestEv extends Consistent{
     value
-
     constructor(){
         super()
         this.value = 5
     }
 
-    incMUT(){
-        this.value += 1
+    @mutating
+    inc(){
+        this.value +=1
     }
 }
 
-class TestCon extends Consistent{
-    value
+class TestActor extends CAPActor{
+    getEV(e){
+        e.onCommit(()=>{
+            console.log("New value in actor: " + e.value)
+        })
+        e.inc()
+    }
+}
 
+class App extends CAPplication{
     constructor(){
         super()
-        this.value = 5
-    }
-
-    incMUT(){
-        this.value += 1
+        let con = new TestEv()
+        let ev = this.libs.thaw(con)
     }
 }
-
-
-let ev = new TestEV()
-let app = new CAPplication()
-let con = app.libs.freeze(ev)
-con.incMUT()
-app.libs.thaw(con).then((ev2)=>{
-    ev2.incMUT()
-})
-
+new App()
 
 
 /*let con = new TestCon()

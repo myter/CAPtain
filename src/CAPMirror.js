@@ -60,8 +60,12 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
         fields.forEach(([fieldName, fieldvalue]) => {
             con[fieldName] = fieldvalue;
         });
-        methods.forEach(([methodName, methodString]) => {
+        methods.forEach(([methodName, methodString, isMutating]) => {
             con[methodName] = this.simpleBind(this.constructMethod(methodString), con);
+            if (isMutating) {
+                let conMirror = this.base.behaviourObject.libs.reflectOnObject(con);
+                conMirror.annotate(methodName, () => { }, "mutating");
+            }
         });
         return con;
     }
@@ -79,8 +83,12 @@ class CAPMirror extends spiders_js_1.SpiderActorMirror {
             fields.forEach(([fieldName, fieldvalue]) => {
                 ev[fieldName] = fieldvalue;
             });
-            methods.forEach(([methodName, methodString]) => {
+            methods.forEach(([methodName, methodString, isMutating]) => {
                 ev[methodName] = this.simpleBind(this.constructMethod(methodString), ev);
+                if (isMutating) {
+                    let evMirror = this.base.behaviourObject.libs.reflectOnObject(ev);
+                    evMirror.annotate(methodName, () => { }, "mutating");
+                }
             });
             return ev;
         });

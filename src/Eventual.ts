@@ -1,18 +1,15 @@
 import {GSP} from "./GSP";
-import {bundleScope, LexScope, SpiderActorMirror, SpiderIsolate, SpiderIsolateMirror} from "spiders.js";
+import {
+    bundleScope, LexScope, makeMethodAnnotation, SpiderActorMirror, SpiderIsolate,
+    SpiderIsolateMirror
+} from "spiders.js";
 import {native} from "../index";
 import {CAPMirror} from "./CAPMirror";
 import {CAPActor} from "./CAPActor";
 
 export var _IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_"
 
-export function mutating(target : any,propertyKey : string,descriptor : PropertyDescriptor){
-    let originalMethod = descriptor.value
-    originalMethod["_IS_MUTATING_"] = true
-    return {
-        value : originalMethod
-    }
-}
+export var mutating = makeMethodAnnotation(()=>{},"mutating")
 export class Eventual extends SpiderIsolate{
     hostGsp             : GSP
     masterGsp           : GSP
@@ -291,6 +288,15 @@ export class EventualMirror extends SpiderIsolateMirror{
         }
     }
 
+    private isMutatingMethod(methodName){
+        if(this.isAnnotated(methodName)){
+            return this.getAnnotationTag(methodName) == "mutating"
+        }
+        else{
+            return false
+        }
+    }
+
     invoke(methodName,args){
         let baseEV = this.base as Eventual
         if(!baseEV.hostGsp){
@@ -303,7 +309,7 @@ export class EventualMirror extends SpiderIsolateMirror{
                         baseEV.addDependency(arg)
                     }
                 })
-                if(this.canInvoke(methodName,args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])){
+                if(this.canInvoke(methodName,args) && this.isMutatingMethod(methodName)){
                     //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
                     //Safe to trigger both tentative and commit handlers
                     let ret = super.invoke(methodName,args)
@@ -328,7 +334,7 @@ export class EventualMirror extends SpiderIsolateMirror{
                 }
             }
             else{
-                if(this.canInvoke(methodName,args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])){
+                if(this.canInvoke(methodName,args) && this.isMutatingMethod(methodName)){
                     baseEV.hostGsp.createRound(baseEV.id,baseEV.ownerId,methodName,args)
                     let ret = super.invoke(methodName,args)
                     baseEV.hostGsp.yield(baseEV.id,baseEV.ownerId)
@@ -387,7 +393,7 @@ export class EventualMirror extends SpiderIsolateMirror{
             baseKeys.concat(protoKeys).forEach((key)=>{
                 if(typeof this.base[key] == 'function'){
                     let meth = this.base[key].toString()
-                    methods.push([key,meth])
+                    methods.push([key,meth,this.isMutatingMethod(key)])
                 }
                 else{
                     let base : Eventual = this.base as Eventual

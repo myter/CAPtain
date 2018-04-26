@@ -1,6 +1,6 @@
 import {Actor, Application, FarRef} from "spiders.js";
 import {Available} from "../src/Available";
-import {Eventual} from "../src/Eventual";
+import {Eventual, mutating} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
 import {CAPActor} from "../src/CAPActor";
 import set = Reflect.set;
@@ -323,20 +323,24 @@ describe("Eventuals",()=>{
             this.sensitive = [5]
         }
 
-        incMUT(){
+        @mutating
+        inc(){
             this.v1++
             return 5
         }
 
-        addMUT(val){
+        @mutating
+        add(val){
             this.sensitive.push(val)
         }
 
-        incWithPrimMUT(v){
+        @mutating
+        incWithPrim(v){
             this.v1 += v
         }
 
-        incWithConMUT(c){
+        @mutating
+        incWithCon(c){
             this.v1 += c.v1
         }
     }
@@ -349,7 +353,8 @@ describe("Eventuals",()=>{
             this.innerVal = 5
         }
 
-        incMUT(){
+        @mutating
+        inc(){
             this.innerVal++
         }
     }
@@ -361,7 +366,8 @@ describe("Eventuals",()=>{
             super()
         }
 
-        addInnersMUT(inner){
+        @mutating
+        addInners(inner){
             this.inner = inner
         }
     }
@@ -377,7 +383,7 @@ describe("Eventuals",()=>{
 
             test(){
                 let c = new this.TestConsistent()
-                c.incWithPrimMUT(5)
+                c.incWithPrim(5)
                 return c.v1
             }
         }
@@ -406,7 +412,7 @@ describe("Eventuals",()=>{
             test(){
                 let c   = new this.TestConsistent()
                 let cc  = new this.TestConsistent()
-                c.incWithConMUT(cc)
+                c.incWithCon(cc)
                 return c.v1
             }
         }
@@ -491,7 +497,7 @@ describe("Eventuals",()=>{
 
             test(){
                 let c   = new this.TestConsistent()
-                c.incWithConMUT({value:5})
+                c.incWithCon({value:5})
                 return c.value
             }
         }
@@ -587,7 +593,7 @@ describe("Eventuals",()=>{
             sendAndInc(toRef){
                 let ev = new this.TestEventual()
                 toRef.getEv(ev)
-                ev.incMUT()
+                ev.inc()
             }
         }
         class Slave extends CAPActor{
@@ -645,7 +651,7 @@ describe("Eventuals",()=>{
         }
         class Slave extends CAPActor{
             getEv(anEv){
-                anEv.incMUT()
+                anEv.inc()
 
             }
         }
@@ -691,7 +697,7 @@ describe("Eventuals",()=>{
         }
         class Slave extends CAPActor{
             getEv(anEv){
-                anEv.addMUT(6)
+                anEv.add(6)
 
             }
         }
@@ -745,8 +751,8 @@ describe("Eventuals",()=>{
 
             getContainer(cont : Container){
                 let contained = new this.Contained()
-                cont.addInnersMUT(contained)
-                contained.incMUT()
+                cont.addInners(contained)
+                contained.inc()
             }
         }
         let app = new CAPplication()
@@ -792,7 +798,7 @@ describe("Eventuals",()=>{
                 anEv.onTentative((ev)=>{
                     this.val = ev.v1
                 })
-                anEv.incMUT()
+                anEv.inc()
             }
 
             test(){
@@ -855,7 +861,7 @@ describe("Eventuals",()=>{
                 anEv.onTentative((ev)=>{
                     this.val = ev.v1
                 })
-                anEv.incMUT()
+                anEv.inc()
             }
         }
         let slave : FarRef<Slave> = app.spawnActor(Slave)
@@ -912,8 +918,8 @@ describe("Eventuals",()=>{
 
             getContainer(cont : Container){
                 let contained = new this.Contained()
-                cont.addInnersMUT(contained)
-                contained.incMUT()
+                cont.addInners(contained)
+                contained.inc()
             }
         }
         let app = new CAPplication()
@@ -1211,7 +1217,8 @@ describe("Libs extension",()=>{
             this.value = 5
         }
 
-        incMUT(){
+        @mutating
+        inc(){
             this.value +=1
         }
     }
@@ -1223,7 +1230,8 @@ describe("Libs extension",()=>{
             this.value  = 5
         }
 
-        incMUT(){
+        @mutating
+        inc(){
             this.value += 1
         }
     }
@@ -1232,7 +1240,7 @@ describe("Libs extension",()=>{
         this.timeout(4000)
         class Act extends CAPActor{
             getEv(ev){
-                ev.incMUT()
+                ev.inc()
             }
         }
         let app = new CAPplication()
@@ -1260,7 +1268,7 @@ describe("Libs extension",()=>{
             getCon(con){
                 return this.libs.thaw(con).then((ev)=>{
                     setTimeout(()=>{
-                        ev.incMUT()
+                        ev.inc()
                     },2000)
                     return ev
                 })
@@ -1289,7 +1297,7 @@ describe("Libs extension",()=>{
         class Act extends CAPActor{
             con
             getCon(con){
-                con.incMUT()
+                con.inc()
             }
         }
         let app = new CAPplication()

@@ -1,14 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const spiders_js_1 = require("spiders.js");
 exports._IS_EVENTUAL_KEY_ = "_IS_EVENTUAL_";
-function mutating(target, propertyKey, descriptor) {
-    let originalMethod = descriptor.value;
-    originalMethod["_IS_MUTATING_"] = true;
-    return {
-        value: originalMethod
-    };
-}
-exports.mutating = mutating;
+exports.mutating = spiders_js_1.makeMethodAnnotation(() => { }, "mutating");
 class Eventual extends spiders_js_1.SpiderIsolate {
     constructor() {
         super(new EventualMirror());
@@ -258,6 +251,14 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             return true;
         }
     }
+    isMutatingMethod(methodName) {
+        if (this.isAnnotated(methodName)) {
+            return this.getAnnotationTag(methodName) == "mutating";
+        }
+        else {
+            return false;
+        }
+    }
     invoke(methodName, args) {
         let baseEV = this.base;
         if (!baseEV.hostGsp) {
@@ -270,7 +271,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                         baseEV.addDependency(arg);
                     }
                 });
-                if (this.canInvoke(methodName, args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])) {
+                if (this.canInvoke(methodName, args) && this.isMutatingMethod(methodName)) {
                     //No host GSP yet for this eventual, which means that it hasn't been serialised yet but created by hosting actor
                     //Safe to trigger both tentative and commit handlers
                     let ret = super.invoke(methodName, args);
@@ -295,7 +296,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
                 }
             }
             else {
-                if (this.canInvoke(methodName, args) && (methodName.includes("MUT") || baseEV[methodName]["_IS_MUTATING_"])) {
+                if (this.canInvoke(methodName, args) && this.isMutatingMethod(methodName)) {
                     baseEV.hostGsp.createRound(baseEV.id, baseEV.ownerId, methodName, args);
                     let ret = super.invoke(methodName, args);
                     baseEV.hostGsp.yield(baseEV.id, baseEV.ownerId);
@@ -352,7 +353,7 @@ class EventualMirror extends spiders_js_1.SpiderIsolateMirror {
             baseKeys.concat(protoKeys).forEach((key) => {
                 if (typeof this.base[key] == 'function') {
                     let meth = this.base[key].toString();
-                    methods.push([key, meth]);
+                    methods.push([key, meth, this.isMutatingMethod(key)]);
                 }
                 else {
                     let base = this.base;

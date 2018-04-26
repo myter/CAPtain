@@ -70,6 +70,15 @@ export class ConsistentMirror extends SpiderObjectMirror{
         }
     }
 
+    private isMutatingMethod(methodName){
+        if(this.isAnnotated(methodName)){
+            return this.getAnnotationTag(methodName) == "mutating"
+        }
+        else{
+            return false
+        }
+    }
+
     access(fieldName : string){
         if(fieldName == "_GET_THAW_DATA_"){
             return new Promise((resolve)=>{
@@ -84,7 +93,7 @@ export class ConsistentMirror extends SpiderObjectMirror{
                 baseKeys.concat(protoKeys).forEach((key)=>{
                     if(typeof this.base[key] == 'function'){
                         let meth = this.base[key].toString()
-                        methods.push([key,meth])
+                        methods.push([key,meth,this.isMutatingMethod(key)])
                     }
                     else{
                         fields.push([key,this.base[key]])
