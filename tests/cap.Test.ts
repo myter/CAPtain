@@ -3,7 +3,6 @@ import {Available} from "../src/Available";
 import {Eventual, mutating} from "../src/Eventual";
 import {Consistent} from "../src/Consistent";
 import {CAPActor} from "../src/CAPActor";
-import set = Reflect.set;
 import {CAPplication} from "../src/CAPplication";
 
 var assert                      = require('assert')
