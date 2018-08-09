@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="Eventual Linkage now happens through MOP:resolve call">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.npmignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/APP2.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/APP2.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/APP2.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/App.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/App.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/Defs.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/clone.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/clone.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyoTests/clone.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Available.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/Available.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CAPMirror.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/CAPMirror.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Consistent.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/Consistent.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Eventual.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/Eventual.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GSP.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/GSP.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/tests/cap.Test.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/cap.Test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/cap.Test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/testCapExtension.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testCapExtension.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -46,11 +24,16 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="564">
-                <caret line="68" column="10" selection-start-line="68" selection-start-column="10" selection-end-line="68" selection-end-column="10" />
+              <first_editor relative-caret-position="779">
+                <caret line="126" column="127" selection-start-line="126" selection-start-column="127" selection-end-line="126" selection-end-column="127" />
                 <folding>
-                  <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
                   <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />
+                  <element signature="n#!!block;n#inc#0;n#Counter#0" expanded="true" />
+                  <element signature="e#194#238#0" expanded="true" />
+                  <element signature="e#256#312#0" expanded="true" />
+                  <element signature="n#!!block;n#getCopy#0;n#TestActor#0" expanded="true" />
+                  <element signature="e#254#319#0" expanded="true" />
+                  <element signature="e#345#410#0" expanded="true" />
                 </folding>
               </first_editor>
               <second_editor />
@@ -70,15 +53,16 @@
       <file leaf-file-name="cap.Test.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="313" column="25" selection-start-line="313" selection-start-column="25" selection-end-line="313" selection-end-column="25" />
+            <state relative-caret-position="397">
+              <caret line="838" column="23" lean-forward="true" selection-start-line="838" selection-start-column="23" selection-end-line="838" selection-end-column="23" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
                 <element signature="e#491#8138#0" expanded="true" />
                 <element signature="e#571#629#0" expanded="true" />
                 <element signature="e#655#696#0" expanded="true" />
                 <element signature="e#721#768#0" expanded="true" />
-                <element signature="e#8166#24495#0" expanded="true" />
+                <element signature="e#19439#20674#0" expanded="true" />
+                <element signature="e#21016#21215#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -351,7 +335,7 @@
       <workItem from="1524826309477" duration="1000" />
       <workItem from="1529307380884" duration="18000" />
       <workItem from="1533815170152" duration="130000" />
-      <workItem from="1533815331831" duration="4498000" />
+      <workItem from="1533815331831" duration="7319000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -416,7 +400,21 @@
       <option name="project" value="LOCAL" />
       <updated>1522940716798</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Working on README (started)">
+      <created>1533822427342</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1533822427342</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Fixed title bug in README">
+      <created>1533822536681</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1533822536681</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -452,11 +450,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154844000" />
+    <option name="totallyTimeSpent" value="157665000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1333" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -540,7 +537,9 @@
     <MESSAGE value="Added main exports" />
     <MESSAGE value="Implemented CAPplication" />
     <MESSAGE value="Eventual Linkage now happens through MOP:resolve call" />
-    <option name="LAST_COMMIT_MESSAGE" value="Eventual Linkage now happens through MOP:resolve call" />
+    <MESSAGE value="Working on README (started)" />
+    <MESSAGE value="Fixed title bug in README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed title bug in README" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -889,21 +888,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="313" column="25" selection-start-line="313" selection-start-column="25" selection-end-line="313" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <element signature="e#491#8138#0" expanded="true" />
-            <element signature="e#571#629#0" expanded="true" />
-            <element signature="e#655#696#0" expanded="true" />
-            <element signature="e#721#768#0" expanded="true" />
-            <element signature="e#8166#24495#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -911,14 +895,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="838" column="23" lean-forward="true" selection-start-line="838" selection-start-column="23" selection-end-line="838" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#491#8138#0" expanded="true" />
+            <element signature="e#571#629#0" expanded="true" />
+            <element signature="e#655#696#0" expanded="true" />
+            <element signature="e#721#768#0" expanded="true" />
+            <element signature="e#19439#20674#0" expanded="true" />
+            <element signature="e#21016#21215#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="564">
-            <caret line="68" column="10" selection-start-line="68" selection-start-column="10" selection-end-line="68" selection-end-column="10" />
+          <first_editor relative-caret-position="779">
+            <caret line="126" column="127" selection-start-line="126" selection-start-column="127" selection-end-line="126" selection-end-column="127" />
             <folding>
-              <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
               <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />
+              <element signature="n#!!block;n#inc#0;n#Counter#0" expanded="true" />
+              <element signature="e#194#238#0" expanded="true" />
+              <element signature="e#256#312#0" expanded="true" />
+              <element signature="n#!!block;n#getCopy#0;n#TestActor#0" expanded="true" />
+              <element signature="e#254#319#0" expanded="true" />
+              <element signature="e#345#410#0" expanded="true" />
             </folding>
           </first_editor>
           <second_editor />

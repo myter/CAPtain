@@ -24,7 +24,7 @@ Each class represents a possible availability/consistency trade-off.
 Objects of type `Available` ensure that field accesses and method calls always return a value (regardless of the caller's connectivity).
 The API offered by `Availables` is basically that of regular TypeScript/JavaScript objects:
 ```TypeScript
-import {Available} from "spiders.captain"
+import {Available, CAPActor, CAPplication} from "spiders.captain"
 class MyAvailable extends Available{
     x = 5
     
@@ -40,15 +40,6 @@ ma.doubleX() //Returns 10
 `Availables` adhere to pass-by-copy semantics. In other words, whenever an `Available` is sent between two actors the receiving actor receives
 a deep copy of the original object (if this doesn't make sense to you, see the [Spiders.js](https://github.com/myter/Spiders.js) tutorial):
 ```TypeScript
-import {Available, CAPActor, CAPplication} from "spiders.captain"
-class MyAvailable extends Available{
-    x = 5
-
-    doubleX(){
-        return this.x * 2
-    }
-}
-
 class TestActor extends CAPActor {
     receiveAvailable(av){
         av.x = 10
@@ -65,14 +56,69 @@ ma.doubleX() //Returns 10
 
 ---
 `Eventuals` extend the behaviour of `Availables` by keeping all copies of a particular `Eventual` instance eventually consistent (i.e. not strongly eventually consistent).
-The `@mutating` annotation allows you to signal the CAPtain.js runtime that a particular method changes an `Eventual's` state.
-Using the 
+In a nutshell if two actors have a copy of the same `Eventual` object, CAPtain.js ensures that the state of these objects is synchronised.
+In other words, both actors can concurrently modify the state of their copy of the object (even while being disconnected from each other) without worrying about 
+synchronising these modifications.
 
-A simple counter example is given bellow.
-TODO
+The `@mutating` annotation allows you to signal the CAPtain.js runtime that a particular method mutates an `Eventual's` state.
+You can install `onTentative` and `onCommit` listeners which are respectively triggered whenever the state of an `Eventual` is changed locally or globally.
 ```TypeScript
-TODO
+import {CAPActor, CAPplication, Eventual, mutating} from "spiders.captain";
+
+class Counter extends Eventual{
+    value = 0
+
+    @mutating
+    inc(){
+        this.value++
+    }
+}
+
+let ev = new Counter()
+ev.onTentative(()=>{
+    ev.value //Triggered first, returns 1
+})
+
+ev.onCommit(()=>{
+    ev.value //Triggered second, returns 1
+})
+ev.inc()
 ```
+
+The counter example bellow illustrated the workings of `Eventuals` across actors.
+The example can trivially be ported to work across machines given Spiders.js' inherent distribution mechanisms.
+```TypeScript
+class TestActor extends CAPActor{
+
+    getCopy(ev){
+        ev.onTentative(()=>{
+            console.log("New tentative value: " + ev.value)
+        })
+        ev.onCommit(()=>{
+            console.log("New committed value: " + ev.value)
+        })
+        ev.inc()
+    }
+}
+
+let app  = new CAPplication()
+let ev   = new Counter()
+let act1 =  app.spawnActor(TestActor)
+let act2 = app.spawnActor(TestActor)
+act1.getCopy(ev)
+act2.getCopy(ev)
+```
+The example spawn two actors which both get a copy of a `Counter` `Eventual`.
+Subsequently, both actors install `onTentative` and `onCommit` listeners and concurrently increment the counter's value.
+Depending on the interleaving of messages the state change listeners might be triggered in different orders. 
+However, the `onCommit` listeners will eventually trigger a final time for both actors.
+At that point in time CAPtain.js guarantees that the value of both counter copies is 2.
+
+---
+
+In the example above it can happen that both actors read different values for the counter (i.e. if this read happens in between synchronisation rounds).
+If you desire stronger consistency guarantees CAPtain.js offers `Consistents` which guarantee sequential consistency.
+In contrast to `Availables` and `Eventuals` 
 ## From Eventual to Consistent and Back Again
 ## Restrictions
 ## Custom Consistency Requirements
