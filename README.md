@@ -1,7 +1,7 @@
 # CAPtain.js
 Integrating the CAP theorem into distributed language design
 
-#Usage
+# Usage
 Install with npm:
 ```
 npm install spiders.captain
@@ -12,10 +12,10 @@ Concretely, as a distributed programmer you explicitly state which pieces of you
 
 If you are interested in how all of this works in practice please consider going through [Spiders.js' tutorial](https://github.com/myter/Spiders.js) first.
 CAPtain.js builds forth on Spiders.js and therefore heavily relies on its abstractions and concepts.
-#Tutorial
+# Tutorial
 This tutorail aims to provide a brief introduction to CAPtain.js' basic abstractions.
 [This](https://github.com/myter/Myosotis) collaborative grocery list application provides a complete and running example.
-##Building Blocks: Availables,Eventuals and Consistents
+## Building Blocks: Availables,Eventuals and Consistents
 CAPtain.js extends Spiders.js with three new classes: availables, eventuals and consistents.
 Each class represents a possible availability/consistency trade-off.
 
@@ -73,9 +73,9 @@ TODO
 ```TypeScript
 TODO
 ```
-##From Eventual to Consistent and Back Again
-##Restrictions
-##Custom Consistency Requirements
+## From Eventual to Consistent and Back Again
+## Restrictions
+## Custom Consistency Requirements
 TODO
-#Reading
+# Reading
 In case you are interested in this work beyond this tutorial you are more than welcome to read our papers about [CAPtain](TODO) or [Spiders.js](TODO).
