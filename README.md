@@ -1,6 +1,4 @@
 # CAPtain.js
-Integrating the CAP theorem into distributed language design.
-
 CAPtain.js is a first prototype of what I think the next generation of distributed programming languages should look like.
 The main idea behind CAPtain.js is to make the trade-off between availability and consistency (think [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)) explicit from a programming perspective.
 Concretely, as a distributed programmer you explicitly state which pieces of your system's state should be available (and eventually consistent) or (strongly) consistent (but not always available).
