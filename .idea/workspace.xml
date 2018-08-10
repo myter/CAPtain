@@ -24,8 +24,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="456">
-                <caret line="182" column="77" selection-start-line="182" selection-start-column="77" selection-end-line="182" selection-end-column="77" />
+              <first_editor relative-caret-position="2895">
+                <caret line="193" column="229" selection-start-line="193" selection-start-column="229" selection-end-line="193" selection-end-column="229" />
                 <folding>
                   <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
                   <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />
@@ -182,8 +182,8 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
-    <option name="width" value="2560" />
-    <option name="height" value="1332" />
+    <option name="width" value="1440" />
+    <option name="height" value="812" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -345,7 +345,7 @@
       <workItem from="1524826309477" duration="1000" />
       <workItem from="1529307380884" duration="18000" />
       <workItem from="1533815170152" duration="130000" />
-      <workItem from="1533815331831" duration="12764000" />
+      <workItem from="1533815331831" duration="14148000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -438,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1533891525996</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Finished restrictions etc">
+      <created>1533902200757</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1533902200757</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -474,7 +481,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="163110000" />
+    <option name="totallyTimeSpent" value="164494000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="807" extended-state="6" />
@@ -566,7 +573,8 @@
     <MESSAGE value="Fixed title bug in README" />
     <MESSAGE value="Working on README" />
     <MESSAGE value="Finished basic building blocks section" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished basic building blocks section" />
+    <MESSAGE value="Finished restrictions etc" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished restrictions etc" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -941,8 +949,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="456">
-            <caret line="182" column="77" selection-start-line="182" selection-start-column="77" selection-end-line="182" selection-end-column="77" />
+          <first_editor relative-caret-position="2895">
+            <caret line="193" column="229" selection-start-line="193" selection-start-column="229" selection-end-line="193" selection-end-column="229" />
             <folding>
               <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
               <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />

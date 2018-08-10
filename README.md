@@ -1,17 +1,18 @@
 # CAPtain.js
-Integrating the CAP theorem into distributed language design
+Integrating the CAP theorem into distributed language design.
 
-# Usage
-Install with npm:
-```
-npm install spiders.captain
-```
 CAPtain.js is a first prototype of what I think the next generation of distributed programming languages should look like.
 The main idea behind CAPtain.js is to make the trade-off between availability and consistency (think [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem)) explicit from a programming perspective.
 Concretely, as a distributed programmer you explicitly state which pieces of your system's state should be available (and eventually consistent) or (strongly) consistent (but not always available).
 
 If you are interested in how all of this works in practice please consider going through [Spiders.js' tutorial](https://github.com/myter/Spiders.js) first.
 CAPtain.js builds forth on Spiders.js and therefore heavily relies on its abstractions and concepts.
+
+# Usage
+Install with npm:
+```
+npm install spiders.captain
+```
 # Tutorial
 This tutorail aims to provide a brief introduction to CAPtain.js' basic abstractions.
 [This](https://github.com/myter/Myosotis) collaborative grocery list application provides a complete and running example.
@@ -190,4 +191,4 @@ The following table summarises the interactions between all three data types:
 ## Custom Consistency Requirements
 TODO
 # Reading
-In case you are interested in this work beyond this tutorial you are more than welcome to read our papers about [CAPtain](TODO) or [Spiders.js](TODO).
+In case you are interested in this work beyond this tutorial you are more than welcome to read our papers about [CAPtain](http://myter.be/papers/pre-print-onward18.pdf) or [Spiders.js](http://myter.be/papers/pre-print-agere16.pdf).
