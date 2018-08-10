@@ -25,33 +25,32 @@ Objects of type `Available` ensure that field accesses and method calls always r
 The API offered by `Availables` is basically that of regular TypeScript/JavaScript objects:
 ```TypeScript
 import {Available, CAPActor, CAPplication} from "spiders.captain"
-class MyAvailable extends Available{
-    x = 5
+class AVCounter extends Available{
+    value = 0
     
-    doubleX(){
-        return this.x * 2
+    inc(){
+        return ++this.value
     }
 }
-let ma = new MyAvailable()
-ma.x //Returns 5
-ma.doubleX() //Returns 10
+let counter = new AVCounter()
+counter.value //Returns 0
+counter.inc() //Returns 1
 ```
 
 `Availables` adhere to pass-by-copy semantics. In other words, whenever an `Available` is sent between two actors the receiving actor receives
 a deep copy of the original object (if this doesn't make sense to you, see the [Spiders.js](https://github.com/myter/Spiders.js) tutorial):
 ```TypeScript
 class TestActor extends CAPActor {
-    receiveAvailable(av){
-        av.x = 10
-        av.doubleX() //Returns 20
+    rcvCounter(counter){
+        counter.inc() //Returns 1
     }
 }
 
-let ma  = new MyAvailable()
+let counter = new AVCounter()
 let app = new CAPplication()
 let act = app.spawnActor(TestActor)
-act.receiveAvailable(ma)
-ma.doubleX() //Returns 10
+act.rcvCounter(counter)
+counter.inc() //Returns 1
 ```
 
 ---
@@ -65,16 +64,16 @@ You can install `onTentative` and `onCommit` listeners which are respectively tr
 ```TypeScript
 import {CAPActor, CAPplication, Eventual, mutating} from "spiders.captain";
 
-class Counter extends Eventual{
+class EVCounter extends Eventual{
     value = 0
 
     @mutating
     inc(){
-        this.value++
+        return ++this.value
     }
 }
 
-let ev = new Counter()
+let ev = new EVCounter()
 ev.onTentative(()=>{
     ev.value //Triggered first, returns 1
 })
@@ -85,28 +84,30 @@ ev.onCommit(()=>{
 ev.inc()
 ```
 
+`Eventuals` are passed between actors using pass-by-replication semantics.
+In a nutshell, this entails that the passed object is deeply copied and that the copies are kept eventually consistent behind the scenes.
 The counter example bellow illustrated the workings of `Eventuals` across actors.
 The example can trivially be ported to work across machines given Spiders.js' inherent distribution mechanisms.
 ```TypeScript
 class TestActor extends CAPActor{
-
-    getCopy(ev){
-        ev.onTentative(()=>{
-            console.log("New tentative value: " + ev.value)
+    rcvCounter(counter){
+        counter.onTentative(()=>{
+            //Triggered when "this" actor invokes "inc"
         })
-        ev.onCommit(()=>{
-            console.log("New committed value: " + ev.value)
+        counter.onCommit(()=>{
+            //Triggered whenever a new global value for counter is confirmed
+            //This can either be the result of "this" actor invoking inc or the "other" actor invoking inc 
         })
-        ev.inc()
+        counter.inc()
     }
 }
 
 let app  = new CAPplication()
-let ev   = new Counter()
+let counter   = new EVCounter()
 let act1 =  app.spawnActor(TestActor)
 let act2 = app.spawnActor(TestActor)
-act1.getCopy(ev)
-act2.getCopy(ev)
+act1.rcvCounter(counter)
+act2.rcvCounter(counter)
 ```
 The example spawn two actors which both get a copy of a `Counter` `Eventual`.
 Subsequently, both actors install `onTentative` and `onCommit` listeners and concurrently increment the counter's value.
@@ -118,7 +119,49 @@ At that point in time CAPtain.js guarantees that the value of both counter copie
 
 In the example above it can happen that both actors read different values for the counter (i.e. if this read happens in between synchronisation rounds).
 If you desire stronger consistency guarantees CAPtain.js offers `Consistents` which guarantee sequential consistency.
-In contrast to `Availables` and `Eventuals` 
+In contrast to `Availables` and `Eventuals`, `Consistents` offer an asynchronous API.
+Accessing a `Consistent's` field or invoking one of its methods returns a promise which only resolves when the consistency of the result can be guaranteed by CAPtain.js:
+```TypeScript
+import {Consistent} from "spiders.captain";
+
+class CCounter extends Consistent{
+    value = 0
+
+    inc(){
+        return ++this.value
+    }
+}
+
+let counter = new CCounter()
+counter.value.then((v)=>{
+    //v will be bound to 0 when promise resolves
+})
+counter.inc().then((v)=>{
+    //v will be bound to 1 when promise resolves
+})
+```
+
+`Consistents` are passed between actors using pass-by-reference semantics.
+Conceptually, this entails that actors only ever have a "far reference" or proxy to a consistent:
+```TypeScript
+class TestActor extends CAPActor{
+    rcvCounter(counter){
+        counter.value.then((v)=>{
+            //Returns the same v for both actors unless someone invokes inc on the counter in between reads
+        })
+    }
+}
+
+let app  = new CAPplication()
+let counter   = new CCounter()
+let act1 =  app.spawnActor(TestActor)
+let act2 = app.spawnActor(TestActor)
+act1.rcvCounter(counter)
+act2.rcvCounter(counter)
+```
+This difference between this example and the example using the `Eventual` counter above lies in the consistency guarantees the counter provides.
+In the previous example it could be that both actors read different values for the counter's value (e.g. due to one of the actors being disconnected from the network).
+In this example both actors will always read the same value for the counter, provided that no inc operation interleaves both reads.
 ## From Eventual to Consistent and Back Again
 ## Restrictions
 ## Custom Consistency Requirements
