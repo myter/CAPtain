@@ -122,7 +122,7 @@ If you desire stronger consistency guarantees CAPtain.js offers `Consistents` wh
 In contrast to `Availables` and `Eventuals`, `Consistents` offer an asynchronous API.
 Accessing a `Consistent's` field or invoking one of its methods returns a promise which only resolves when the consistency of the result can be guaranteed by CAPtain.js:
 ```TypeScript
-import {Consistent} from "spiders.captain";
+import {Consistent,CAPplication,CAPActor} from "spiders.captain";
 
 class CCounter extends Consistent{
     value = 0
@@ -163,7 +163,30 @@ This difference between this example and the example using the `Eventual` counte
 In the previous example it could be that both actors read different values for the counter's value (e.g. due to one of the actors being disconnected from the network).
 In this example both actors will always read the same value for the counter, provided that no inc operation interleaves both reads.
 ## From Eventual to Consistent and Back Again
+CAPtain.js provides two built-in function which allow you to convert an `Eventual` to a `Consistent` and vice versa.
+On one hand freeze accepts an `Eventual` as argument and creates a new `Consistent` which represents a snapshot of the `Eventual's` state at freeze time. 
+On the other hand, thaw accepts a `Consistent` as argument and returns a new `Eventual` which represents a snapshot of the `Consistent's` state at thaw time.
+Both functions are provided in the Actor/Application libraries:
+```TypeScript
+class TestActor extends CAPActor{
+    foo(someEventual,someConsistent){
+        this.libs.freeze(someEventual) //Returns a consistent
+        this.libs.thaw(someConsistent) //Returns an eventual
+    }
+}
+```
 ## Restrictions
+The interactions between `Availables`, `Eventuals` and `Consistents` is restricted in order to guarantee their respective properties.
+By "interactions" I mean field assignment and method parameters.
+For example, CAPtain.js will trow a runtime exception if you try to assign the field of a `Consistent` to an `Eventual` value.
+The reason for this being that the `Consistent` would no longer be able to guarantee the strong consistency of that particular field.
+The following table summarises the interactions between all three data types:
+
+|            | Available | Eventual | Consistent |   |
+|------------|:---------:|:--------:|:----------:|---|
+| Available  |     OK    |    OK    |     NOK    |   |
+| Eventual   |     OK    |    OK    |     NOK    |   |
+| Consistent |    NOK    |    NOK   |     OK     |   |
 ## Custom Consistency Requirements
 TODO
 # Reading
