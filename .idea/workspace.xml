@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,31 +20,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="2895">
-                <caret line="193" column="229" selection-start-line="193" selection-start-column="229" selection-end-line="193" selection-end-column="229" />
-                <folding>
-                  <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
-                  <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />
-                  <element signature="n#!!block;n#inc#0;n#Counter#0" expanded="true" />
-                  <element signature="e#194#238#0" expanded="true" />
-                  <element signature="e#256#312#0" expanded="true" />
-                  <element signature="n#!!block;n#getCopy#0;n#TestActor#0" expanded="true" />
-                  <element signature="e#254#319#0" expanded="true" />
-                  <element signature="e#345#410#0" expanded="true" />
-                  <element signature="n#!!block;n#doubleX#0;n#MyConsistent#0" expanded="true" />
-                  <element signature="e#189#199#0" expanded="true" />
-                  <element signature="e#189#248#0" expanded="true" />
-                  <element signature="e#189#248#0" expanded="true" />
-                  <element signature="e#232#254#0" expanded="true" />
-                  <element signature="n#!!block;n#rcvCounter#0;n#TestActor#0" expanded="true" />
-                  <element signature="e#91#115#0" expanded="true" />
-                  <element signature="n#!!block;n#rcvCounter#0;n#TestActor#0" expanded="true" />
-                  <element signature="n#!!block;n#foo#0;n#TestActor#0" expanded="true" />
-                </folding>
+              <first_editor relative-caret-position="15">
+                <caret line="1" selection-start-line="1" selection-end-line="1" />
               </first_editor>
               <second_editor />
             </state>
@@ -55,7 +36,16 @@
         <entry file="file://$PROJECT_DIR$/index.d.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
-              <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
+              <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -63,16 +53,10 @@
       <file leaf-file-name="cap.Test.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="1243" column="9" lean-forward="true" selection-start-line="1243" selection-start-column="9" selection-end-line="1243" selection-end-column="9" />
+            <state relative-caret-position="570">
+              <caret line="1243" column="9" selection-start-line="1243" selection-start-column="9" selection-end-line="1243" selection-end-column="9" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
-                <element signature="e#571#629#0" expanded="true" />
-                <element signature="e#655#696#0" expanded="true" />
-                <element signature="e#721#768#0" expanded="true" />
-                <element signature="e#8172#8683#0" />
-                <element signature="e#21016#21215#0" expanded="true" />
-                <element signature="e#31125#31512#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -154,13 +138,13 @@
         <option value="$PROJECT_DIR$/src/Consistent.ts" />
         <option value="$PROJECT_DIR$/src/Eventual.ts" />
         <option value="$PROJECT_DIR$/tests/temp.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/CAPMirror.ts" />
         <option value="$PROJECT_DIR$/tests/testCapExtension.ts" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/.npmignore" />
         <option value="$PROJECT_DIR$/tests/cap.Test.ts" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -180,10 +164,10 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="812" />
+    <option name="width" value="2560" />
+    <option name="height" value="1333" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -193,7 +177,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -215,6 +198,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -222,6 +206,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs.mocha.mocha_node_package_dir" value="$PROJECT_DIR$/node_modules/mocha" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
@@ -346,6 +331,8 @@
       <workItem from="1529307380884" duration="18000" />
       <workItem from="1533815170152" duration="130000" />
       <workItem from="1533815331831" duration="14148000" />
+      <workItem from="1533904019903" duration="48000" />
+      <workItem from="1537276196315" duration="10000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -481,30 +468,30 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="164494000" />
+    <option name="totallyTimeSpent" value="164552000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="807" extended-state="6" />
+    <frame x="0" y="23" width="2560" height="1333" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="12" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.48736998" />
       <window_info id="npm" order="2" sideWeight="0.5074946" side_tool="true" weight="0.15715292" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.48736998" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3299712" />
       <window_info anchor="bottom" id="TypeScript" order="9" weight="0.32708934" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.12896407" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.12879086" />
       <window_info anchor="bottom" id="Statistic" order="10" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="3" sideWeight="0.51293105" side_tool="true" weight="0.1564482" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3294964" />
     </layout>
@@ -621,10 +608,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="54" column="36" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
-          <folding>
-            <element signature="n#!!block;n#clone#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#isMutatingMethod#0;n#EventualMirror#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -674,10 +657,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="54" column="36" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
-          <folding>
-            <element signature="n#!!block;n#clone#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#isMutatingMethod#0;n#EventualMirror#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -795,13 +774,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="237">
@@ -848,9 +820,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="777">
           <caret line="145" column="5" selection-start-line="145" selection-start-column="5" selection-end-line="145" selection-end-column="5" />
-          <folding>
-            <element signature="n#!!block;n#confirmMasterRound#0;n#GSP#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -858,41 +827,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="27" selection-start-line="27" selection-end-line="48" selection-end-column="5" />
-          <folding>
-            <element signature="n#!!block;n#clone#0;n#Eventual#0" expanded="true" />
-            <element signature="n#!!block;n#isMutatingMethod#0;n#EventualMirror#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/Defs.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/clone.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="80" column="24" lean-forward="true" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/APP2.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="184" column="39" lean-forward="true" selection-start-line="184" selection-start-column="39" selection-end-line="184" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyoTests/App.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="130" column="6" selection-start-line="130" selection-start-column="6" selection-end-line="130" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/MyoTests/Defs.ts" />
+    <entry file="file://$PROJECT_DIR$/MyoTests/clone.ts" />
+    <entry file="file://$PROJECT_DIR$/MyoTests/APP2.ts" />
+    <entry file="file://$PROJECT_DIR$/MyoTests/App.ts" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -916,9 +857,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/cap.Test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2846">
+        <state relative-caret-position="-2846" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="15">
+            <caret line="1" selection-start-line="1" selection-end-line="1" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="1243" column="9" selection-start-line="1243" selection-start-column="9" selection-end-line="1243" selection-end-column="9" />
           <folding>
-            <element signature="e#87#570#0" expanded="true" />
+            <element signature="e#0#54#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -926,52 +883,14 @@
     <entry file="file://$PROJECT_DIR$/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
+          <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="1243" column="9" lean-forward="true" selection-start-line="1243" selection-start-column="9" selection-end-line="1243" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <element signature="e#571#629#0" expanded="true" />
-            <element signature="e#655#696#0" expanded="true" />
-            <element signature="e#721#768#0" expanded="true" />
-            <element signature="e#8172#8683#0" />
-            <element signature="e#21016#21215#0" expanded="true" />
-            <element signature="e#31125#31512#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="2895">
-            <caret line="193" column="229" selection-start-line="193" selection-start-column="229" selection-end-line="193" selection-end-column="229" />
-            <folding>
-              <element signature="n#!!block;n#doubleX#0;n#MyAvailable#0" expanded="true" />
-              <element signature="n#!!block;n#receiveAvailable#0;n#TestActor#0" expanded="true" />
-              <element signature="n#!!block;n#inc#0;n#Counter#0" expanded="true" />
-              <element signature="e#194#238#0" expanded="true" />
-              <element signature="e#256#312#0" expanded="true" />
-              <element signature="n#!!block;n#getCopy#0;n#TestActor#0" expanded="true" />
-              <element signature="e#254#319#0" expanded="true" />
-              <element signature="e#345#410#0" expanded="true" />
-              <element signature="n#!!block;n#doubleX#0;n#MyConsistent#0" expanded="true" />
-              <element signature="e#189#199#0" expanded="true" />
-              <element signature="e#189#248#0" expanded="true" />
-              <element signature="e#189#248#0" expanded="true" />
-              <element signature="e#232#254#0" expanded="true" />
-              <element signature="n#!!block;n#rcvCounter#0;n#TestActor#0" expanded="true" />
-              <element signature="e#91#115#0" expanded="true" />
-              <element signature="n#!!block;n#rcvCounter#0;n#TestActor#0" expanded="true" />
-              <element signature="n#!!block;n#foo#0;n#TestActor#0" expanded="true" />
-            </folding>
-          </first_editor>
-          <second_editor />
+        <state relative-caret-position="120">
+          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
         </state>
       </provider>
     </entry>
