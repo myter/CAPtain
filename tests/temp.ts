@@ -3,6 +3,7 @@ import {Consistent} from "../src/Consistent";
 
 class TestC extends Consistent{
     someArr
+    someFunc
 
     constructor(){
         super()
@@ -25,16 +26,23 @@ class TestC extends Consistent{
     }
 
     reallyBottomMethod(){
+        console.log("REAL BOTTOM")
         console.log(this.someArr)
         this.someArr.forEach((el)=>{
             console.log(el)
         })
     }
+
+    test(){
+        this.someFunc()
+    }
 }
 
 let app = new CAPplication()
 let t = new TestC()
-t.topMethod()
+//t.topMethod()
+t.someFunc = ()=>{console.log("OK WORKED")}
+t.test()
 
 
 

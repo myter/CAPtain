@@ -54,9 +54,10 @@ export class ConsistentMirror extends SpiderObjectMirror{
                 //In this case we don't want this.x to return a promise if it's "internal"
                 //Moreover, this must be the case for nested function calls as well
                 let rebind = (func)=>{
-                    return func.unBind().bind(new Proxy(base,{
+                    return func.unBind().bind(new Proxy(this.base,{
                         get(target,key,receiver){
-                            if(typeof target[key] == 'function'){
+                            //Deep rebind for all methods which are part of the consistent (i.e. which have the unBind property)
+                            if(typeof target[key] == 'function' && Reflect.has(target[key],'unBind')){
                                 return rebind(target[key])
                             }
                             else{
@@ -65,19 +66,6 @@ export class ConsistentMirror extends SpiderObjectMirror{
                         }
                     }))
                 }
-                //Need to get the regular function back and bind it to the unproxied object
-                //let f = this.base[methodName].unBind().bind(this.base)
-                let base = this.base
-                /*let f = this.base[methodName].unBind().bind(new Proxy(base,{
-                    get(target,key,receiver){
-                        if(typeof target[key] == 'function'){
-                            return target[key].unBind().bind(base)
-                        }
-                        else{
-                            return target[key]
-                        }
-                    }
-                }))*/
                 let f = rebind(this.base[methodName])
                 resolve(f(...args))
             })

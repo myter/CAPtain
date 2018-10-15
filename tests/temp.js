@@ -20,13 +20,19 @@ class TestC extends Consistent_1.Consistent {
         this.reallyBottomMethod();
     }
     reallyBottomMethod() {
+        console.log("REAL BOTTOM");
         console.log(this.someArr);
         this.someArr.forEach((el) => {
             console.log(el);
         });
     }
+    test() {
+        this.someFunc();
+    }
 }
 let app = new CAPplication_1.CAPplication();
 let t = new TestC();
-t.topMethod();
+//t.topMethod()
+t.someFunc = () => { console.log("OK WORKED"); };
+t.test();
 //# sourceMappingURL=temp.js.map
