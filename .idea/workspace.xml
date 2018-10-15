@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f82c734b-4a8c-41b5-9d46-dfeb0be4aea3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Consistent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Consistent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Consistent.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/Consistent.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Consistent.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Consistent.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/temp.js" beforeDir="false" afterPath="$PROJECT_DIR$/tests/temp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/temp.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/tests/temp.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/temp.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/temp.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,57 +25,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="15">
-                <caret line="1" selection-start-line="1" selection-end-line="1" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.d.ts">
+      <file leaf-file-name="Consistent.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+            <state relative-caret-position="84">
+              <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
               <folding>
-                <element signature="e#73#151#0" expanded="true" />
+                <element signature="n#!!block;n#constructor#0;n#Consistent#0" expanded="true" />
+                <element signature="n#!!block;n#access#0;n#ConsistentMirror#0" expanded="true" />
+                <element signature="e#3726#4645#0" expanded="true" />
+                <element signature="e#4213#4558#0" expanded="true" />
+                <element signature="e#4713#4777#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CAPLib.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CAPLib.ts">
+      <file leaf-file-name="temp.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tests/temp.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="4" column="43" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cap.Test.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="1324" selection-start-line="1324" selection-end-line="1324" />
+            <state relative-caret-position="405">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
               <folding>
-                <element signature="e#0#54#0" expanded="true" />
-                <element signature="e#30376#33100#0" expanded="true" />
-                <element signature="e#30838#31493#0" expanded="true" />
+                <element signature="e#1#50#0" expanded="true" />
+                <element signature="n#!!block;n#constructor#0;n#TestC#0" expanded="true" />
+                <element signature="n#!!block;n#topMethod#0;n#TestC#0" expanded="true" />
+                <element signature="n#!!block;n#bottomMethod#0;n#TestC#0" expanded="true" />
+                <element signature="e#619#658#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,9 +129,7 @@
         <option value="$PROJECT_DIR$/src/CAPplication.ts" />
         <option value="$PROJECT_DIR$/src/CAPLib.ts" />
         <option value="$PROJECT_DIR$/MyoTests/APP2.ts" />
-        <option value="$PROJECT_DIR$/src/Consistent.ts" />
         <option value="$PROJECT_DIR$/src/Eventual.ts" />
-        <option value="$PROJECT_DIR$/tests/temp.ts" />
         <option value="$PROJECT_DIR$/src/CAPMirror.ts" />
         <option value="$PROJECT_DIR$/tests/testCapExtension.ts" />
         <option value="$PROJECT_DIR$/.gitignore" />
@@ -158,6 +138,8 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/index.d.ts" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/Consistent.ts" />
+        <option value="$PROJECT_DIR$/tests/temp.ts" />
       </list>
     </option>
   </component>
@@ -180,7 +162,7 @@
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="807" />
+    <option name="height" value="806" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -256,9 +238,6 @@
         </option>
       </method>
     </configuration>
-    <configuration name="APP2.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="APP2.js" working-dir="$PROJECT_DIR$/MyoTests" />
-    <configuration name="App.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="App.js" working-dir="$PROJECT_DIR$/MyoTests" />
-    <configuration name="clone.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="clone.js" working-dir="$PROJECT_DIR$/MyoTests" />
     <configuration name="temp.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="temp.js" working-dir="$PROJECT_DIR$/tests" />
     <configuration name="cap.Test.js" type="mocha-javascript-test-runner" factoryName="Mocha" nameIsGenerated="true">
       <node-interpreter>project</node-interpreter>
@@ -274,16 +253,10 @@
       <item itemvalue="JavaScript Debug.testClient" />
       <item itemvalue="Mocha.cap.Test.js" />
       <item itemvalue="Node.js.temp.js" />
-      <item itemvalue="Node.js.App.js" />
-      <item itemvalue="Node.js.clone.js" />
-      <item itemvalue="Node.js.APP2.js" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Node.js.temp.js" />
-        <item itemvalue="Node.js.APP2.js" />
-        <item itemvalue="Node.js.App.js" />
-        <item itemvalue="Node.js.clone.js" />
       </list>
     </recent_temporary>
   </component>
@@ -349,7 +322,8 @@
       <workItem from="1537276514943" duration="1229000" />
       <workItem from="1537371179794" duration="302000" />
       <workItem from="1538992360885" duration="25000" />
-      <workItem from="1539002717968" duration="3000" />
+      <workItem from="1539002717968" duration="80000" />
+      <workItem from="1539589982649" duration="2013000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -453,12 +427,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="cap_Test_js - 2018.04.26 at 14h 54m 38s.xml">
-      <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
-    </history-entry>
-    <history-entry file="cap_Test_js - 2018.04.26 at 18h 50m 49s.xml">
-      <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
-    </history-entry>
     <history-entry file="cap_Test_js - 2018.04.26 at 18h 51m 41s.xml">
       <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
@@ -483,27 +451,33 @@
     <history-entry file="cap_Test_js - 2018.09.18 at 15h 11m 19s.xml">
       <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
+    <history-entry file="cap_Test_js - 2018.10.15 at 10h 28m 35s.xml">
+      <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
+    </history-entry>
+    <history-entry file="cap_Test_js - 2018.10.15 at 10h 29m 41s.xml">
+      <configuration name="cap.Test.js" configurationId="mocha-javascript-test-runner" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166226000" />
+    <option name="totallyTimeSpent" value="168316000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="812" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="810" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.12755461" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Statistic" order="10" />
-      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4869565" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.29275364" />
       <window_info anchor="bottom" id="Version Control" order="12" />
       <window_info id="npm" order="2" sideWeight="0.5074946" side_tool="true" weight="0.15715292" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3299712" />
+      <window_info anchor="bottom" id="TypeScript" order="9" weight="0.32708934" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.17336152" />
+      <window_info anchor="bottom" id="Statistic" order="10" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="3" sideWeight="0.51293105" side_tool="true" weight="0.1564482" />
-      <window_info anchor="bottom" id="TypeScript" order="9" weight="0.32708934" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -582,7 +556,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -784,20 +758,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="95" column="75" selection-start-line="95" selection-start-column="75" selection-end-line="95" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/temp.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="35" column="9" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/EVDefinition.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -870,26 +830,16 @@
         <state relative-caret-position="-2846" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="15">
-            <caret line="1" selection-start-line="1" selection-end-line="1" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CAPLib.ts">
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="4" column="43" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="43" />
+        <state relative-caret-position="120">
+          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/cap.Test.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
+        <state relative-caret-position="613">
           <caret line="1324" selection-start-line="1324" selection-end-line="1324" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
@@ -909,10 +859,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/src/CAPLib.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+        <state relative-caret-position="30">
+          <caret line="4" column="43" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="15">
+            <caret line="1" selection-start-line="1" selection-end-line="1" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
+          <folding>
+            <element signature="n#!!block;n#constructor#0;n#Consistent#0" expanded="true" />
+            <element signature="n#!!block;n#access#0;n#ConsistentMirror#0" expanded="true" />
+            <element signature="e#3726#4645#0" expanded="true" />
+            <element signature="e#4213#4558#0" expanded="true" />
+            <element signature="e#4713#4777#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/temp.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="e#1#50#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#TestC#0" expanded="true" />
+            <element signature="n#!!block;n#topMethod#0;n#TestC#0" expanded="true" />
+            <element signature="n#!!block;n#bottomMethod#0;n#TestC#0" expanded="true" />
+            <element signature="e#619#658#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -49,8 +49,33 @@ class ConsistentMirror extends spiders_js_1.SpiderObjectMirror {
             return new Promise((resolve) => {
                 //Pretty ugly, but all methods in mirror object are bound to the mirror
                 //In this case we don't want this.x to return a promise if it's "internal"
+                //Moreover, this must be the case for nested function calls as well
+                let rebind = (func) => {
+                    return func.unBind().bind(new Proxy(base, {
+                        get(target, key, receiver) {
+                            if (typeof target[key] == 'function') {
+                                return rebind(target[key]);
+                            }
+                            else {
+                                return target[key];
+                            }
+                        }
+                    }));
+                };
                 //Need to get the regular function back and bind it to the unproxied object
-                let f = this.base[methodName].unBind().bind(this.base);
+                //let f = this.base[methodName].unBind().bind(this.base)
+                let base = this.base;
+                /*let f = this.base[methodName].unBind().bind(new Proxy(base,{
+                    get(target,key,receiver){
+                        if(typeof target[key] == 'function'){
+                            return target[key].unBind().bind(base)
+                        }
+                        else{
+                            return target[key]
+                        }
+                    }
+                }))*/
+                let f = rebind(this.base[methodName]);
                 resolve(f(...args));
             });
         }

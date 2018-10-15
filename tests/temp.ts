@@ -1,48 +1,40 @@
-import {Eventual, mutating} from "../src/Eventual";
-import {CAPActor} from "../src/CAPActor";
 import {CAPplication} from "../src/CAPplication";
-import {FarRef} from "spiders.js";
 import {Consistent} from "../src/Consistent";
 
-class TestEv extends Consistent{
-    value
+class TestC extends Consistent{
+    someArr
+
     constructor(){
         super()
-        this.value = 5
+        this.someArr = [1,2,3,4]
     }
 
-    @mutating
-    inc(){
-        this.value +=1
+    topMethod(){
+        console.log("TOP")
+        console.log(this.someArr)
+        this.bottomMethod()
+        /*this.someArr.forEach((el)=>{
+            console.log(el)
+        })*/
     }
-}
 
-class TestActor extends CAPActor{
-    getEV(e){
-        e.onCommit(()=>{
-            console.log("New value in actor: " + e.value)
+    bottomMethod(){
+        console.log("BOTTOM")
+        console.log(this.someArr)
+        this.reallyBottomMethod()
+    }
+
+    reallyBottomMethod(){
+        console.log(this.someArr)
+        this.someArr.forEach((el)=>{
+            console.log(el)
         })
-        e.inc()
     }
 }
 
-class App extends CAPplication{
-    constructor(){
-        super()
-        let con = new TestEv()
-        let ev = this.libs.thaw(con)
-    }
-}
-new App()
-
-
-/*let con = new TestCon()
 let app = new CAPplication()
-app.libs.thaw(con).then((ev)=>{
-    ev.incMUT()
-    let con2 = app.libs.freeze(ev)
-    con2.incMUT()
-})*/
+let t = new TestC()
+t.topMethod()
 
 
 
