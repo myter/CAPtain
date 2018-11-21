@@ -32,13 +32,37 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.d.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="CAPplication.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/CAPplication.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
-              <caret line="10" column="63" lean-forward="true" selection-start-line="10" selection-start-column="63" selection-end-line="10" selection-end-column="63" />
+              <caret line="10" column="63" selection-start-line="10" selection-start-column="63" selection-end-line="10" selection-end-column="63" />
               <folding>
                 <element signature="n#!!block;n#constructor#0;n#CAPplication#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CAPMirror.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/CAPMirror.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="450">
+              <caret line="91" column="53" lean-forward="true" selection-start-line="91" selection-start-column="53" selection-end-line="91" selection-end-column="53" />
+              <folding>
+                <element signature="n#!!block;n#freeze#0;n#CAPMirror#0" expanded="true" />
+                <element signature="e#1957#2254#0" expanded="true" />
+                <element signature="e#2858#2916#0" expanded="true" />
+                <element signature="e#2986#3302#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,7 +71,7 @@
       <file leaf-file-name="temp.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/temp.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
+            <state relative-caret-position="315">
               <caret line="44" selection-start-line="44" selection-end-line="44" />
               <folding>
                 <element signature="n#!!block;n#constructor#0;n#TestC#0" expanded="true" />
@@ -171,10 +195,10 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="806" />
+    <option name="width" value="2560" />
+    <option name="height" value="1333" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -338,7 +362,10 @@
       <workItem from="1539589982649" duration="2076000" />
       <workItem from="1539594743571" duration="391000" />
       <workItem from="1539598236852" duration="11000" />
-      <workItem from="1539612713079" duration="7000" />
+      <workItem from="1539612713079" duration="69000" />
+      <workItem from="1541466527888" duration="39000" />
+      <workItem from="1541631100842" duration="45000" />
+      <workItem from="1542813515729" duration="11000" />
     </task>
     <task id="LOCAL-00001" summary="Migrated from main project">
       <created>1518019020418</created>
@@ -474,20 +501,20 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168788000" />
+    <option name="totallyTimeSpent" value="168945000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="807" extended-state="6" />
+    <frame x="0" y="23" width="2560" height="1333" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.29190752" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.29112083" />
       <window_info anchor="bottom" id="Version Control" order="12" />
       <window_info id="npm" order="2" sideWeight="0.5074946" side_tool="true" weight="0.15715292" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3299712" />
       <window_info anchor="bottom" id="TypeScript" order="9" weight="0.32708934" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.17336152" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48706895" visible="true" weight="0.17329657" />
       <window_info anchor="bottom" id="Statistic" order="10" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -780,13 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CAPMirror.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="95" column="87" selection-start-line="95" selection-start-column="87" selection-end-line="95" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/CAPActor.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -842,20 +862,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="613">
           <caret line="1324" selection-start-line="1324" selection-end-line="1324" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CAPLib.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="4" column="43" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#30376#33100#0" expanded="true" />
+            <element signature="e#30838#31493#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -871,7 +882,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/temp.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
+        <state relative-caret-position="315">
           <caret line="44" selection-start-line="44" selection-end-line="44" />
           <folding>
             <element signature="n#!!block;n#constructor#0;n#TestC#0" expanded="true" />
@@ -883,22 +894,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
+    <entry file="file://$PROJECT_DIR$/src/CAPLib.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="58" column="128" selection-start-line="58" selection-start-column="128" selection-end-line="58" selection-end-column="128" />
-          <folding>
-            <element signature="n#!!block;n#constructor#0;n#Consistent#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="30">
+          <caret line="4" column="43" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CAPplication.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
-          <caret line="10" column="63" lean-forward="true" selection-start-line="10" selection-start-column="63" selection-end-line="10" selection-end-column="63" />
+          <caret line="10" column="63" selection-start-line="10" selection-start-column="63" selection-end-line="10" selection-end-column="63" />
           <folding>
             <element signature="n#!!block;n#constructor#0;n#CAPplication#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CAPMirror.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="91" column="53" lean-forward="true" selection-start-line="91" selection-start-column="53" selection-end-line="91" selection-end-column="53" />
+          <folding>
+            <element signature="n#!!block;n#freeze#0;n#CAPMirror#0" expanded="true" />
+            <element signature="e#1957#2254#0" expanded="true" />
+            <element signature="e#2858#2916#0" expanded="true" />
+            <element signature="e#2986#3302#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Consistent.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="58" column="128" selection-start-line="58" selection-start-column="128" selection-end-line="58" selection-end-column="128" />
+          <folding>
+            <element signature="n#!!block;n#constructor#0;n#Consistent#0" expanded="true" />
           </folding>
         </state>
       </provider>
